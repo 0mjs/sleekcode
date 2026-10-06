@@ -5,6 +5,7 @@ import type { Editor } from "./config";
 import { writeEditorFiles } from "./editor-files";
 import { LANGUAGES, type Language } from "./languages";
 import { renderList } from "./list";
+import { renderLog, renderRecords } from "./records";
 import { ensureProblemFiles } from "./materialize";
 import { problemReadme } from "./readme";
 import { MARKER, bankProblems, bankTestFile, openWorkspace, problemDir, solutionFile, testFile, writeMarker, type Workspace } from "./workspace";
@@ -33,7 +34,7 @@ export async function createWorkspace(dir: string, language: Language, editor: E
   await setupLanguage(dir, language);
   await writeEditorFiles(dir, [language], editor);
   await Bun.write(join(dir, "README.md"), workspaceReadme());
-  await Bun.write(join(dir, "LOG.md"), "# Results Log\n\n| Date | Problem | Lang | Difficulty | Tests | Time | Solved | Complexity | Notes |\n| ---- | ------- | ---- | ---------- | ----- | ------- | ----- | ---------- | ----- |\n");
+  await renderLog({ dir } as Workspace, []);
 
   // Every problem gets its folder + README now, and starting code in the first language
   const ws = await openWorkspace(dir, { workspace: dir, editor, reviewDays: 7, targets: { Easy: 15, Medium: 30, Hard: 45 } });
@@ -57,7 +58,8 @@ export async function refreshWorkspace(ws: Workspace) {
       await Bun.write(join(problemDir(ws, p), "README.md"), problemReadme(p, null));
     }
   }
-  await renderList(ws);
+  const { loadAttempts } = await import("./attempts");
+  await renderRecords(ws, (await loadAttempts(ws)).map((a) => a.folder));
 }
 
 function workspaceReadme(): string {

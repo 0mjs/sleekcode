@@ -1,11 +1,11 @@
 import * as p from "@clack/prompts";
 import { copyFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
-import { addAttempt, HELP_LABEL, type Help } from "../core/attempts";
+import { addAttempt, type Help } from "../core/attempts";
 import { parse } from "../core/args";
 import { formatDuration, parseDuration } from "../core/duration";
 import { LANGUAGES } from "../core/languages";
-import { renderList } from "../core/list";
+import { renderRecords } from "../core/records";
 import { label, needProblem } from "../core/problem";
 import { runOnce } from "../core/run";
 import { hintsFile, problemDir, solutionFile, type Workspace } from "../core/workspace";
@@ -22,10 +22,10 @@ const bail = () => {
   p.cancel("Nothing logged.");
   process.exit(0);
 };
-const ask = <T>(v: T): Exclude<T, symbol> => (p.isCancel(v) ? bail() : v) as Exclude<T, symbol>;
+export const ask = <T>(v: T): Exclude<T, symbol> => (p.isCancel(v) ? bail() : v) as Exclude<T, symbol>;
 
 /** O(N²) / O(n^2) / O(n*n) → one comparable form */
-function norm(s: string): string {
+export function norm(s: string): string {
   return s.toLowerCase().replace(/\s|\*|·|×/g, "").replace(/²/g, "^2").replace(/³/g, "^3").replace(/ⁿ/g, "^n")
     .replace(/√n|sqrt\(n\)/g, "sqrtn").replace(/n\^2|n\.n|nn(?!a)/g, "n^2");
 }
@@ -34,12 +34,13 @@ const LADDER = ["o(1)", "o(logn)", "o(sqrtn)", "o(n)", "o(nlogn)", "o(n^2)", "o(
 const rank = (s: string) => LADDER.indexOf(norm(s));
 
 /** Same complexity? Also treats O(m·n) and O(n·m) as the same */
-const same = (a: string, b: string) => norm(a) === norm(b) || [...norm(a)].sort().join("") === [...norm(b)].sort().join("");
+export const same = (a: string, b: string) => norm(a) === norm(b) || [...norm(a)].sort().join("") === [...norm(b)].sort().join("");
 
-async function pickComplexity(kind: "time" | "space", options: string[]): Promise<string> {
+export async function pickComplexity(kind: "time" | "space", options: string[], current?: string): Promise<string> {
+  const known = current ? options.find((o) => same(o, current)) : undefined;
   const v = ask(await p.select({
     message: `${kind === "time" ? "Time" : "Space"} complexity of your solution?`,
-    initialValue: kind === "time" ? "O(n)" : "O(1)",
+    initialValue: known ?? (current ? OTHER : current === "" ? SKIP : kind === "time" ? "O(n)" : "O(1)"),
     maxItems: 9,
     options: [
       ...options.map((o) => ({ value: o, label: o })),
@@ -49,7 +50,20 @@ async function pickComplexity(kind: "time" | "space", options: string[]): Promis
   }));
   if (v === SKIP) return "";
   if (v !== OTHER) return v as string;
-  return ask(await p.text({ message: `${kind === "time" ? "Time" : "Space"} complexity`, placeholder: "e.g. O(n · 2ⁿ)", defaultValue: "" })) as string;
+  return ask(await p.text({ message: `${kind === "time" ? "Time" : "Space"} complexity`, placeholder: "e.g. O(n · 2ⁿ)", initialValue: known ? "" : current ?? "", defaultValue: "" })) as string;
+}
+
+export async function pickHelp(hintsUsed: number, current: Help = "none"): Promise<Help> {
+  return ask(await p.select<Help>({
+    message: hintsUsed ? `How did you solve it? ${c.muted(`(${hintsUsed} hint${hintsUsed > 1 ? "s" : ""} used, that's fine)`)}` : "How did you solve it?",
+    initialValue: current,
+    options: [
+      { value: "none", label: "On my own", hint: "no AI, no looking up the answer" },
+      { value: "ai", label: "Used AI", hint: "ChatGPT, Claude, Copilot…" },
+      { value: "lookup", label: "Looked at a solution or video" },
+      { value: "person", label: "Someone helped me" },
+    ],
+  }));
 }
 
 export async function log(ws: Workspace, args: string[]) {
@@ -94,16 +108,7 @@ export async function log(ws: Workspace, args: string[]) {
   let help: Help;
   if (values.solo !== undefined) help = String(values.solo).toLowerCase().startsWith("y") ? "none" : "lookup";
   else {
-    help = ask(await p.select<Help>({
-      message: hintsUsed ? `How did you solve it? ${c.muted(`(${hintsUsed} hint${hintsUsed > 1 ? "s" : ""} used, that's fine)`)}` : "How did you solve it?",
-      initialValue: "none",
-      options: [
-        { value: "none", label: "On my own", hint: "no AI, no looking up the answer" },
-        { value: "ai", label: "Used AI", hint: "ChatGPT, Claude, Copilot…" },
-        { value: "lookup", label: "Looked at a solution or video" },
-        { value: "person", label: "Someone helped me" },
-      ],
-    }));
+    help = await pickHelp(hintsUsed);
   }
 
   // 4. Complexity, then a check against NeetCode's target
@@ -132,31 +137,20 @@ export async function log(ws: Workspace, args: string[]) {
   let notes = values.notes as string | undefined;
   if (notes === undefined) notes = ask(await p.text({ message: "Notes? (optional)", placeholder: "the trick, a gotcha, what you'd do differently", defaultValue: "" })) as string;
 
-  // 5. Save everywhere
+  // 5. Save: snapshot your code, record the attempt, regenerate LOG.md / README / LIST.md
   const now = new Date();
   const date = now.toISOString().slice(0, 10);
-  const minutes = seconds == null ? null : Math.max(1, Math.round(seconds / 60));
+  mkdirSync(join(dir, "attempts"), { recursive: true });
+  let snapshot = `attempts/${date}.${lang.ext}`;
+  for (let i = 2; existsSync(join(dir, snapshot)); i++) snapshot = `attempts/${date}-${i}.${lang.ext}`;
+  copyFileSync(solutionFile(ws, prob), join(dir, snapshot));
+
   await addAttempt(ws, {
     at: now.toISOString(), folder: prob.folder, id: prob.id, title: prob.title, difficulty: prob.difficulty, pattern: prob.pattern,
-    language: ws.language, pass, total, seconds, minutes, help, solo: help === "none", hints: hintsUsed, complexity, notes,
+    language: ws.language, pass, total, seconds, minutes: seconds == null ? null : Math.max(1, Math.round(seconds / 60)),
+    help, solo: help === "none", hints: hintsUsed, complexity, notes, snapshot,
   });
-  const esc = (s: string) => s.replaceAll("|", "\\|");
-  const tests = `${pass}/${total} ${ok ? "✅" : "❌"}`;
-  const how = `${help === "none" ? "✅" : `❌ ${HELP_LABEL[help]}`}${hintsUsed ? ` 💡${hintsUsed}` : ""}`;
-  const took = seconds == null ? "–" : formatDuration(seconds);
-  const readme = join(dir, "README.md");
-  await Bun.write(readme, (await Bun.file(readme).text()).trimEnd() + `\n| ${date} | ${lang.tag} | ${tests} | ${took} | ${how} | ${esc(complexity)} | ${esc(notes)} |\n`);
-  const logFile = join(ws.dir, "LOG.md");
-  await Bun.write(logFile, (await Bun.file(logFile).text()).trimEnd() +
-    `\n| ${date} | [${label(prob)}](problems/${prob.folder}/README.md) | ${lang.tag} | ${prob.difficulty} | ${tests} | ${took} | ${how} | ${esc(complexity)} | ${esc(notes)} |\n`);
-
-  const snapshots = join(dir, "attempts");
-  mkdirSync(snapshots, { recursive: true });
-  let snap = join(snapshots, `${date}.${lang.ext}`);
-  for (let i = 2; existsSync(snap); i++) snap = join(snapshots, `${date}-${i}.${lang.ext}`);
-  copyFileSync(solutionFile(ws, prob), snap);
-
-  await renderList(ws);
+  await renderRecords(ws, [prob.folder]);
   rmSync(startedFile, { force: true });
   rmSync(usedFile, { force: true });
   p.outro(`${c.green("Logged.")} ${c.muted(ok ? "Next one: sk next" : "Have another go, then sk log again.")}`);

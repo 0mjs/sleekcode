@@ -26,6 +26,8 @@ export type Attempt = {
   hints: number;
   complexity: string;
   notes: string;
+  /** Your code at the time, relative to the problem folder (e.g. attempts/2026-10-06.ts) */
+  snapshot?: string;
 };
 
 export type Help = "none" | "ai" | "lookup" | "person";
@@ -52,8 +54,18 @@ export async function loadAttempts(ws: Workspace): Promise<Attempt[]> {
   }
 }
 
+export async function saveAttempts(ws: Workspace, attempts: Attempt[]) {
+  await Bun.write(file(ws), JSON.stringify(attempts, null, 2) + "\n");
+}
+
 export async function addAttempt(ws: Workspace, a: Attempt) {
-  await Bun.write(file(ws), JSON.stringify([...(await loadAttempts(ws)), a], null, 2) + "\n");
+  await saveAttempts(ws, [...(await loadAttempts(ws)), a]);
+}
+
+/** Attempts are identified by their timestamp */
+export async function updateAttempt(ws: Workspace, at: string, change: Partial<Attempt> | null) {
+  const all = await loadAttempts(ws);
+  await saveAttempts(ws, change === null ? all.filter((a) => a.at !== at) : all.map((a) => (a.at === at ? { ...a, ...change } : a)));
 }
 
 export const passed = (a: Attempt) => a.total > 0 && a.pass === a.total;

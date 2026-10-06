@@ -37,6 +37,8 @@ export const GROUPS: { title: string; commands: Command[] }[] = [
   {
     title: "Progress",
     commands: [
+      { name: "attempts", args: "[number]", desc: "See, edit or delete what you've logged", flags: [{ short: "a", long: "all", desc: "every problem, newest first" }] },
+      { name: "undo", desc: "Delete your most recent log (asks first)" },
       { name: "stats", desc: "Dashboard: overview, patterns, history, review" },
       {
         name: "list",
