@@ -1,24 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 252. Meeting Rooms
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().canAttendMeetings([[0, 30], [5, 10], [15, 20]]) is False
-
-
-def test_example_2():
-    assert Solution().canAttendMeetings([[7, 10], [2, 4]]) is True
-
-
-def test_no_meetings():
-    assert Solution().canAttendMeetings([]) is True
-
-
-def test_back_to_back_meetings_dont_conflict():
-    assert Solution().canAttendMeetings([[5, 8], [8, 10]]) is True
-
-
-def test_unsorted_input_with_an_overlap_at_the_end():
-    assert Solution().canAttendMeetings([[10, 20], [1, 5], [6, 9], [19, 25]]) is False
+def test_fast_enough():
+    check_perf(FILE, __file__)

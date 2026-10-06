@@ -67,7 +67,7 @@ if (cmd === "setup" || !config) {
   process.exit(0);
 }
 if (cmd === "config") {
-  await configure(await currentWorkspace());
+  await configure(await currentWorkspace(), rest);
   process.exit(0);
 }
 if (cmd === "update") {

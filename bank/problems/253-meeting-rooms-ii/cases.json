@@ -1,0 +1,1 @@
+{"title":"253. Meeting Rooms II","call":{"kind":"function","name":"minMeetingRooms","params":[{"name":"intervals","type":"integer[][]"}],"returns":"integer"},"compare":"exact","cases":[{"name":"example 1","input":[[[0,30],[5,10],[15,20]]],"output":2},{"name":"example 2","input":[[[7,10],[2,4]]],"output":1}],"perf":null}

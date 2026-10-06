@@ -1,28 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 323. Number of Connected Components in an Undirected Graph
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().countComponents(5, [[0, 1], [1, 2], [3, 4]]) == 2
-
-
-def test_example_2():
-    assert Solution().countComponents(5, [[0, 1], [1, 2], [2, 3], [3, 4]]) == 1
-
-
-def test_isolated_nodes_each_count():
-    assert Solution().countComponents(4, [[0, 1]]) == 3
-
-
-def test_no_edges():
-    assert Solution().countComponents(3, []) == 3
-
-
-def test_cycle_is_still_one_component():
-    assert Solution().countComponents(4, [[0, 1], [1, 2], [2, 0], [3, 2]]) == 1
-
-
-def test_edges_given_in_reverse_direction():
-    assert Solution().countComponents(6, [[1, 0], [2, 1], [5, 4]]) == 3
+def test_fast_enough():
+    check_perf(FILE, __file__)

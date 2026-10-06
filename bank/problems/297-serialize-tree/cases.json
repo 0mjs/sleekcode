@@ -1,0 +1,1 @@
+{"title":"297. Serialize and Deserialize Binary Tree","call":{"kind":"custom","adapter":"serializeTree","params":[{"name":"root","type":"TreeNode"}],"exports":["serialize","deserialize"]},"compare":"exact","cases":[{"name":"example 1","input":[[1,2,3,null,null,4,5]],"output":[1,2,3,null,null,4,5]},{"name":"example 2","input":[[]],"output":[]}],"perf":null}

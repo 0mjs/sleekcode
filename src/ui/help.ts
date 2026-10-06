@@ -67,7 +67,12 @@ export const GROUPS: { title: string; commands: Command[] }[] = [
         desc: "Show or switch your language (typescript, python), like LeetCode's dropdown",
         flags: [{ short: "a", long: "all", desc: "create files for every problem now, not as you go" }],
       },
-      { name: "config", desc: "Change editor, review timing, or set up another workspace" },
+      { name: "config", args: "[setting]", desc: "Settings menu, or jump straight to one:" },
+      { name: "config editor", args: "[name]", desc: "zed, vscode, cursor, terminal or none" },
+      { name: "config review", args: "[days]", desc: "how long a clean solve waits before review" },
+      { name: "config workspace", args: "[path]", desc: "switch the active workspace" },
+      { name: "config new", desc: "set up another workspace" },
+      { name: "config remove", args: "[path]", desc: "move a workspace to the Trash (asks first)" },
       {
         name: "add",
         args: "<slug or url>",

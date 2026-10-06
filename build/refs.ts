@@ -34,7 +34,7 @@ export async function referenceSource(p: { folder: string; slug: string }, lang:
   const casesFile = join(BANK, p.folder, "cases.json");
   const testFile = join(BANK, p.folder, "ts", "solution.test.ts");
   const exported = existsSync(casesFile)
-    ? ((c) => (c.call.kind === "design" ? c.call.className : c.call.name))(await Bun.file(casesFile).json())
+    ? ((c) => (c.call.kind === "design" ? c.call.className : c.call.kind === "custom" ? c.call.exports.join(", ") : c.call.name))(await Bun.file(casesFile).json())
     : (await Bun.file(testFile).text()).match(/import \{ (\w+) \} from "\.\/solution"/)![1]!;
   const needs = ["ListNode", "TreeNode"].filter((t) => ref.includes(t) && !new RegExp(`^(export )?class ${t}\\b`, "m").test(ref));
   return (needs.length ? `import { ${needs.join(", ")} } from "../../lib";\n` : "") + ref + `\nexport { ${exported} };\n`;

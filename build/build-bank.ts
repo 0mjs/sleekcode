@@ -4,7 +4,8 @@
 // Hand-written problems (MANUAL) are never overwritten.
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { caseFile, python, specFrom, typescript } from "../src/core/generate";
+import { caseFile, PY_TEST, python, specFrom, TS_TEST, typescript } from "../src/core/generate";
+import { MANUAL_CASES } from "./manual-cases";
 import { existsSync } from "node:fs";
 
 const ROOT = join(import.meta.dir, "..");
@@ -91,7 +92,24 @@ for (const x of nc) {
     hints: blocks.filter((b) => /^hint/i.test(b.title)).map((b) => b.body),
   }, null, 2) + "\n");
 
-  if (MANUAL.has(slug) || !q?.content) continue;
+  // Extra edge/random cases + speed check, from build/build-cases.ts
+  const extraFile = join(import.meta.dir, "extra-cases", `${folder}.json`);
+  const extra = existsSync(extraFile) ? await Bun.file(extraFile).json() : { cases: [], perf: null };
+
+  if (MANUAL.has(slug) || !q?.content) {
+    // Hand-written starting code; cases from build/manual-cases.ts, standard tests
+    const m = MANUAL_CASES[slug];
+    if (!m) throw new Error(`${slug}: missing from build/manual-cases.ts`);
+    const cases = {
+      title: `${id}. ${q?.title ?? x.problem}`, call: m.call, compare: m.compare,
+      cases: [...m.examples.map(([input, output], i) => ({ name: `example ${i + 1}`, input, output })), ...extra.cases],
+      perf: extra.perf ?? null,
+    };
+    await Bun.write(join(dir, "cases.json"), JSON.stringify(cases) + "\n");
+    await Bun.write(join(dir, "ts", "solution.test.ts"), TS_TEST);
+    await Bun.write(join(dir, "py", "test_solution.py"), PY_TEST);
+    continue;
+  }
 
   const spec = specFrom(q, { id, title: q.title, slug, difficulty: x.difficulty, pattern: x.pattern, blind75: !!x.blind75 },
     { anyOrder: FORCE_ANY_ORDER.has(slug), deep: DEEP_ANY_ORDER.has(slug) });
@@ -99,12 +117,8 @@ for (const x of nc) {
 
   // cases.json: the examples, plus extra edge/random cases + speed check from build/build-cases.ts
   const cases = caseFile(spec);
-  const extraFile = join(import.meta.dir, "extra-cases", `${folder}.json`);
-  if (existsSync(extraFile)) {
-    const extra = await Bun.file(extraFile).json();
-    cases.cases.push(...extra.cases);
-    cases.perf = extra.perf ?? null;
-  }
+  cases.cases.push(...extra.cases);
+  cases.perf = extra.perf ?? null;
   await Bun.write(join(dir, "cases.json"), JSON.stringify(cases) + "\n");
 
   const snippet = (lang: string) => q.codeSnippets.find((c: any) => c.langSlug === lang).code;

@@ -16,6 +16,8 @@ export type Config = {
   targets: Record<Difficulty, number>;
   /** Optional: replace the complexity choices `sk log` offers */
   complexities?: string[];
+  /** Every workspace you've created or used (for switching and removing) */
+  workspaces?: string[];
 };
 
 export const DEFAULTS: Omit<Config, "workspace"> = {
@@ -34,5 +36,6 @@ export async function loadConfig(): Promise<Config | null> {
 
 export async function saveConfig(config: Config) {
   mkdirSync(CONFIG_DIR, { recursive: true });
+  config.workspaces = [...new Set([...(config.workspaces ?? []), config.workspace])];
   await Bun.write(CONFIG_FILE, JSON.stringify(config, null, 2) + "\n");
 }

@@ -1,15 +1,15 @@
 // First-run onboarding (and `sk config`): pick a language, an editor, and where your workspace lives.
 import * as p from "@clack/prompts";
-import { existsSync, readdirSync } from "node:fs";
+import { cpSync, existsSync, readdirSync, renameSync, rmSync } from "node:fs";
 import { homedir } from "node:os";
-import { join, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { DEFAULTS, EDITORS, loadConfig, saveConfig, type Config, type Editor } from "../core/config";
 import { LANGUAGE_IDS, LANGUAGES, ensureTool, type Language } from "../core/languages";
 import { renderList } from "../core/list";
 import { createWorkspace, installDeps } from "../core/create";
 import { writeEditorFiles } from "../core/editor-files";
-import { tilde } from "../core/paths";
+import { CONFIG_FILE, tilde } from "../core/paths";
 import { syncReadmes } from "../core/sync";
 import { MARKER, openWorkspace, type Workspace } from "../core/workspace";
 import { bold, c } from "../ui/colors";
@@ -138,10 +138,142 @@ export async function onboarding(args: string[] = []) {
   p.outro(`Happy grinding ${c.green("✦")}`);
 }
 
-/** sk config: change settings later */
-export async function configure(ws: Workspace | null) {
+/** Known workspaces that still exist, the active one first */
+function knownWorkspaces(config: Config): string[] {
+  return [...new Set([config.workspace, ...(config.workspaces ?? [])])].filter((d) => d && existsSync(join(d, MARKER)));
+}
+
+async function describeWorkspace(dir: string): Promise<string> {
+  const marker = await Bun.file(join(dir, MARKER)).json().catch(() => null);
+  const attemptsFile = join(dir, "attempts.json");
+  const attempts: { folder: string; pass: number; total: number }[] = existsSync(attemptsFile) ? await Bun.file(attemptsFile).json().catch(() => []) : [];
+  const solved = new Set(attempts.filter((a) => a.total && a.pass === a.total).map((a) => a.folder)).size;
+  const langs = (marker?.languages ?? [marker?.language]).filter(Boolean).map((l: Language) => LANGUAGES[l]?.name ?? l).join(" + ");
+  return `${langs || "?"} · ${attempts.length} attempt${attempts.length === 1 ? "" : "s"} logged · ${solved} solved`;
+}
+
+async function pickWorkspace(config: Config, message: string, query?: string): Promise<string> {
+  const known = knownWorkspaces(config);
+  if (query) {
+    const dir = expand(query);
+    const match = existsSync(join(dir, MARKER)) ? dir : known.find((d) => d.endsWith("/" + query) || d.includes(query));
+    if (!match) {
+      p.cancel(`No workspace matching "${query}".`);
+      process.exit(1);
+    }
+    return match;
+  }
+  if (!known.length) {
+    p.cancel("No workspaces found.");
+    process.exit(1);
+  }
+  const options = await Promise.all(known.map(async (d) => ({ value: d, label: tilde(d) + (d === config.workspace ? c.green("  (active)") : ""), hint: await describeWorkspace(d) })));
+  return check(await p.select({ message, options: [...options, { value: "", label: c.muted("Cancel") }] })) || (p.cancel("No changes."), process.exit(0));
+}
+
+/** Moves a workspace to the macOS Trash (recoverable), after showing what's in it */
+async function removeWorkspace(config: Config, query?: string) {
+  const dir = await pickWorkspace(config, "Which workspace do you want to remove?", query);
+  p.log.message(`${c.ink(tilde(dir))}\n${c.muted(await describeWorkspace(dir))}`);
+  const sure = check(await p.confirm({ message: "Move it to the Trash? Your solutions and progress go with it (you can still restore it from the Trash).", initialValue: false }));
+  if (!sure) return p.outro(c.muted("No changes."));
+
+  const trash = process.env.SLEEKCODE_TRASH ?? join(homedir(), ".Trash"); // override only for testing
+  let target = join(trash, basename(dir));
+  for (let i = 2; existsSync(target); i++) target = join(trash, `${basename(dir)} ${i}`);
+  try {
+    renameSync(dir, target);
+  } catch {
+    cpSync(dir, target, { recursive: true }); // a different disk: copy, then remove
+    rmSync(dir, { recursive: true, force: true });
+  }
+
+  config.workspaces = (config.workspaces ?? []).filter((d) => d !== dir);
+  const remaining = knownWorkspaces({ ...config, workspace: config.workspaces[0] ?? "" }).filter((d) => d !== dir);
+  if (!config.workspaces.length && config.workspace !== dir) config.workspaces = [config.workspace];
+  if (config.workspace === dir) {
+    if (remaining.length) {
+      config.workspace = remaining[0]!;
+      p.log.info(`Active workspace is now ${c.ink(tilde(config.workspace))}`);
+    } else {
+      rmSync(CONFIG_FILE, { force: true });
+      p.outro(`${c.green("Moved to the Trash.")} ${c.muted("That was your last workspace, so the next sk starts setup again.")}`);
+      return;
+    }
+  }
+  await saveConfig(config);
+  if (process.cwd().startsWith(dir)) p.log.warn("You're still inside that folder in this terminal: cd somewhere else.");
+  p.outro(c.green("Moved to the Trash."));
+}
+
+async function setEditor(config: Config, ws: Workspace | null, name?: string) {
+  const fromArg = name ? (Object.keys(EDITORS) as Editor[]).find((e) => e === name.toLowerCase() || EDITORS[e].toLowerCase().replace(/\s/g, "") === name.toLowerCase().replace(/\s/g, "")) : undefined;
+  if (name && !fromArg) {
+    p.cancel(`Unknown editor "${name}". Choose from: ${Object.keys(EDITORS).join(", ")}`);
+    process.exit(1);
+  }
+  config.editor = fromArg ?? (await askEditor(config.editor));
+  if (ws) await writeEditorFiles(ws.dir, ws.languages, config.editor);
+  await saveConfig(config);
+  p.outro(`${c.green("Editor:")} ${EDITORS[config.editor]}`);
+}
+
+async function setReview(config: Config, days?: string) {
+  if (days) {
+    if (!/^\d+$/.test(days)) {
+      p.cancel("Give a number of days, e.g. sk config review 10");
+      process.exit(1);
+    }
+    config.reviewDays = Number(days);
+  } else {
+    const v = check(await p.text({ message: "Days until a clean solve comes back for review", defaultValue: String(config.reviewDays), placeholder: String(config.reviewDays), validate: (s) => (s && !/^\d+$/.test(s) ? "A number of days" : undefined) }));
+    config.reviewDays = Number(v || config.reviewDays);
+    for (const d of ["Easy", "Medium", "Hard"] as const) {
+      const t = check(await p.text({ message: `Comfortable time for ${d} problems (minutes)`, defaultValue: String(config.targets[d]), placeholder: String(config.targets[d]), validate: (s) => (s && !/^\d+$/.test(s) ? "A number of minutes" : undefined) }));
+      config.targets[d] = Number(t || config.targets[d]);
+    }
+  }
+  await saveConfig(config);
+  p.outro(`${c.green("Reviews:")} a clean solve comes back after ${config.reviewDays} days`);
+}
+
+async function switchWorkspace(config: Config, query?: string) {
+  config.workspace = await pickWorkspace(config, "Which workspace should be active?", query);
+  await saveConfig(config);
+  p.outro(`${c.green("Active workspace:")} ${tilde(config.workspace)}`);
+}
+
+async function newWorkspace(config: Config) {
+  const language = await askLanguage();
+  if (!(await ensureTool(language))) process.exit(1);
+  const dir = await askDir();
+  config.workspace = dir;
+  const created = await build(dir, language, config.editor, config);
+  await saveConfig(config);
+  nextSteps(created);
+  p.outro(c.green("Done."));
+}
+
+/**
+ * sk config                 the settings menu
+ * sk config editor [name]   sk config review [days]   sk config workspace [path]   sk config new   sk config remove [path]
+ */
+export async function configure(ws: Workspace | null, args: string[] = []) {
   const config = await loadConfig();
   if (!config) return onboarding();
+  const [action, value] = args;
+
+  if (action) {
+    p.intro(bold(" SleekCode settings "));
+    if (action === "editor") return setEditor(config, ws, value);
+    if (action === "review") return setReview(config, value);
+    if (action === "workspace" || action === "switch") return switchWorkspace(config, value);
+    if (action === "new") return newWorkspace(config);
+    if (action === "remove" || action === "delete") return removeWorkspace(config, value);
+    p.cancel(`Unknown setting "${action}". Try: editor, review, workspace, new, remove`);
+    process.exit(1);
+  }
+
   console.log(header());
   p.intro(bold(" SleekCode settings "));
   p.log.message([
@@ -149,45 +281,22 @@ export async function configure(ws: Workspace | null) {
     `${c.muted("Editor")}     ${c.ink(EDITORS[config.editor])}`,
     `${c.muted("Reviews")}    ${c.ink(`${config.reviewDays} days`)} ${c.muted(`· targets ${config.targets.Easy}/${config.targets.Medium}/${config.targets.Hard} min`)}`,
   ].join("\n"));
-
+  const others = knownWorkspaces(config).length;
   const choice = check(await p.select({
     message: "What do you want to change?",
     options: [
-      { value: "editor", label: "Editor", hint: EDITORS[config.editor] },
-      { value: "review", label: "Review timing", hint: `${config.reviewDays} days` },
-      { value: "new", label: "Set up another workspace", hint: "rarely needed: sk lang switches languages" },
-      { value: "switch", label: "Switch the active workspace" },
+      { value: "editor", label: "Editor", hint: `${EDITORS[config.editor]} · sk config editor` },
+      { value: "review", label: "Review timing", hint: `${config.reviewDays} days · sk config review` },
+      ...(others > 1 ? [{ value: "workspace", label: "Switch workspace", hint: "sk config workspace" }] : []),
+      { value: "new", label: "Set up another workspace", hint: "sk config new · rarely needed: sk lang switches languages" },
+      { value: "remove", label: "Remove a workspace", hint: "moves it to the Trash · sk config remove" },
       { value: "done", label: "Nothing, I'm done" },
     ],
   }));
-
-  if (choice === "editor") {
-    config.editor = await askEditor(config.editor);
-    if (ws) await writeEditorFiles(ws.dir, ws.languages, config.editor);
-  } else if (choice === "review") {
-    const days = check(await p.text({ message: "Days until a clean solve comes back for review", defaultValue: String(config.reviewDays), placeholder: String(config.reviewDays), validate: (s) => (s && !/^\d+$/.test(s) ? "A number of days" : undefined) }));
-    config.reviewDays = Number(days || config.reviewDays);
-    for (const d of ["Easy", "Medium", "Hard"] as const) {
-      const v = check(await p.text({ message: `Comfortable time for ${d} problems (minutes)`, defaultValue: String(config.targets[d]), placeholder: String(config.targets[d]), validate: (s) => (s && !/^\d+$/.test(s) ? "A number of minutes" : undefined) }));
-      config.targets[d] = Number(v || config.targets[d]);
-    }
-  } else if (choice === "new") {
-    const language = await askLanguage();
-    if (!(await ensureTool(language))) process.exit(1);
-    const dir = await askDir();
-    config.workspace = dir;
-    const created = await build(dir, language, config.editor, config);
-    await saveConfig(config);
-    nextSteps(created);
-  } else if (choice === "switch") {
-    const v = check(await p.text({ message: "Path to the workspace folder", placeholder: tilde(config.workspace) }));
-    const dir = expand(v || config.workspace);
-    if (!existsSync(join(dir, MARKER))) {
-      p.cancel(`${tilde(dir)} isn't a SleekCode workspace.`);
-      process.exit(1);
-    }
-    config.workspace = dir;
-  }
-  await saveConfig(config);
-  p.outro(choice === "done" ? "No changes." : c.green("Saved."));
+  if (choice === "editor") return setEditor(config, ws);
+  if (choice === "review") return setReview(config);
+  if (choice === "workspace") return switchWorkspace(config);
+  if (choice === "new") return newWorkspace(config);
+  if (choice === "remove") return removeWorkspace(config);
+  p.outro(c.muted("No changes."));
 }

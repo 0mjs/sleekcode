@@ -218,7 +218,10 @@ const COMPARE_OVERRIDE: Record<string, CaseFile["compare"]> = {
 
 export type CaseFile = {
   title: string;
-  call: { kind: "function"; name: string; params: Param[]; returns: string } | { kind: "design"; className: string };
+  call:
+    | { kind: "function"; name: string; params: Param[]; returns: string }
+    | { kind: "design"; className: string }
+    | { kind: "custom"; adapter: string; params: Param[]; exports: string[] };
   compare: "exact" | "anyOrder" | "anyOrderDeep" | "float" | `validator:${string}`;
   cases: { name: string; input: unknown[]; output: unknown }[];
   perf: { input: unknown[]; about: string; limit: { ts: number; py: number } } | null;
@@ -243,7 +246,7 @@ export function caseFile(s: Spec): CaseFile {
   };
 }
 
-const TS_TEST = `// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+export const TS_TEST = `// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
 import { suite } from "../../lib/testing";
 import cases from "./cases.json";
 import * as solution from "./solution";
@@ -251,7 +254,7 @@ import * as solution from "./solution";
 suite(cases, solution, import.meta.path);
 `;
 
-const PY_TEST = `# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+export const PY_TEST = `# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
 import pytest
 
 import solution

@@ -7,7 +7,10 @@ import copy
 import json
 from typing import Any
 
-from . import any_order, any_order_deep, from_list, from_tree, run_ops, to_list, to_tree
+from . import (
+    any_order, any_order_deep, find_node, from_graph, from_list, from_random_list, from_tree, graph_nodes,
+    random_list_nodes, run_ops, to_cycle_list, to_graph, to_list, to_random_list, to_tree,
+)
 
 
 def _to_arg(type_: str, v: Any) -> Any:
@@ -28,11 +31,69 @@ def _from_value(type_: str, v: Any) -> Any:
     return v
 
 
+# How LeetCode runs the problems that need more than "call a method, compare the result".
+# Each returns the answer in JSON form, or a message saying what's wrong. (Same set in runtime/ts/lib/cases.ts.)
+
+
+def _has_cycle(m, values, pos):  # 141: values + pos (where the tail links back; -1 = none)
+    return m.Solution().hasCycle(to_cycle_list(values, pos))
+
+
+def _lca(m, tree, p, q):  # 235: p and q are values; your method receives those nodes
+    root = to_tree(tree)
+    node = m.Solution().lowestCommonAncestor(root, find_node(root, p), find_node(root, q))
+    return node.val if node else None
+
+
+def _clone_graph(m, adj):  # 133: a deep copy, sharing no nodes with the original
+    original = to_graph(adj)
+    copy_ = m.Solution().cloneGraph(original)
+    originals = {id(n) for n in graph_nodes(original)}
+    if any(id(n) in originals for n in graph_nodes(copy_)):
+        return "not a copy: it shares nodes with the original graph"
+    return from_graph(copy_)
+
+
+def _copy_random_list(m, pairs):  # 138: a deep copy; the original left unchanged
+    original = to_random_list(pairs)
+    copy_ = m.Solution().copyRandomList(original)
+    originals = {id(n) for n in random_list_nodes(original)}
+    for n in random_list_nodes(copy_):
+        if id(n) in originals or (n.random is not None and id(n.random) in originals):
+            return "not a copy: it points into the original list"
+    if from_random_list(original) != pairs:
+        return "the original list was changed"
+    return from_random_list(copy_)
+
+
+def _serialize_tree(m, tree):  # 297: any format, as long as it round-trips
+    codec = m.Codec()
+    data = codec.serialize(to_tree(tree))
+    if not isinstance(data, str):
+        return "serialize must return a string"
+    return from_tree(m.Codec().deserialize(data))
+
+
+def _encode_decode(m, strs):  # 271: any encoding, as long as it round-trips
+    encoded = m.Solution().encode(list(strs))
+    if not isinstance(encoded, str):
+        return "encode must return a single string"
+    return m.Solution().decode(encoded)
+
+
+ADAPTERS = {
+    "hasCycle": _has_cycle, "lowestCommonAncestor": _lca, "cloneGraph": _clone_graph,
+    "copyRandomList": _copy_random_list, "serializeTree": _serialize_tree, "encodeDecode": _encode_decode,
+}
+
+
 def run(file: dict, module: Any, input_: list) -> Any:
     """Calls your solution with a case's input; returns its answer in LeetCode's JSON form."""
     call = file["call"]
     if call["kind"] == "design":
         return run_ops(getattr(module, call["className"]), input_[0], copy.deepcopy(input_[1]))
+    if call["kind"] == "custom":
+        return ADAPTERS[call["adapter"]](module, *copy.deepcopy(input_))
     method = getattr(module.Solution(), call["name"])
     args = [_to_arg(p["type"], copy.deepcopy(v)) for p, v in zip(call["params"], input_)]
     result = method(*args)
@@ -67,8 +128,40 @@ def _longest_palindrome(input_: list, actual: Any, expected: Any) -> bool:
     return isinstance(actual, str) and len(actual) == len(expected) and actual in s and actual == actual[::-1]
 
 
+def _course_order(input_: list, actual: Any, expected: Any) -> bool:
+    """210. Course Schedule II: any order with every prerequisite first; [] exactly when impossible"""
+    n, prereqs = input_
+    if not isinstance(actual, list):
+        return False
+    if not expected:
+        return actual == []
+    if sorted(actual) != list(range(n)):
+        return False
+    at = {c: i for i, c in enumerate(actual)}
+    return all(at[pre] < at[course] for course, pre in prereqs)
+
+
+def _alien_order(input_: list, actual: Any, expected: Any) -> bool:
+    """269. Alien Dictionary: any letter order consistent with the words; "" exactly when there's none"""
+    (words,) = input_
+    if not isinstance(actual, str):
+        return False
+    if expected == "":
+        return actual == ""
+    if sorted(actual) != sorted(set("".join(words))):
+        return False
+    rank = {ch: i for i, ch in enumerate(actual)}
+    for a, b in zip(words, words[1:]):
+        for x, y in zip(a, b):
+            if x != y:
+                if rank[x] > rank[y]:
+                    return False
+                break
+    return True
+
+
 # For the few problems where more than one answer is correct (same set in runtime/ts/lib/cases.ts)
-VALIDATORS = {"longestPalindrome": _longest_palindrome}
+VALIDATORS = {"longestPalindrome": _longest_palindrome, "courseOrder": _course_order, "alienOrder": _alien_order}
 
 
 def close(a: Any, b: Any) -> bool:

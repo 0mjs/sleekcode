@@ -1,0 +1,1 @@
+{"title":"133. Clone Graph","call":{"kind":"custom","adapter":"cloneGraph","params":[{"name":"adjList","type":"integer[][]"}],"exports":["cloneGraph"]},"compare":"exact","cases":[{"name":"example 1","input":[[[2,4],[1,3],[2,4],[1,3]]],"output":[[2,4],[1,3],[2,4],[1,3]]},{"name":"example 2","input":[[[]]],"output":[[]]},{"name":"example 3","input":[[]],"output":[]}],"perf":null}
