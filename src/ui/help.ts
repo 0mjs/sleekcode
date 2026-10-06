@@ -28,6 +28,7 @@ const GROUPS: { title: string; commands: Command[] }[] = [
           { short: "t", long: "time", arg: "duration", desc: 'e.g. 25, "1h 10m" (automatic with sk start)' },
           { short: "s", long: "solo", arg: "y/n", desc: "solved on your own (no AI, no looking it up)?" },
           { short: "c", long: "complexity", arg: "text", desc: 'e.g. "O(n) / O(1)"' },
+          { short: "f", long: "feel", arg: "unhappy|fine|nailed", desc: "how you feel about your solution" },
           { short: "n", long: "notes", arg: "text", desc: "anything worth remembering" },
         ],
       },
@@ -91,6 +92,7 @@ const GROUPS: { title: string; commands: Command[] }[] = [
       { name: "sync", desc: "Download any problem text that's missing" },
       { name: "update", desc: "Update SleekCode to the latest version" },
       { name: "help", args: "[command]", desc: "This screen, or details for one command" },
+      { name: "-v, --version", desc: "Which version of SleekCode you have" },
     ],
   },
 ];

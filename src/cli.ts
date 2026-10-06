@@ -5,7 +5,8 @@ import { dueNow, loadAttempts, solvedFolders } from "./core/attempts";
 import { EDITORS, loadConfig } from "./core/config";
 import { LANGUAGES } from "./core/languages";
 import { lang } from "./commands/lang";
-import { tilde } from "./core/paths";
+import pkg from "../package.json";
+import { tilde, TOOL } from "./core/paths";
 import { label } from "./core/problem";
 import { currentWorkspace, resolveProblem, type Workspace } from "./core/workspace";
 import { attempts, undo } from "./commands/attempts";
@@ -47,6 +48,13 @@ async function status(ws: Workspace): Promise<string[]> {
       (due ? ` ${c.muted("·")} ${c.amber(`${due} due for review`)}` : "") +
       (current ? ` ${c.muted("· current:")} ${c.body(label(current))}` : ""),
   ];
+}
+
+// Version: sk -v / sk --version
+if (cmd === "-v" || cmd === "--version" || cmd === "version") {
+  const commit = Bun.spawnSync(["git", "log", "-1", "--format=%h · %cs"], { cwd: TOOL, stdout: "pipe", stderr: "ignore" }).stdout.toString().trim();
+  console.log(`sleekcode v${pkg.version}${commit ? c.muted(`  (${commit})`) : ""}`);
+  process.exit(0);
 }
 
 // Help, before anything that needs a workspace

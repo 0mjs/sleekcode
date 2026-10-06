@@ -61,6 +61,8 @@ export async function sync(ws: Workspace) {
 }
 
 export async function update(ws: Workspace | null) {
+  const version = async () => (await Bun.file(join(TOOL, "package.json")).json()).version as string;
+  const before = await version();
   const spin = p.spinner();
   spin.start("Updating SleekCode");
   const pull = Bun.spawnSync(["git", "pull", "--ff-only"], { cwd: TOOL, stdout: "pipe", stderr: "pipe" });
@@ -75,7 +77,12 @@ export async function update(ws: Workspace | null) {
     await syncReadmes(ws, () => {});
     for (const lang of ws.languages) await installDeps(ws.dir, lang);
   }
-  spin.stop(c.green(pull.stdout.toString().includes("Already up to date") ? "Already up to date." : "Updated."));
+  const after = await version();
+  spin.stop(
+    pull.stdout.toString().includes("Already up to date")
+      ? `${c.green("Already up to date")} ${c.muted(`(v${after})`)}`
+      : `${c.green("Updated")} ${before === after ? c.muted(`(v${after}, small fixes)`) : `v${before} → ${c.ink(`v${after}`)}`} ${c.muted("· what's new: CHANGELOG.md")}`,
+  );
 }
 
 export async function add(ws: Workspace, args: string[]) {

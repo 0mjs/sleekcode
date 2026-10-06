@@ -16,7 +16,7 @@ function cells(a: Attempt) {
     lang: LANGUAGES[a.language]?.tag ?? a.language,
     tests: `${a.pass}/${a.total} ${passed(a) ? "✅" : "❌"}`,
     time: a.seconds == null ? "–" : formatDuration(a.seconds),
-    how: `${a.help === "none" ? "✅" : `❌ ${HELP_LABEL[a.help]}`}${a.hints ? ` 💡${a.hints}` : ""}`,
+    how: `${a.help === "none" ? "✅" : `❌ ${HELP_LABEL[a.help]}`}${a.hints ? ` 💡${a.hints}` : ""}${a.aboveTarget ? " ⚠️ above target" : ""}${a.feel === "unhappy" ? " 😬" : a.feel === "nailed" ? " 😎" : ""}`,
     complexity: esc(a.complexity || "–"),
     notes: esc(a.notes),
   };

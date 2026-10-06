@@ -2,14 +2,15 @@
 import * as p from "@clack/prompts";
 import { existsSync, renameSync } from "node:fs";
 import { join } from "node:path";
-import { HELP_LABEL, loadAttempts, passed, updateAttempt, type Attempt } from "../core/attempts";
+import { HELP_LABEL, loadAttempts, passed, updateAttempt, type Attempt, type Feel } from "../core/attempts";
+import { aboveTarget } from "../core/complexity";
 import { parse } from "../core/args";
 import { formatDuration, parseDuration } from "../core/duration";
 import { openInEditor } from "../core/editor";
 import { LANGUAGES } from "../core/languages";
 import { needProblem } from "../core/problem";
 import { renderRecords } from "../core/records";
-import { problemDir, type Workspace } from "../core/workspace";
+import { hintsFile, problemDir, type Workspace } from "../core/workspace";
 import { c, rgb, visible } from "../ui/colors";
 import { ask, COMPLEXITIES, pickComplexity, pickHelp } from "./log";
 
@@ -42,7 +43,8 @@ function summary(a: Attempt, withTitle = false): string {
     passed(a) ? c.green(`✓ ${a.pass}/${a.total}`) : c.red(`✗ ${a.pass}/${a.total}`),
     a.seconds == null ? c.dim("no time") : c.body(formatDuration(a.seconds)),
     a.help === "none" ? c.body(a.hints ? `on my own · ${a.hints} hint${a.hints > 1 ? "s" : ""}` : "on my own") : c.amber(HELP_LABEL[a.help]),
-    a.complexity ? c.body(a.complexity) : null,
+    a.complexity ? (a.aboveTarget ? c.amber(`${a.complexity} (above target)`) : c.body(a.complexity)) : null,
+    a.feel === "unhappy" ? "😬" : a.feel === "nailed" ? "😎" : null,
   ].filter(Boolean).join(c.dim(" · "));
 }
 
@@ -72,11 +74,23 @@ async function edit(ws: Workspace, a: Attempt) {
   const options = ws.config.complexities?.length ? ws.config.complexities : COMPLEXITIES;
   const time = await pickComplexity("time", options, t ?? "");
   const space = await pickComplexity("space", options, s ?? "");
+  const feel = ask(await p.select<Feel>({
+    message: "How do you feel about your solution?",
+    initialValue: a.feel,
+    options: [
+      { value: "unhappy", label: "😬 Not happy with it", hint: "back in 2 days" },
+      { value: "fine", label: "👍 Fine" },
+      { value: "nailed", label: "😎 Nailed it", hint: "twice as long before review" },
+    ],
+  }));
   const notes = ask(await p.text({ message: "Notes", initialValue: a.notes, placeholder: "(none)", defaultValue: "" }));
 
+  const complexity = [time, space].filter(Boolean).join(" / ");
+  const prob = ws.problems.find((x) => x.folder === a.folder);
+  const target = prob && existsSync(hintsFile(ws, prob)) ? (await Bun.file(hintsFile(ws, prob)).json()).target : null;
   await updateAttempt(ws, a.at, {
     seconds, minutes: seconds == null ? null : Math.max(1, Math.round(seconds / 60)),
-    help, solo: help === "none", complexity: [time, space].filter(Boolean).join(" / "), notes,
+    help, solo: help === "none", complexity, aboveTarget: aboveTarget(complexity, target).above, feel, notes,
   });
   await renderRecords(ws, [a.folder]);
   const updated = (await loadAttempts(ws)).find((x) => x.at === a.at)!;
@@ -122,7 +136,7 @@ export async function attempts(ws: Workspace, args: string[]) {
   const action = ask(await p.select({
     message: "What do you want to do?",
     options: [
-      { value: "edit", label: "Edit it", hint: "time, how you solved it, complexity, notes" },
+      { value: "edit", label: "Edit it", hint: "time, how you solved it, complexity, how it felt, notes" },
       { value: "delete", label: "Delete it" },
       ...(a.snapshot ? [{ value: "code", label: "Open the code you logged", hint: a.snapshot }] : []),
       { value: "cancel", label: c.muted("Cancel") },

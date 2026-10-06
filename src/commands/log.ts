@@ -1,7 +1,8 @@
 import * as p from "@clack/prompts";
 import { copyFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
-import { addAttempt, type Help } from "../core/attempts";
+import { addAttempt, type Feel, type Help } from "../core/attempts";
+import { aboveTarget, same, targetParts, verdict } from "../core/complexity";
 import { parse } from "../core/args";
 import { formatDuration, parseDuration } from "../core/duration";
 import { LANGUAGES } from "../core/languages";
@@ -23,18 +24,6 @@ const bail = () => {
   process.exit(0);
 };
 export const ask = <T>(v: T): Exclude<T, symbol> => (p.isCancel(v) ? bail() : v) as Exclude<T, symbol>;
-
-/** O(N²) / O(n^2) / O(n*n) → one comparable form */
-function norm(s: string): string {
-  return s.toLowerCase().replace(/\s|\*|·|×/g, "").replace(/²/g, "^2").replace(/³/g, "^3").replace(/ⁿ/g, "^n")
-    .replace(/√n|sqrt\(n\)/g, "sqrtn").replace(/n\^2|n\.n|nn(?!a)/g, "n^2");
-}
-/** Position on the usual growth ladder, or -1 if it isn't a simple one-variable class */
-const LADDER = ["o(1)", "o(logn)", "o(sqrtn)", "o(n)", "o(nlogn)", "o(n^2)", "o(n^3)", "o(2^n)", "o(n!)"];
-const rank = (s: string) => LADDER.indexOf(norm(s));
-
-/** Same complexity? Also treats O(m·n) and O(n·m) as the same */
-const same = (a: string, b: string) => norm(a) === norm(b) || [...norm(a)].sort().join("") === [...norm(b)].sort().join("");
 
 export async function pickComplexity(kind: "time" | "space", options: string[], current?: string): Promise<string> {
   const known = current ? options.find((o) => same(o, current)) : undefined;
@@ -121,17 +110,37 @@ export async function log(ws: Workspace, args: string[]) {
     complexity = [time, space].filter(Boolean).join(" / ");
   } else [time = "", space = ""] = complexity.split("/").map((x) => x.trim());
 
+  // Compare with the target; being above it brings the problem back for review sooner
+  const above = aboveTarget(complexity, hintData?.target);
   if (hintData?.target) {
-    const [tTime, tSpace] = hintData.target.match(/O\([^)]*\)/g) ?? [];
-    const verdict = (yours: string, target?: string) => {
+    const [tTime, tSpace] = targetParts(hintData.target);
+    const show = (yours: string, target?: string) => {
       if (!target) return "";
       if (!yours) return `${c.muted("target")} ${c.ink(target)}`;
-      if (same(yours, target)) return `${c.green("✓")} ${c.ink(target)}`;
-      const [y, t] = [rank(yours), rank(target)];
-      if (y >= 0 && t >= 0 && y < t) return `${c.green("✓✓")} ${c.ink(yours)} ${c.muted(`· better than the target ${target}`)}`;
+      const v = verdict(yours, target);
+      if (v === "met") return `${c.green("✓")} ${c.ink(target)}`;
+      if (v === "better") return `${c.green("✓✓")} ${c.ink(yours)} ${c.muted(`· better than the target ${target}`)}`;
       return `${c.amber("✗")} ${c.muted("you")} ${c.ink(yours)} ${c.muted("· target")} ${c.ink(target)}`;
     };
-    if (tTime || tSpace) p.log.message(`🎯 ${c.muted("Time")}  ${verdict(time, tTime)}     ${c.muted("Space")}  ${verdict(space, tSpace)}`);
+    if (tTime || tSpace) p.log.message(`🎯 ${c.muted("Time")}  ${show(time, tTime)}     ${c.muted("Space")}  ${show(space, tSpace)}`);
+    if (above.above) p.log.warn(`Above the target complexity, so it comes back for review in 3 days to try the better way.`);
+  }
+
+  // How do you feel about it? (Like a flashcard app: this tunes when it comes back)
+  let feel: Feel;
+  if (values.feel !== undefined) {
+    const f = String(values.feel).toLowerCase();
+    feel = f.startsWith("u") ? "unhappy" : f.startsWith("n") ? "nailed" : "fine";
+  } else {
+    feel = ask(await p.select<Feel>({
+      message: "How do you feel about your solution?",
+      initialValue: "fine",
+      options: [
+        { value: "unhappy", label: "😬 Not happy with it", hint: "it works, but I'd do it differently · back in 2 days" },
+        { value: "fine", label: "👍 Fine", hint: "the normal schedule" },
+        { value: "nailed", label: "😎 Nailed it", hint: "could do it in my sleep · twice as long before review" },
+      ],
+    }));
   }
 
   let notes = values.notes as string | undefined;
@@ -148,7 +157,7 @@ export async function log(ws: Workspace, args: string[]) {
   await addAttempt(ws, {
     at: now.toISOString(), folder: prob.folder, id: prob.id, title: prob.title, difficulty: prob.difficulty, pattern: prob.pattern,
     language: ws.language, pass, total, seconds, minutes: seconds == null ? null : Math.max(1, Math.round(seconds / 60)),
-    help, solo: help === "none", hints: hintsUsed, complexity, notes, snapshot,
+    help, solo: help === "none", hints: hintsUsed, complexity, aboveTarget: above.above, feel, notes, snapshot,
   });
   await renderRecords(ws, [prob.folder]);
   rmSync(startedFile, { force: true });
