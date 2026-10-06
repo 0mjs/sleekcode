@@ -53,6 +53,8 @@ for review. Everything you log is tracked, so the graphs only lie if you do.
 `sk review` (spaced repetition), `sk lang` (switch TypeScript ⇄ Python), `sk submit` (copy it to LeetCode
 when you're feeling brave). `sk` lists the rest.
 
+Can't tell O(n) from O(n log n) yet? [BIG_O_CHEATSHEET.md](BIG_O_CHEATSHEET.md): the finite list of things to know.
+
 Works with Zed, VS Code, Cursor or vim. Update with `sk update`.
 
 ## Fine print
