@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/target-sum.md",
+  "target": "You should aim for a solution as good or better than `O(n * m)` time and `O(n * m)` space, where `n` is the size of the input array and `m` is the sum of all the elements in the array.",
+  "hints": [
+    "Try to think in terms of recursion and visualize it as a decision tree, where we have two choices at each recursion step: assigning a positive or negative sign.",
+    "We recursively iterate through the array using index `i`, tracking the current sum along the recursive path. Each step branches into two paths, and we sum the number of ways to reach the target. If the index `i` goes out of bounds, we return `1` if the current sum equals the target; otherwise, we return `0`.",
+    "This approach is exponential. We can use memoization to cache recursive call results and avoid redundant calculations. A hash map or a `2D` array with modifications can be used for caching. If using a `2D` array, the dimensions can be `(n * (2m + 1))`, where `n` is the array size and `m` represents the sum of the array elements."
+  ]
+}

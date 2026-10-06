@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/combinations-of-a-phone-number.md",
+  "target": "You should aim for a solution with `O(n * (4^n))` time and `O(n)` space, where `n` is the length of the input string.",
+  "hints": [
+    "We can use a hash map to pair all the digits with their corresponding letters. Think of this as a decision tree, where at each step, we have a digit, and we select one of multiple characters to proceed to the next digit in the given string `digits`. Can you think of an algorithm to generate all combinations of strings?",
+    "We can use backtracking where we select a character and process it, then backtrack to process another character. We recursively iterate on the given string with index `i`. At each step, we consider the letters from the hash map that correspond to the digit at the `i-th` index. Can you think of the base condition to stop this recursive path?",
+    "We initialize an empty string that represents the choices of the characters throughout the current recursive path. When the index `i` reaches the end of the string, we add the current string to the result list and return."
+  ]
+}

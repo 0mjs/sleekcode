@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/buy-and-sell-crypto-with-cooldown.md",
+  "target": "You should aim for a solution as good or better than `O(n)` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "Try to think in terms of recursion and visualize it as a decision tree. Can you determine the possible decisions at each recursion step? Also, can you identify the base cases and the essential information that needs to be tracked during recursion?",
+    "At each recursion step, we can buy only if we haven't already bought a coin, or we can sell if we own one. When buying, we subtract the coin value, and when selling, we add it. We explore all possible buying and selling options recursively, iterating through the coins from left to right using index `i`. For the cooldown condition, if we buy a coin, we increment the index `i` by two.",
+    "We can use a boolean variable `canBuy` to indicate whether buying is allowed at the current recursive step. If we go out of bounds, we return `0`. This approach is exponential. Can you think of a way to optimize it?",
+    "We can use memoization to cache the results of recursive calls and avoid recalculations. A hash map or a `2D` array can be used to store these results."
+  ]
+}

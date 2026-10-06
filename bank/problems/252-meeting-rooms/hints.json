@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/meeting-schedule.md",
+  "target": "You should aim for a solution with `O(nlogn)` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "If two intervals are sorted in ascending order by their start values, they overlap if the start value of the second interval is less than the end value of the first interval. And these are called overlapping intervals.",
+    "A brute force approach would be to check every pair of intervals and return `false` if any overlap is found. This would be an `O(n^2)` solution. Can you think of a better way? Maybe you should visualize the given intervals as line segments.",
+    "We should sort the given intervals based on their start values, as this makes it easier to check for overlaps by comparing adjacent intervals. We then iterate through the intervals from left to right and return `false` if any adjacent intervals overlap."
+  ]
+}

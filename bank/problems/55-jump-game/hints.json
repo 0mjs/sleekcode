@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/jump-game.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the size of input array.",
+  "hints": [
+    "A brute force approach would be to recursively explore all paths from index `0` to its reachable indices, then process those indices similarly, returning `true` if we reach the last index. This would be an exponential approach. Can you think of a better way? Maybe a greedy approach works.",
+    "Instead of processing the array from index `0`, start from the last index. Let the target index be `goal = n - 1`. Iterate in reverse from index `n - 2`.",
+    "At each iteration, we check whether the current index can reach `goal`. If it can, we update `goal` to the current index, as reaching the current index means we can also reach the `goal`.",
+    "To determine if we can reach the last index, the `goal` should be `0` after the iteration. Otherwise, reaching the last index is not possible."
+  ]
+}

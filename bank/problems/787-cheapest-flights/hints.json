@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/cheapest-flight-path.md",
+  "target": "You should aim for a solution as good or better than `O(n + (m * k))` time and `O(n)` space, where `n` is the number of cities, `m` is the number of flights, and `k` is the number of stops.",
+  "hints": [
+    "Consider this as a graph problem where the cities are nodes and the flights are edges connecting two cities, with the ticket cost as the edge weight. Can you think of a shortest path algorithm to solve the problem? Perhaps a better algorithm than Dijkstra's that can intuitively handle the `k` stops condition.",
+    "We can use the Bellman-Ford algorithm. Initialize a `prices` array of size `n` with `Infinity`, setting `prices[source] = 0`. These values describe the cost to reach a city from the source city. Iterate `(k + 1)` times (stops are 0-indexed), updating the cost to each city by extending paths from cities with valid costs. We only update the cost for a city if it is less than the previous cost. How would you implement this?",
+    "At each level of iteration, we go through the given flights and use them to update the price array with the minimum costs compared to the previous level. We use a temporary prices array at each level to store the updated costs. After completing all levels, we return the result stored in `prices[dst]`. If that value is `Infinity`, we return `-1` instead."
+  ]
+}

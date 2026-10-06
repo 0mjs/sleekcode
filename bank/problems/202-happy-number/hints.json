@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/non-cyclical-number.md",
+  "target": "You should aim for a solution as good or better than `O(logn)` time and `O(logn)` space, where `n` is the given integer.",
+  "hints": [
+    "Create a helper function that returns the sum of the squares of a number's digits. Then, simulate the given process. If we reach `1`, return `true`. However, we may get stuck in a cycle if a number is processed more than once. What data structure can be used to detect if a number has already been processed?",
+    "We can use a hash set to detect if a number has already been processed. At each step, we update `n` with the return value of the helper function. If the result is `1`, we return `true`. If `n` is already in the set, we return `false`. Otherwise, we add `n` to the hash set and continue."
+  ]
+}

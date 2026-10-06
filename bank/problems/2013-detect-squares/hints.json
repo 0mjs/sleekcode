@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/count-squares.md",
+  "target": "You should aim for a solution with `O(1)` time for each `add()` call, `O(n)` time for each `count()` call, and `O(n)` space, where `n` is the total number of points.",
+  "hints": [
+    "Initially, we can store the points in a global list for the `add()` call. For the `count()` call, a brute force approach would use three nested loops to check other points except for the query point, resulting in an `O(n^3)` time solution. Can you think of a better way? Maybe you should consider the observation that can be drawn from the diagonal of a square.",
+    "In a square's diagonal, the absolute difference between the x-coordinates is equal to the absolute difference between the y-coordinates of the two endpoints, and neither difference can be zero. Using these two points, we can determine the other diagonal endpoints.",
+    "We store points in a hash map instead of a list for `O(1)` lookups, treating duplicate points as one while tracking their frequencies. For the `count()` function, we iterate through points that, along with the query point, can form a diagonal. Let the query point be `(qx, qy)` and the other point be `(x, y)`, ensuring they form a diagonal. What could be the other two points? Maybe you should consider the points forming a right-to-left diagonal, treating `(qx, qy)` as the top-right corner.",
+    "The other two points are point1 `(x, qy)` and point2 `(qx, y)`. For counting, we simply add `count of point1 * count of point2` to the result `res`."
+  ]
+}

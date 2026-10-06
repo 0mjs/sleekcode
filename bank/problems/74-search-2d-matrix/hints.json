@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/search-2d-matrix.md",
+  "target": "You should aim for a solution with `O(log(m * n))` time and `O(1)` space, where `m` is the number of rows and `n` is the number of columns in the matrix.",
+  "hints": [
+    "A brute force solution would be to do a linear search on the matrix. This would be an `O(m * n)` solution. Can you think of a better way? Maybe an efficient searching algorithm, as the given matrix is sorted.",
+    "We can use binary search, which is particularly effective when we visualize a row as a range of numbers, `[x, y]` where `x` is the first cell and `y` is the last cell of a row. Using this representation, it becomes straightforward to check if the target value falls within the range. How can you use binary search to solve the problem?",
+    "We perform a binary search on the rows to identify the row in which the target value might fall. This operation takes `O(logm)` time, where `m` is the number of rows. Now, when we find the potential row, can you find the best way to search the target in that row? The sorted nature of each row is the hint.",
+    "Once we identify the potential row where the target might exist, we can perform a binary search on that row which acts as a one dimensional array. It takes `O(logn)` time, where `n` is the number of columns in the row."
+  ]
+}

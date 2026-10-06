@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/search-for-word-ii.md",
+  "target": "You should aim for a solution with `O(m * n * 4 * (3^(t-1)) + s)` time and `O(s)` space, where `m` is the number of rows, `n` is the number of columns, `t` is the maximum length of any word and `s` is the sum of the lengths of all the words.",
+  "hints": [
+    "To search for a word in the grid, we can use backtracking by starting at each cell, simultaneously iterating through the word and matching the characters with the cells, recursively visiting the neighboring cells. However, if we are given a list of words and need to search for each one, it becomes inefficient to iterate through each word and run backtracking for each. Can you think of a better way? Perhaps a data structure could help with more efficient word search and insertion.",
+    "We can use a Trie to efficiently search for multiple words. After inserting all words into the Trie, we traverse the grid once. For each character in the grid, we check if it exists in the current Trie node. If not, we prune the search. If we encounter an \"end of word\" flag in the Trie node, we know a valid word has been found. But how can we add that word to the result list? Maybe you should think about what additional information you can store in the Trie node.",
+    "When we insert a word into the Trie, we can store the word's index. Why? Because when we want to add the word to the result list after finding a valid word, we can easily add it using the index. After adding that word, we put `index = -1` as we shouldn't add the word multiple times to the result list. How can you implement this?",
+    "We insert all the words into the Trie with their indices marked. Then, we iterate through each cell in the grid. At each cell, we start at the root of the Trie and explore all possible paths. As we traverse, we match characters in the cell with those in the Trie nodes. If we encounter the end of a word, we take the index at that node and add the corresponding word to the result list. Afterward, we unmark that index and continue exploring further paths."
+  ]
+}

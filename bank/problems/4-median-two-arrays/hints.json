@@ -1,0 +1,11 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/median-of-two-sorted-arrays.md",
+  "target": "You should aim for a solution with `O(log(min(n, m)))` time and `O(1)` space, where `n` is the size of `nums1` and `m` is the size of `nums2`.",
+  "hints": [
+    "A brute force solution would be to create a new array by merging elements from both arrays, then sorting it and returning the median. This would be an `O(n + m)` solution. Can you think of a better way? Maybe you can use the criteria of both the arrays being sorted in ascending order.",
+    "Suppose we merged both arrays. Then, we would have `half = (m + n) / 2` elements to the left of the median. So, without merging, is there any way to use this information to find the median? You can leverage the fact that the arrays are sorted. Consider the smaller array between the two and use binary search to find the correct partition between the two arrays, which will allow you to directly find the median without fully merging the arrays. How will you implement this?",
+    "We will always try to keep array `A` smaller and interchange it with array `B` if `len(A) > len(B)`. Now, we perform binary search on the number of elements we will choose from array `A`. It is straightforward that when we choose `x` elements from array `A`, we have to choose `half - x` elements from array `B`. But we should also ensure that this partition is valid. How can we do this?",
+    "When we do a partition for both arrays, we should ensure that the maximum elements from the left partitions of both arrays are smaller than or equal to the minimum elements of the right partitions of both the arrays. This will ensure that the partition is valid, and we can then find the median. We can find the min or max of these partitions in `O(1)` as these partitions are sorted in ascending order. Why does this work?",
+    "For example, consider the arrays `A = [1, 2, 3, 4, 5]` and `B = [1, 2, 3, 4, 5, 6, 7, 8]`. When we select `x = 2`, we take `4` elements from array `B`. However, this partition is not valid because value `4` from the left partition of array `B` is greater than the value `3` from the right partition of array `A`. So, we should try to take more elements from array `A` to make the partition valid. Binary search will eventually help us find a valid partition."
+  ]
+}

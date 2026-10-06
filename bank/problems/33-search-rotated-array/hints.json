@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/find-target-in-rotated-sorted-array.md",
+  "target": "You should aim for a solution with `O(logn)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute force solution would be to do a linear search on the array to find the target element. This would be an `O(n)` solution. Can you think of a better way? Maybe an efficient searching algorithm is helpful.",
+    "Given that the array is rotated after sorting, elements from the right end are moved to the left end one by one, creating two sorted segments separated by a deflection point due to the rotation. For example, consider the array `[3, 4, 1, 2]`, which is rotated twice, resulting in two sorted segments: `[3, 4]` and `[1, 2]`. In a fully sorted array, it's easy to find the target. So, if you can identify the deflection point (cut), you can perform a binary search on both segments to find the target element. Can you use binary search to find this cut?",
+    "We perform a binary search on the array with pointers `l` and `r`, which belong to two different sorted segments. For example, in `[3, 4, 5, 6, 1, 2, 3]`, `l = 0`, `r = 6`, and `mid = 3`. At least two of `l`, `mid`, and `r` will always be in the same sorted segment. Can you find conditions to eliminate one half and continue the binary search? Perhaps analyzing all possible conditions for `l`, `mid`, and `r` may help.",
+    "There are two cases: `l` and `mid` belong to the left sorted segment, or `mid` and `r` belong to the right sorted segment.\nIf `l` and `mid` are in the same segment, `nums[l]"
+  ]
+}

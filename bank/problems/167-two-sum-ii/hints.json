@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/two-integer-sum-ii.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute force solution would be to check every pair of numbers in the array. This would be an `O(n^2)` solution. Can you think of a better way?",
+    "Can you think of an algorithm by taking the advantage of array being sorted?",
+    "We can use the two-pointer algorithm. If `nums[0] + nums[n-1] > target`, then we know `nums[n - 1]` can not possibly be included in any pairs. Why? Because `nums[n - 1]` is the largest element in the array. Even by adding it with `nums[0]`, which is the smallest element, we still exceed the target. You can think of the case when `nums[0] + nums[n - 1]",
+    "We keep two pointers, one at the start and the other at the end of the array. If the sum of the numbers at the two pointers is greater than the `target`, decrement the right pointer, else increment the left pointer. Repeat this process until you find a valid pair."
+  ]
+}

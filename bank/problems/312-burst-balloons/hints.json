@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/burst-balloons.md",
+  "target": "You should aim for a solution with `O(n ^ 3)` time and `O(n ^ 2)` space, where `n` is the size of the input array.",
+  "hints": [
+    "Try to simulate the process recursively by passing the array to the recursive function. At each step, iterate through the array, pop an element, and recursively apply the same process to the two subarrays on both sides of the popped element, returning the maximum result from all recursive paths. This approach is exponential. Can you think of a way to optimize it? Maybe you should consider observing the subproblems instead of modifying the array.",
+    "Instead of passing the array, we can pass the range of indices `l` and `r` that need to be processed. We pad the input array with `1`s on both sides for easier computation, but `l` and `r` represent the first and last indices of the original input array. Can you think of a reverse engineering approach for popping elements?",
+    "We determine the result by considering each element as the last one to be popped in the current range. For each element, we calculate its value by multiplying it with the elements at `l - 1` and `r + 1`, then recursively solve the subproblems for the ranges `(l, i - 1)` and `(i + 1, r)`, where `i` is the current element in the given range. Can you think of a way to optimize and avoid redundant calculations?",
+    "We can use memoization to cache the results of recursive calls and avoid redundant calculations. A hash map or a `2D` array can be used to store results since the recursive function parameters `l` and `r` are within the range of the input array size."
+  ]
+}

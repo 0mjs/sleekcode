@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/pacific-atlantic-water-flow.md",
+  "target": "You should aim for a solution with `O(m * n)` time and `O(m * n)` space, where `m` is the number of rows and `n` is the number of columns in the grid.",
+  "hints": [
+    "A brute force solution would be to traverse each cell in the grid and run a BFS from each cell to check if it can reach both oceans. This would result in an `O((m * n)^2)` solution. Can you think of a better way? Maybe you should consider a reverse way of traversing.",
+    "We can use the Depth First Search (DFS) algorithm starting from the border cells of the grid. However, we reverse the condition such that the next visiting cell should have a height greater than or equal to the current cell. For the top and left borders connected to the Pacific Ocean, we use a hash set called `pacific` and run a DFS from each of these cells, visiting nodes recursively. Similarly, for the bottom and right borders connected to the Atlantic Ocean, we use a hash set called `atlantic` and run a DFS. The required coordinates are the cells that exist in both the `pacific` and `atlantic` sets. How do you implement this?",
+    "We perform DFS from the border cells, using their respective hash sets. During the DFS, we recursively visit the neighbouring cells that are unvisited and have height greater than or equal to the current cell's height and add the current cell's coordinates to the corresponding hash set. Once the DFS completes, we traverse the grid and check if a cell exists in both the hash sets. If so, we add that cell to the result list."
+  ]
+}

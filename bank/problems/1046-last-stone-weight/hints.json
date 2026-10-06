@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/last-stone-weight.md",
+  "target": "You should aim for a solution as good or better than `O(nlogn)` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A naive solution would involve simulating the process by sorting the array at each step and processing the top `2` heaviest stones, resulting in an `O(n * nlogn)` time complexity. Can you think of a better way? Consider using a data structure that efficiently supports insertion and removal of elements and maintain the sorted order.",
+    "We can use a Max-Heap, which allows us to retrieve the maximum element in `O(1)` time. We initially insert all the weights into the Max-Heap, which takes `O(logn)` time per insertion. We then simulate the process until only one or no element remains in the Max-Heap. At each step, we pop two elements from the Max-Heap which takes `O(logn)` time. If they are equal, we do not insert anything back into the heap and continue. Otherwise, we insert the difference of the two elements back into the heap."
+  ]
+}

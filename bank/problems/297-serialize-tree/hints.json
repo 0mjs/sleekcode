@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/serialize-and-deserialize-binary-tree.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where `n` is the number of nodes in the given tree.",
+  "hints": [
+    "A straightforward way to serialize a tree is by traversing it and adding nodes to a string separated by a delimiter (example: \",\"), but this does not handle `null` nodes effectively. During deserialization, it becomes unclear where to stop or how to handle missing children. Can you think of a way to indicate `null` nodes explicitly?",
+    "Including a placeholder for `null` nodes (example: \"N\") during serialization ensures that the exact structure of the tree is preserved. This placeholder allows us to identify missing children and reconstruct the tree accurately during deserialization.",
+    "We can use the Depth First Search (DFS) algorithm for both serialization and deserialization. During serialization, we traverse the tree and add node values to the result string separated by a delimiter, inserting `N` whenever we encounter a `null` node. During deserialization, we process the serialized string using an index `i`, create nodes for valid values, and return from the current path whenever we encounter `N`, reconstructing the tree accurately."
+  ]
+}

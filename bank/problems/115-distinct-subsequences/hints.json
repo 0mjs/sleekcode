@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/count-subsequences.md",
+  "target": "You should aim for a solution as good or better than `O(m * n)` time and `O(m * n)` space, where `m` is the length of the string `s` and `n` is the length of the string `t`.",
+  "hints": [
+    "Try to think in terms of recursion and visualize it as a decision tree, as we need to explore all subsequences of `s`. Can you determine the possible decisions at each recursion step?",
+    "We recursively iterate through the strings using indices `i` and `j` for `s` and `t`, respectively. At each recursion step, we can either skip the current character of `s` or include it in the current path if it matches the current character of `t`. Can you determine the base conditions for this recursive function?",
+    "If index `j` goes out of bounds, we return `1` as a valid subsequence is found. If index `i` goes out of bounds first, we return `0`. At each recursion step, we return the sum of both paths. This approach is exponential. Can you think of a way to optimize it?",
+    "We can use memoization to cache the results of recursive calls and avoid redundant computations. A hash map or a `2D` array can be used to store these results."
+  ]
+}

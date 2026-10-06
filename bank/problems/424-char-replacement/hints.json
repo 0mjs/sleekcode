@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/longest-repeating-substring-with-replacement.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(m)` space, where `n` is the length of the given string and `m` is the number of unique characters in the string.",
+  "hints": [
+    "Which characters would you replace in a string to make all its characters identical? Can you think with respect to the frequency of the characters?",
+    "For a given substring or window, it is always optimal to replace characters with the most frequent character in that substring. Why? Because using the most frequent character minimizes the number of replacements required to make all characters in the substring identical. How can you find the number of replacements now?",
+    "The number of replacements is equal to the difference between the length of the current substring and the frequency of the most frequent character in that substring. A brute force solution would be to consider all substrings, use a hash map for frequency counting, and return the maximum length of the substring that has at most `k` replacements. This would be an `O(n^2)` solution. Can you think of a better way?",
+    "We can use the sliding window approach. The window size will be dynamic, and we will shrink the window when the number of replacements exceeds `k`. The result will be the maximum window size observed at each iteration."
+  ]
+}

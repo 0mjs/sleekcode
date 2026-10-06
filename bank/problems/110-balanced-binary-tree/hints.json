@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/balanced-binary-tree.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where `n` is the number of nodes in the tree.",
+  "hints": [
+    "A brute force solution would involve traversing every node and checking whether the tree rooted at each node is balanced by computing the heights of its left and right subtrees. This approach would result in an `O(n^2)` solution. Can you think of a more efficient way? Perhaps you could avoid repeatedly computing the heights for every node by determining balance and height in a single traversal.",
+    "We can use the Depth First Search (DFS) algorithm to compute the heights at each node. While calculating the heights of the left and right subtrees, we also check if the tree rooted at the current node is balanced. If `leftHeight - rightHeight > 1`, we update a global variable, such as `isBalanced = False`. After traversing all the nodes, the value of `isBalanced` indicates whether the entire tree is balanced or not."
+  ]
+}

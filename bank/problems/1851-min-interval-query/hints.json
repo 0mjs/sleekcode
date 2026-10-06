@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/minimum-interval-including-query.md",
+  "target": "You should aim for a solution as good or better than `O(nlogn + mlogm)` time and `O(n + m)` space, where `m` is the size of the array `queries` and `n` is the size of the array `intervals`.",
+  "hints": [
+    "A brute force approach would be to iterate through each query and, for each query, check all intervals to find the result. This would be an `O(m * n)` solution. Can you think of a better way? Maybe processing the queries in sorted order could help.",
+    "We sort the intervals by start value and process the queries in ascending order. Using a pointer `i`, we add intervals to a min-heap while their start values are less than or equal to the query, storing their end values and sizes.",
+    "The min-heap is ordered by interval size. We remove elements from the heap while the top element’s end value is less than the current query. The result for the query is the top element’s size if the heap is non-empty; otherwise, it is `-1`."
+  ]
+}

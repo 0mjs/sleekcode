@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/reverse-nodes-in-k-group.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the length of the given list.",
+  "hints": [
+    "A brute-force solution would involve storing the linked list node values in an array, reversing the `k` groups one by one, and then converting the array back into a linked list, requiring extra space of `O(n)`. Can you think of a better way? Perhaps you could apply the idea of reversing a linked list in-place without using extra space.",
+    "We can avoid extra space by reversing each group in-place while keeping track of the head of the next group. For example, consider the list `[1, 2, 3, 4, 5]` with `k = 2`. First, we reverse the group `[1, 2]` to `[2, 1]`. Then, we reverse `[3, 4]`, resulting in `[2, 1, 4, 3, 5]`. While reversing `[3, 4]`, we need to link `1` to `4` and also link `3` to `5`. How can we efficiently manage these pointers?",
+    "We create a dummy node to handle modifications to the head of the linked list, pointing its `next` pointer to the current head. We then iterate `k` nodes, storing the address of the next group's head and tracking the tail of the previous group. After reversing the current group, we reconnect it by linking the previous group's tail to the new head and the current group's tail to the next group's head. This process is repeated for all groups, and we return the new head of the linked list."
+  ]
+}

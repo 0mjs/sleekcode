@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/course-schedule-ii.md",
+  "target": "You should aim for a solution with `O(V + E)` time and `O(V + E)` space, where `V` is the number of courses (nodes) and `E` is the number of prerequisites (edges).",
+  "hints": [
+    "Consider the problem as a graph where courses represent the nodes, and `prerequisite[i] = [a, b]` represents a directed edge from `a` to `b`. We need to determine whether the graph contains a cycle. Why? Because if there is a cycle, it is impossible to complete the courses involved in the cycle. Can you think of an algorithm to detect a cycle in a graph and also find the valid ordering if a cycle doesn't exist?",
+    "We can use DFS to detect a cycle in a graph. However, we also need to find the valid ordering of the courses, which can also be achieved using DFS. Alternatively, we can use the Topological Sort algorithm to find the valid ordering in this directed graph, where the graph must be acyclic to complete all the courses, and the prerequisite of a course acts as the parent node of that course. How would you implement this?",
+    "We compute the indegrees of all the nodes. Then, we perform a BFS starting from the nodes that have no parents (`indegree[node] == 0`). At each level, we traverse these nodes, decrement the indegree of their child nodes, and append those child nodes to the queue if their indegree becomes `0`. We only append nodes whose indegree is `0` or becomes `0` during the BFS to our result array. If the length of the result array is not equal to the number of courses, we return an empty array."
+  ]
+}

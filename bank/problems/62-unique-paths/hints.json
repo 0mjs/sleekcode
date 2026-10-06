@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/count-paths.md",
+  "target": "You should aim for a solution as good or better than `O(m * n)` time and `O(m * n)` space, where `m` is the number of rows and `n` is the number of columns in the grid.",
+  "hints": [
+    "Try to think in terms of recursion and visualize it as a decision tree, where we have two choices at each step. Can you determine the base condition and recurrence relation?",
+    "We recursively traverse the grid using row `i` and column `j`. At each step, we explore both possibilities: moving down or moving right, ensuring we do not go out of bounds. If we reach the bottom-right cell, we return `1`.",
+    "This approach has exponential complexity. Can you think of a way to optimize the recursion? Maybe you should consider using a dynamic programming approach.",
+    "We can use memoization to cache the results of recursive calls and avoid recalculations. A hash map or a `2D` array can be used to store these results."
+  ]
+}

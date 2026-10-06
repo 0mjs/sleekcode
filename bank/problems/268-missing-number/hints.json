@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/missing-number.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute force approach would iterate through the range of numbers from `0` to `n`, checking if each number is present in the given array. If a number is missing, it is returned. This results in an `O(n^2)` solution. Can you think of a better way? Maybe a data structure could help optimize this process.",
+    "We can use a hash set by inserting the given array elements into it. Then, we iterate through the range of numbers from `0` to `n` and use the hash set for `O(1)` lookups to find the missing number. Can you think of a way to further optimize this? Maybe a bitwise operator could be useful.",
+    "We can use bitwise XOR. When two identical numbers are XORed, the result is `0`. Using this property, we can efficiently find the missing number.",
+    "We first compute the bitwise XOR of numbers from `0` to `n`. Then, we iterate through the array and XOR its elements as well. The missing number remains in the final XOR result since all other numbers appear twice—once in the range and once in the array—while the missing number is XORed only once."
+  ]
+}

@@ -1,0 +1,1 @@
+export function canPartition(n: number[]) { const s = n.reduce((a, b) => a + b); if (s % 2) return false; let dp = new Set([0]); for (const x of n) dp = new Set([...dp, ...[...dp].map(d => d + x)]); return dp.has(s / 2); }

@@ -1,0 +1,11 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/eating-bananas.md",
+  "target": "You should aim for a solution with `O(nlogm)` time and `O(1)` space, where `n` is the size of the input array, and `m` is the maximum value in the array.",
+  "hints": [
+    "Given `h` is always greater than or equal to the length of piles, can you determine the upper bound for the answer? How much time does it take Koko to eat a pile with `x` bananas?",
+    "It takes `ceil(x / k)` time to finish the `x` pile when Koko eats at a rate of `k` bananas per hour. Our task is to determine the minimum possible value of `k`. However, we must also ensure that at this rate, `k`, Koko can finish eating all the piles within the given `h` hours. Can you now think of the upper bound for `k`?",
+    "The upper bound for `k` is the maximum size of all the piles. Why? Because if Koko eats the largest pile in one hour, then it is straightforward that she can eat any other pile in an hour only.",
+    "Consider `m` to be the largest pile and `n` to be the number of piles. A brute force solution would be to linearly check all values from `1` to `m` and find the minimum possible value at which Koko can complete the task. This approach would take `O(n * m)` time. Can you think of a more efficient method? Perhaps an efficient searching algorithm could help.",
+    "Rather than linearly scanning, we can use binary search. The upper bound of `k` is `max(piles)` and since we are only dealing with positive values, the lower bound is `1`. The search space of our binary search is `1` through `max(piles)`. This allows us to find the smallest possible `k` using binary search."
+  ]
+}

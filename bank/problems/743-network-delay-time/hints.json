@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/network-delay-time.md",
+  "target": "You should aim for a solution as good or better than `O(ElogV)` time and `O(V + E)` space, where `E` is the number of edges and `V` is the number of vertices (nodes).",
+  "hints": [
+    "As we are given the source node and we need to find the minimum time to reach all nodes, this represents the shortest path from the source node to all nodes. Can you think of a standard algorithm to find the shortest path from a source to a destination? Maybe a heap-based algorithm is helpful.",
+    "We can use Dijkstra's algorithm to find the shortest path from a source to destination. We end up finding the shortest paths from the source to the nodes that we encounter in finding the destination. So, to find shortest path for all nodes from the source, we need to perform Dijkstra's algorithm until the heap in this algorithm becomes empty. How would you implement this?",
+    "We use a Min-Heap as we need to find the minimum time. We create an adjacency list for the given times (weighted edges). We also initialize an array `dist[]` of size `n` (number of nodes) which represents the distance from the source to all nodes, initialized with infinity. We put `dist[source] = 0`. Then we continue the algorithm. After the heap becomes empty, if we don't visit any node, we return `-1`; otherwise, we return the time."
+  ]
+}

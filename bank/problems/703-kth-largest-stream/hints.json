@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/kth-largest-integer-in-a-stream.md",
+  "target": "You should aim for a solution with `O(mlogk)` time and `O(k)` space, where `m` is the number of times `add()` is called, and `k` represents the rank of the largest number to be tracked (i.e., the `k-th` largest element).",
+  "hints": [
+    "A brute force solution would involve sorting the array in every time a number is added using `add()`, and then returning the `k-th` largest element. This would take `O(m * nlogn)` time, where `m` is the number of calls to `add()` and `n` is the total number of elements added. However, do we really need to track all the elements added, given that we only need the `k-th` largest element? Maybe you should think of a data structure which can maintain only the top `k` largest elements.",
+    "We can use a Min-Heap, which stores elements and keeps the smallest element at its top. When we add an element to the Min-Heap, it takes `O(logk)` time since we are storing `k` elements in it. Retrieving the top element (the smallest in the heap) takes `O(1)` time. How can this be useful for finding the `k-th` largest element?",
+    "The `k-th` largest element is the smallest element among the top `k` largest elements. This means we only need to maintain `k` elements in our Min-Heap to efficiently determine the `k-th` largest element. Whenever the size of the Min-Heap exceeds `k`, we remove the smallest element by popping from the heap. How do you implement this?",
+    "We initialize a Min-Heap with the elements of the input array. When the `add()` function is called, we insert the new element into the heap. If the heap size exceeds `k`, we remove the smallest element (the root of the heap). Finally, the top element of the heap represents the `k-th` largest element and is returned."
+  ]
+}

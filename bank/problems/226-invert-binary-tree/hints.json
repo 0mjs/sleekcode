@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/invert-a-binary-tree.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where `n` is the number of nodes in the tree.",
+  "hints": [
+    "From the diagram, you can see that the left and right children of every node in the tree are swapped. Can you think of a way to achieve this recursively? Maybe an algorithm that is helpful to traverse the tree.",
+    "We can use the Depth First Search (DFS) algorithm. At each node, we swap its left and right children by swapping their pointers. This inverts the current node, but every node in the tree also needs to be inverted. To achieve this, we recursively visit the left and right children and perform the same operation. If the current node is `null`, we simply return."
+  ]
+}

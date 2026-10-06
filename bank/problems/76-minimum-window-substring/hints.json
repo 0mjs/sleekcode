@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/minimum-window-with-characters.md",
+  "target": "You should aim for a solution with `O(n + m)` time and `O(k)` space, where `n` is the length of the string `s`, `m` is the length of the string `t`, and `k` is the total number of unique characters in `s` and `t`.",
+  "hints": [
+    "A brute force solution would involve checking every substring of `s` against `t` and returning the minimum length valid substring. This would be an `O(n^2)` solution. Can you think of a better way? Maybe you should think in terms of frequency of characters.",
+    "We need to find substrings in `s` that should have atleast the characters of `t`. We can use hash maps to maintain the frequencies of characters. It will be `O(1)` for lookups. Can you think of an algorithm now?",
+    "We can use a dynamically sized sliding window approach on `s`. We iterate through `s` while maintaining a window. If the current window contains at least the frequency of characters from `t`, we update the result and shrink the window until it is valid.",
+    "We should ensure that we maintain the result substring and only update it if we find a shorter valid substring. Additionally, we need to keep track of the result substring's length so that we can return an empty string if no valid substring is found."
+  ]
+}

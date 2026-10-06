@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/same-binary-tree.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where `n` is the number of nodes in the tree.",
+  "hints": [
+    "Can you think of an algorithm that is used to traverse the tree? Maybe in terms of recursion.",
+    "We can use the Depth First Search (DFS) algorithm to traverse the tree. Can you think of a way to simultaneously traverse both the trees?",
+    "We traverse both trees starting from their root nodes. At each step in the recursion, we check if the current nodes in both trees are either `null` or have the same value. If one node is `null` while the other is not, or if their values differ, we return `false`. If the values match, we recursively check their `left` and `right` subtrees. If any recursive call returns `false`, the result for the current recursive call is `false`."
+  ]
+}

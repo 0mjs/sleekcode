@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/max-area-of-island.md",
+  "target": "You should aim for a solution with `O(m * n)` time and `O(m * n)` space, where `m` is the number of rows and `n` is the number of columns in the grid.",
+  "hints": [
+    "An island is a group of `1`'s in which every `1` is reachable from any other `1` in that group. Can you think of an algorithm that can find the number of groups by visiting a group only once? Maybe there is a recursive way of doing it.",
+    "We can use the Depth First Search (DFS) algorithm to traverse each group by starting at a cell with `1` and recursively visiting all the cells that are reachable from that cell and are also `1`. Can you think about how to find the area of that island? How would you implement this?",
+    "We traverse the grid, and when we encounter a `1`, we initialize a variable `area`. We then start a DFS from that cell to visit all connected `1`'s recursively, marking them as `0` to indicate they are visited. At each recursion step, we increment `area`. After completing the DFS, we update `maxArea`, which tracks the maximum area of an island in the grid, if `maxArea"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/hand-of-straights.md",
+  "target": "You should aim for a solution as good or better than `O(nlogn)` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "It is observed that to form a group, the minimum value should be the starting value of the group. Additionally, the minimum value in the array serves as the starting value for one or more groups based on its frequency. Can you think of an efficient way to determine the frequencies of array elements? Maybe a specific data structure can be useful here.",
+    "We can use a hash map to store the elements along with their frequencies. Additionally, we sort the given array. Then, we iterate through the sorted array and try to form groups by decrementing the frequency count. If we fail to form a group at any step, we immediately return `false`. Can you think why this works?",
+    "Sorting ensures we start with the smallest available value, while the hash map helps track element availability using frequency counts. At each step, we pick the smallest available value `x` and attempt to form a group from `x` to `x + groupSize - 1`. If all elements are present based on their frequency counts, we decrement their counts as we iterate. If we successfully form all groups, we return `true`; otherwise, we return `false`."
+  ]
+}

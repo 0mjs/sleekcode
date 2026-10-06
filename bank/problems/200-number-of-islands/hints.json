@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/count-number-of-islands.md",
+  "target": "You should aim for a solution with `O(m * n)` time and `O(m * n)` space, where `m` is the number of rows and `n` is the number of columns in the grid.",
+  "hints": [
+    "An island is a group of `1`'s in which every `1` is reachable from any other `1` in that group. Can you think of an algorithm that can find the number of groups by visiting a group only once? Maybe there is a recursive way of doing it.",
+    "We can use the Depth First Search (DFS) algorithm to traverse each group independently. We iterate through each cell of the grid. When we encounter a `1`, we perform a DFS starting at that cell and recursively visit every other `1` that is reachable. During this process, we mark the visited `1`'s as `0` to ensure we don't revisit them, as they belong to the same group. The number of groups corresponds to the number of islands."
+  ]
+}

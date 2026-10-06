@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/regular-expression-matching.md",
+  "target": "You should aim for a solution as good or better than `O(m * n)` time and `O(m * n)` space, where `m` is the length of the string `s` and `n` is the length of the string `p`.",
+  "hints": [
+    "Try to think in terms of recursion and visualize it as a decision tree, where we explore different combinations to match the strings when encountering `*`. Multiple decisions are made at each step to find a valid matching path. Can you determine the possible decisions at each recursion step?",
+    "We recursively iterate through the strings using indices `i` and `j` for `s` and `p`, respectively. If the characters match or `p[j]` is `'.'`, we increment both `i` and `j` to process the remaining strings. When the next character of string `p` is `'*'`, we have two choices: skip it (treating it as zero occurrences) or match one or more characters (if `s[i]` matches `p[j]`), incrementing `i` accordingly.",
+    "If both indices go out of bounds, we return `true`; otherwise, we return `false`. If any recursive path returns `true`, we immediately return `true`. This approach is exponential. Can you think of a way to optimize it?",
+    "We can use memoization to cache the results of recursive calls and avoid redundant calculations. A hash map or a `2D` array can be used to store these results."
+  ]
+}

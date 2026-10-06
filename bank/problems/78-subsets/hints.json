@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/subsets.md",
+  "target": "You should aim for a solution with `O(n * (2^n))` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "It is straightforward that if the array is empty we return an empty array. When we have an array `[1]` which is of size `1`, we have two subsets, `[[], [1]]` as the output. Can you think why the output is so?",
+    "We can see that one subset includes a number, and another does not. From this, we can conclude that we need to find the subsets that include a number and those that do not. This results in `2^n` subsets for an array of size `n` because there are many combinations for including and excluding the array of numbers. Since the elements are unique, duplicate subsets will not be formed if we ensure that we don't pick the element more than once in the current subset. Which algorithm is helpful to generate all subsets, and how would you implement it?",
+    "We can use backtracking to generate all possible subsets. We iterate through the given array with an index `i` and an initially empty temporary list representing the current subset. We recursively process each index, adding the corresponding element to the current subset and continuing, which results in a subset that includes that element. Alternatively, we skip the element by not adding it to the subset and proceed to the next index, forming a subset without including that element. What can be the base condition to end this recursion?",
+    "When the index `i` reaches the end of the array, we append a copy of the subset formed in that particular recursive path to the result list and return. All subsets of the given array are generated from these different recursive paths, which represent various combinations of \"include\" and \"not include\" steps for the elements of the array. As we are only iterating from left to right in the array, we don't pick an element more than once."
+  ]
+}

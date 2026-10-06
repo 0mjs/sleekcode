@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/counting-bits.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where `n` is the given integer.",
+  "hints": [
+    "A straightforward approach would be to iterate from `0` to `n` using `i`, and for each `i`, iterate through its bits to count the number of set bits. This would result in an `O(n \\log n)` approach. Can you think of a better way? Maybe you should try identifying a pattern by observing the bitwise representation of consecutive numbers.",
+    "For example, to compute set bits for `7`, add `1` to the count of set bits in `3`, which was previously computed by adding `1` to the count of set bits in `1`. Observing the pattern, for numbers less than `4`, add `1` to the count from two positions before. For numbers less than `8`, add `1` to the count from four positions before. Can you derive a dynamic programming relation from this?",
+    "We find an offset for the current number based on the number before `offset` positions. The dynamic programming relation is `dp[i] = 1 + dp[i - offset]`, where `dp[i]` represents the number of set bits in `i`. The offset starts at `1` and updates when encountering a power of `2`. To simplify the power of `2` check, if `offset * 2` equals the current number, we update `offset` to the current number."
+  ]
+}

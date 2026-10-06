@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/multiply-strings.md",
+  "target": "You should aim for a solution with `O(m*n)` time and `O(m+n)` space, where `m` is the length of the string `num1` and `n` is the length of the string `num2`.",
+  "hints": [
+    "Implement a helper function that takes two number strings and returns their sum. Ensure that the length of `num1` is greater than `num2`, swapping them if necessary. Can you think of a way to multiply the strings? Maybe you should first consider basic multiplication, where `num1` is multiplied by each digit of `num2`.",
+    "When multiplying `num1` with each digit of `num2`, we iterate through `num2` in reverse order. Based on the digit's position, we pad zeros to the multiplication result accordingly—no padding for the last digit, one zero for the second last, and so on. What should be the next step after each multiplication? Maybe you should implement a helper function to handle this.",
+    "We implement a helper function that takes `num1`, a digit, and a variable `zeroes`, returning the multiplication result with `zeroes` padded at the end. A global string `res` stores the final result.",
+    "In the main function, we iterate through `num2` in reverse order, calling the helper function to multiply `num1` with the current digit and append the appropriate number of padding zeros. We then call another helper function that takes this multiplication result and the global result string `res`, adds them, and updates `res`."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/merge-two-sorted-linked-lists.md",
+  "target": "You should aim for a solution with `O(n + m)` time and `O(1)` space, where `n` is the length of `list1` and `m` is the length of `list2`.",
+  "hints": [
+    "A brute force solution would involve storing the values of both linked lists in an array, sorting the array, and then converting it back into a linked list. This approach would use `O(n)` extra space and is trivial. Can you think of a better way? Perhaps the sorted nature of the lists can be leveraged.",
+    "We create a dummy node to keep track of the head of the resulting linked list while iterating through the lists. Using `l1` and `l2` as iterators for `list1` and `list2`, respectively, we traverse both lists node by node to build a final linked list that is also sorted. How do you implement this?",
+    "For example, consider `list1 = [1, 2, 3]` and `list2 = [2, 3, 4]`. While iterating through the lists, we move the pointers by comparing the node values from both lists. We link the next pointer of the iterator to the node with the smaller value. For instance, when `l1 = 1` and `l2 = 2`, since `l1"
+  ]
+}

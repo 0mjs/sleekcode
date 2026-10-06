@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/add-two-numbers.md",
+  "target": "You should aim for a solution with `O(m + n)` time and `O(1)` space, where `m` is the length of list `l1` and `n` is the length of list `l2`.",
+  "hints": [
+    "Try to visualize the addition of two numbers. We know that the addition of two numbers is done by starting at the one's digit. We add the numbers by going through digit by digit. We track the extra value as a `carry` because the addition of two digits can result in a number with two digits. The `carry` is then added to the next digits, and so on. How do you implement this in case of linked lists?",
+    "We track the extra value, `carry`, here as well. We iterate through the lists `l1` and `l2` until both lists reach `null`. We add the values of both nodes as well as the carry. If either of the nodes is `null`, we add `0` in its place and continue the process while tracking the carry simultaneously. Once we complete the process, if we are left with any `carry`, we add an extra node with that carry value and return the head of the result list."
+  ]
+}

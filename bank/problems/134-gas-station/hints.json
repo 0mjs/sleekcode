@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/gas-station.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute force approach would be to start at each gas station, simulate the process, and return the index where completing the circuit is possible. This would be an `O(n^2)` time solution. Can you think of a better way? Maybe a greedy approach works.",
+    "We can immediately return `-1` if `sum(gas)",
+    "We start with a variable `total` to track the gas balance and initialize the result index to `0`. As we iterate through the array with index `i`, we accumulate the difference `(gas[i] - cost[i])`. If `total` becomes negative at any index, we reset it to `0` and update the result index to `(i + 1)`."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/k-closest-points-to-origin.md",
+  "target": "You should aim for a solution as good or better than `O(nlogk)` time and `O(k)` space, where `n` is the size of the input array, and `k` is the number of points to be returned.",
+  "hints": [
+    "A naive solution would be to sort the array in ascending order based on the distances of the points from the origin `(0, 0)` and return the first `k` points. This would take `O(nlogn)` time. Can you think of a better way? Perhaps you could use a data structure that maintains only `k` points and allows efficient insertion and removal.",
+    "We can use a Max-Heap that keeps the maximum element at its top and allows retrieval in `O(1)` time. This data structure is ideal because we need to return the `k` closest points to the origin. By maintaining only `k` points in the heap, we can efficiently remove the farthest point when the size exceeds `k`. How would you implement this?",
+    "We initialize a Max-Heap that orders points based on their distances from the origin. Starting with an empty heap, we iterate through the array of points, inserting each point into the heap. If the size of the heap exceeds `k`, we remove the farthest point (the maximum element in the heap). After completing the iteration, the heap will contain the `k` closest points to the origin. Finally, we convert the heap into an array and return it."
+  ]
+}

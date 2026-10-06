@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/two-integer-sum.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where n is the size of the input array.",
+  "hints": [
+    "A brute force solution would be to check every pair of numbers in the array. This would be an `O(n^2)` solution. Can you think of a better way? Maybe in terms of mathematical equation?",
+    "Given, We need to find indices `i` and `j` such that `i != j` and `nums[i] + nums[j] == target`. Can you rearrange the equation and try to fix any index to iterate on?",
+    "we can iterate through nums with index `i`. Let `difference = target - nums[i]` and check if `difference` exists in the hash map as we iterate through the array, else store the current element in the hashmap with its index and continue. We use a hashmap for `O(1)` lookups."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/plus-one.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "There are two cases when adding `1` to a number. If the rightmost digit is less than `9`, we simply increment it. Otherwise, we set it to `0` and apply the same process to the preceding digit.",
+    "We iterate through the given `digits` from right to left using index `i`. If the current digit is less than `9`, we increment it and return the array. Otherwise, we set the digit to `0` and continue. If the loop completes without returning, we insert `1` at the beginning of the array and return it."
+  ]
+}

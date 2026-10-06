@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/reverse-integer.md",
+  "target": "You should aim for a solution with `O(1)` time and `O(1)` space.",
+  "hints": [
+    "A straightforward approach would be to convert the given integer to a string, reverse it, convert it back to an integer using a long type, and return 0 if the result exceeds the integer range. Can you think of a better way?",
+    "We initially declare the result `res` as an `int` with a value of `0`. We iterate through the given integer, extracting digits one by one. Before appending a digit to `res`, we consider multiple cases. Can you determine them? Maybe you should think about overflow.",
+    "Let `MAX` be the maximum positive integer and `MIN` be the minimum negative integer. We iterate through each digit and check for overflow before updating `res`. If `res > MAX / 10` or `res"
+  ]
+}

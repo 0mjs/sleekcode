@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/merge-k-sorted-linked-lists.md",
+  "target": "You should aim for a solution as good or better than `O(n * k)` time and `O(1)` space, where `k` is the total number of lists and `n` is the total number of nodes across all lists.",
+  "hints": [
+    "A brute-force solution would involve storing all `n` nodes in an array, sorting them, and converting the array back into a linked list, resulting in an `O(nlogn)` time complexity. Can you think of a better way? Perhaps consider leveraging the idea behind merging two sorted linked lists.",
+    "We can merge two sorted linked lists without using any extra space. To handle `k` sorted linked lists, we can iteratively merge each linked list with a resultant merged list. How can you implement this?",
+    "We iterate through the list array with index `i`, starting at `i = 1`. We merge the linked lists using `mergeTwoLists(lists[i], lists[i - 1])`, which returns the head of the merged list. This head is stored in `lists[i]`, and the process continues. Finally, the merged list is obtained at the last index, and we return its head."
+  ]
+}

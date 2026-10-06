@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/combination-target-sum-ii.md",
+  "target": "You should aim for a solution with `O(n * (2^n))` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute-force solution would be to create a `hash set`, which is used to detect duplicates, to get combinations without duplicates. Can you think of a better way without using a `hash set`? Maybe you should sort the input array and observe the recursive calls that are responsible for duplicate combinations.",
+    "We can use backtracking to generate all combinations whose sum equals the given target. When the input array contains duplicate elements, it may result in duplicate combinations. To avoid this, we can sort the array. Why does sorting help? Because as we traverse the array from left to right, we form combinations with the current element. By skipping duplicate elements, we ensure that the same combinations are not repeated for identical elements. How can you implement this?",
+    "We recursively traverse the given array starting at index `i`, with a variable `sum` representing the sum of the picked elements. We explore elements from `i` to the end of the array and extend the recursive path if adding the current element results in `sum"
+  ]
+}

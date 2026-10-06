@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/combination-target-sum.md",
+  "target": "You should aim for a solution with `O(2^(t/m))` time and `O(t/m)` space, where `t` is the given `target` and `m` is the minimum value in the given array.",
+  "hints": [
+    "Can you think of this problem in terms of a decision tree, where at each step, we have `n` decisions, where `n` is the size of the array? In this decision tree, we can observe that different combinations of paths are formed. Can you think of a base condition to stop extending a path? Maybe you should consider the target value.",
+    "We can use backtracking to recursively traverse these paths and make decisions to choose an element at each step. We maintain a variable `sum`, which represents the sum of all the elements chosen in the current path. We stop this recursive path if `sum == target`, and add a copy of the chosen elements to the result. How do you implement it?",
+    "We recursively traverse the array starting from index `i`. At each step, we select an element from `i` to the end of the array. We extend the recursive path with elements where `sum"
+  ]
+}

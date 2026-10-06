@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/insert-new-interval.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` extra space, where `n` is the size of the input array.",
+  "hints": [
+    "The given intervals are non-overlapping and sorted in ascending order based on the start value. Try to visualize them as line segments and consider how a new interval can be inserted. Maybe you should analyze different cases of inserting a new interval.",
+    "First, we append all intervals to the output list that have an end value smaller than the start value of the new interval. Then, we encounter one of three cases: we have appended all intervals, we reach an interval whose start value is greater than the new interval’s end, or we find an overlapping interval. Can you think of a way to handle these cases efficiently?",
+    "We iterate through the remaining intervals, updating the new interval if its end value is greater than or equal to the current interval's start value. We adjust the start and end of the new interval to the minimum and maximum values, respectively. After this, any remaining intervals are appended to the output list, and we return the result."
+  ]
+}

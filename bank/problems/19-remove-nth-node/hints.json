@@ -1,0 +1,11 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/remove-node-from-end-of-linked-list.md",
+  "target": "You should aim for a solution with `O(N)` time and `O(1)` space, where `N` is the length of the given list.",
+  "hints": [
+    "A brute force solution would involve storing the nodes of the list into an array, removing the `nth` node from the array, and then converting the array back into a linked list to return the new head. However, this requires `O(N)` extra space. Can you think of a better approach to avoid using extra space? Maybe you should first solve with a two pass approach.",
+    "We can use a two-pass approach by first finding the length of the list, `N`. Since removing the `nth` node from the end is equivalent to removing the `(N - n)th` node from the front, as they both mean the same. How can you remove the node in a linked list?",
+    "For example, consider a three-node list `[1, 2, 3]`. If we want to remove `2`, we update the `next` pointer of `1` (initially pointing to `2`) to point to the node after `2`, which is `3`. After this operation, the list becomes `[1, 3]`, and we return the head. But, can we think of a more better approach? Maybe a greedy calculation can help.",
+    "We can avoid a separate length-counting pass with two pointers. Move the `first` pointer `n` steps ahead from the head. Then, start another pointer `second` at a dummy node before the head and iterate both pointers simultaneously until `first` reaches `null`. At this point, the `second` pointer is just before the node to be removed. We then remove the node that is next to the `second` pointer. Why does this work?",
+    "This works because `first` stays `n` nodes ahead of `second.next`. When `first` reaches the end, `second.next` is exactly the `nth` node from the end. This positioning allows us to remove that node efficiently."
+  ]
+}

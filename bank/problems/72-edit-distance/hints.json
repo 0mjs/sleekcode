@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/edit-distance.md",
+  "target": "You should aim for a solution as good or better than `O(m * n)` time and `O(m * n)` space, where `m` and `n` are the lengths of the strings `word1` and `word2`, respectively.",
+  "hints": [
+    "Try to think in terms of recursion and visualize it as a decision tree, as we have choices at each recursion step. Can you determine the recurrence relation and base cases?",
+    "We recursively iterate through the strings using indices `i` and `j` for `word1` and `word2`, respectively. If the characters at the current indices match, we increment both indices without counting an operation. Otherwise, we have three choices: insert the character at the current index of `word1` (increment `j`), delete the current character of `word1` (increment `i`), or replace the character at index `i` in `word1` (increment both `i` and `j`).",
+    "If index `i` goes out of bounds, we return the number of remaining characters in `word2` (using insert operations). If index `j` goes out of bounds, we return the number of remaining characters in `word1` (using delete operations). At each step, we return the minimum operation path. This approach is exponential. Can you think of a way to optimize it?",
+    "We can use memoization to cache the results and avoid redundant calculations. A hash map or a `2D` array can be used to store these results."
+  ]
+}

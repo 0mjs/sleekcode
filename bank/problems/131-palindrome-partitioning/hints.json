@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/palindrome-partitioning.md",
+  "target": "You should aim for a solution with `O(n * (2^n))` time and `O(n)` space, where `n` is the length of the input string.",
+  "hints": [
+    "For a given string there are `2^n` possible partitions because at each index we have two decisions: we can either partition and start a new string, or continue without partitioning. Can you think of an algorithm to recursively traverse all combinations?",
+    "We can use backtracking to recursively traverse the string with indices `j` (start of the current substring) and `i` (current iterating index). At each step, we either skip partitioning at the current index or, if the substring from `j` to `i` is a palindrome, make a partition, update `j = i + 1`, and start a new substring. The base condition to stop the recursion is when `j` reaches the end of the string. How do you implement this?",
+    "We start with `j = 0`, `i = 0` and a temporary list which stores the substrings from the partitions. Then we recursively iterate the string with the index `i`. At each step we apply the `2` decisions accordingly. At the base condition of the recursive path, we make a copy of the current partition list and add it to the result."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/longest-increasing-path-in-matrix.md",
+  "target": "You should aim for a solution with `O(m * n)` time and `O(m * n)` space, where `m` is the number of rows and `n` is the number of columns in the given matrix.",
+  "hints": [
+    "If we move from one cell to an adjacent cell with a greater value, we won't revisit a cell, as the path is strictly increasing. A brute force approach would be to run a `dfs` from every cell and return the longest path found. This approach is exponential. Can you think of a way to optimize it to avoid redundant calculations?",
+    "We can use memoization to cache the results of recursive calls and avoid redundant computations. A hash map or a `2D` array can be used to store these results."
+  ]
+}

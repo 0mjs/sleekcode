@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/evaluate-reverse-polish-notation.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute force solution would involve repeatedly finding an operator `+ - * /` in the array and modifying the array by computing the result for that operator and two operands to its left. This would be an `O(n^2)` solution. Can you think of a better way? Maybe we can use a data structure to handle operations efficiently.",
+    "We can use a stack. We iterate through the array, and if we encounter a number, we push it onto the stack. If we encounter an operator, we pop two elements from the stack, treat them as operands, and solve the equation using the current operator. Then, we push the result back onto the stack. Why does this work?",
+    "As the array has postfix expression, stack helps us to maintain the correct order of operations by ensuring that we always use the most recent operands (those closest to the operator) when performing the operation. After the iteration, the final result is left in the stack."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/subtree-of-a-binary-tree.md",
+  "target": "You should aim for a solution as good or better than `O(m * n)` time and `O(m + n)` space, where `n` and `m` are the number of nodes in `root` and `subRoot`, respectively.",
+  "hints": [
+    "A subtree of a tree is a tree rooted at a specific node. We need to check whether the given `subRoot` is identical to any of the subtrees of `root`. Can you think of a recursive way to check this? Maybe you can leverage the idea of solving a problem where two trees are given, and you need to check whether they are identical in structure and values.",
+    "When two trees are identical, it means that every node in both trees has the same value and structure. We can use the Depth First Search (DFS) algorithm to solve the problem. How do you implement this?",
+    "We traverse the given `root`, and at each node, we check if the subtree rooted at that node is identical to the given `subRoot`. We use a helper function, `sameTree(root1, root2)`, to determine whether the two trees passed to it are identical in both structure and values."
+  ]
+}

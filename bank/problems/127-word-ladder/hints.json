@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/word-ladder.md",
+  "target": "You should aim for a solution with `O((m ^ 2) * n)` time and `O((m ^ 2) * n)` space, where `n` is the number of words and `m` is the length of the word.",
+  "hints": [
+    "Consider the given problem in terms of a graph, treating strings as nodes. Think of a way to build edges where two strings have an edge if they differ by a single character. A naive approach would be to consider each pair of strings and check whether an edge can be formed. Can you think of an efficient way? For example, consider a string `hot` and think about the strings that can be formed from it by changing a single letter.",
+    "To efficiently build edges, consider transforming each word into intermediate states by replacing one character with a wildcard, like `*`. For example, the word `hot` can be transformed into `*ot`, `h*t`, and `ho*`. These intermediate states act as \"parents\" that connect words differing by one character. For instance, `*ot` can connect to words like `cot`. For each word in the list, generate all possible patterns by replacing each character with `*` and store the word as a child of these patterns. We can run a `BFS` starting from the `beginWord`, visiting other words while avoiding revisiting by using a hash set.",
+    "When visiting a node during BFS, if the word matches the `endWord`, we immediately return `true`. Otherwise, we generate the pattern words that can be formed from the current word and attempt to visit the words connected to these pattern words. We add only unvisited words to the queue. If we exhaust all possibilities without finding the `endWord`, we return `false`."
+  ]
+}

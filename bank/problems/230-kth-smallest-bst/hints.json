@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/kth-smallest-integer-in-bst.md",
+  "target": "You should aim for a solution as good or better than `O(n)` time and `O(n)` space, where `n` is the number of nodes in the given tree.",
+  "hints": [
+    "A naive solution would be to store the node values in an array, sort it, and then return the `k-th` value from the sorted array. This would be an `O(nlogn)` solution due to sorting. Can you think of a better way? Maybe you should try one of the traversal technique.",
+    "We can use the Depth First Search (DFS) algorithm to traverse the tree. Since the tree is a Binary Search Tree (BST), we can leverage its structure and perform an in-order traversal, where we first visit the left subtree, then the current node, and finally the right subtree. Why? Because we need the `k-th` smallest integer, and by visiting the left subtree first, we ensure that we encounter smaller nodes before the current node. How can you implement this?",
+    "We keep a counter variable `cnt` to track the position of the current node in the ascending order of values. When `cnt == k`, we store the current node's value in a global variable and return. This allows us to identify and return the `k-th` smallest element during the in-order traversal."
+  ]
+}

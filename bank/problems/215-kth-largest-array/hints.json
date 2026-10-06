@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/kth-largest-element-in-an-array.md",
+  "target": "You should aim for a solution as good or better than `O(nlogk)` time and `O(k)` space, where `n` is the size of the input array, and `k` represents the rank of the largest number to be returned (i.e., the `k-th` largest element).",
+  "hints": [
+    "A naive solution would be to sort the array in descending order and return the `k-th` largest element. This would be an `O(nlogn)` solution. Can you think of a better way? Maybe you should think of a data structure which can maintain only the top `k` largest elements.",
+    "We can use a Min-Heap, which stores elements and keeps the smallest element at its top. When we add an element to the Min-Heap, it takes `O(logk)` time since we are storing `k` elements in it. Retrieving the top element (the smallest in the heap) takes `O(1)` time. How can this be useful for finding the `k-th` largest element?",
+    "The `k-th` largest element is the smallest element among the top `k` largest elements. This means we only need to maintain `k` elements in our Min-Heap to efficiently determine the `k-th` largest element. Whenever the size of the Min-Heap exceeds `k`, we remove the smallest element by popping from the heap. How do you implement this?",
+    "We initialize an empty Min-Heap. We iterate through the array and add elements to the heap. When the size of the heap exceeds `k`, we pop from the heap and continue. After the iteration, the top element of the heap is the `k-th` largest element."
+  ]
+}

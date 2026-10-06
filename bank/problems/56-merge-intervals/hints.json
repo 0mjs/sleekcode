@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/merge-intervals.md",
+  "target": "You should aim for a solution as good or better than `O(nlogn)` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "Sorting the given intervals in ascending order based on their start values is beneficial, as it helps in identifying overlapping intervals efficiently. How can you determine if two intervals overlap?",
+    "If two intervals are sorted in ascending order by their start values, they overlap if the start value of the second interval is less than or equal to the end value of the first interval.",
+    "We iterate through the sorted intervals from left to right, starting with the first interval in the output list. From the second interval onward, we compare each interval with the last appended interval. Can you determine the possible cases for this comparison?",
+    "The two cases are: if the current interval overlaps with the last appended interval, we update its end value to the maximum of both intervals' end values and continue. Otherwise, we append the current interval and proceed."
+  ]
+}

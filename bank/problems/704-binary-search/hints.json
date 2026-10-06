@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/binary-search.md",
+  "target": "You should aim for a solution with `O(logn)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "Can you find an algorithm that is useful when the array is sorted? Maybe other than linear seacrh.",
+    "The problem name is the name of the algorithm that we can use. We need to find a target value and if it does not exist in the array return `-1`. We have `l` and `r` as the boundaries of the segment of the array in which we are searching. Try building conditions to eliminate half of the search segment at each step. Maybe sorted nature of the array can be helpful.",
+    "We compare the target value with the `mid` of the segment. For example, consider the array `[1, 2, 3, 4, 5]` and `target = 4`. The `mid` value is `3`, thus, on the next iteration we search to the right of `mid`. The remaining segment is `[4,5]`. Why?",
+    "Because the array is sorted, all elements to the left of `mid` (including `3`) are guaranteed to be smaller than the target. Therefore, we can safely eliminate that half of the array from consideration, narrowing the search to the right half and repeat this search until we find the target."
+  ]
+}

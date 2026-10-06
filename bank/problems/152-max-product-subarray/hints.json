@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/maximum-product-subarray.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute force solution would be to find the product for every subarray and then return the maximum among all the products. This would be an `O(n ^ 2)` approach. Can you think of a better way? Maybe you should think of a dynamic programming approach.",
+    "Try to identify a pattern by finding the maximum product for an array with two elements and determining what values are needed when increasing the array size to three. Perhaps you only need two values when introducing a new element.",
+    "We maintain both the minimum and maximum product values and update them when introducing a new element by considering three cases: starting a new subarray, multiplying with the previous max product, or multiplying with the previous min product. The max product is updated to the maximum of these three, while the min product is updated to the minimum. We also track a global max product for the result. This approach is known as Kadane's algorithm."
+  ]
+}

@@ -1,0 +1,1 @@
+export function kClosest(p: number[][], k: number) { return [...p].sort((a, b) => a[0]! ** 2 + a[1]! ** 2 - b[0]! ** 2 - b[1]! ** 2).slice(0, k); }

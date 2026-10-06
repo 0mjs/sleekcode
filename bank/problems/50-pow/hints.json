@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/pow-x-n.md",
+  "target": "You should aim for a solution as good or better than `O(logn)` time and `O(logn)` space, where `n` is the given integer.",
+  "hints": [
+    "A brute force approach would be to iterate linearly up to `n`, multiplying by `x` each time to find `(x^n)`. If `n` is negative, return `(1 / (x^n))`; otherwise, return `(x^n)`. Can you think of a better way? Maybe a recursive approach would be more efficient.",
+    "For example, to calculate `2^6`, instead of multiplying `2` six times, we compute `2^3` and square the result. The same logic applies recursively to find `2^3` and further break down the multiplication. What should be the base case for this recursion? Maybe you should consider the term that cannot be further broken down.",
+    "In `(x^n)`, if `x` is `0`, we return `0`. If `n` is `0`, we return `1`, as any number raised to the power of `0` is `1`. Otherwise, we compute `(x^(n/2))` recursively and square the result. If `n` is odd, we multiply the final result by `x`. What should be the logic if `n` is negative?",
+    "We start the recursion with the absolute value of `n`. After computing the result as `res`, we return `res` if `n` is non-negative; otherwise, we return `(1 / res)`."
+  ]
+}

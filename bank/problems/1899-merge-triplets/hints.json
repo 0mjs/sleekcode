@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/merge-triplets-to-form-target.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "An important observation is that we can ignore triplets with values greater than the target triplet.",
+    "Specifically, if a triplet `t` has any element greater than the corresponding value in `target` (i.e., `t[0] > target[0]`, `t[1] > target[1]`, or `t[2] > target[2]`), we can discard it. This is because using such a triplet in operations would exceed the target values, making it invalid.",
+    "Now, from the remaining valid triplets, we only need to check whether the target triplet values exist. Since all values in the valid triplets are less than or equal to the corresponding values in the target triplet, finding the target triplet among them guarantees that we can achieve it."
+  ]
+}

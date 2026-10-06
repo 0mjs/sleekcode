@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/jump-game-ii.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute force approach would be to recursively explore all paths from index `0` to its reachable indices, then process those indices similarly and return the minimum steps to reach the last index. This would be an exponential approach. Can you think of a better way? Maybe a greedy approach works.",
+    "We maintain two pointers, `l` and `r`, initially set to `0`, representing the range of reachable indices. At each step, we iterate through the indices in the range `l` to `r` and determine the farthest index that can be reached from the current range.",
+    "We then update the pointers `l` and `r` to the next range, setting `l` to `r + 1` and `r` to the farthest index reachable from the current range. We continue this process until the pointers go out of bounds.",
+    "The number of steps taken represents the minimum steps required to reach the last index, as it is guaranteed that we can reach it."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/count-good-nodes-in-binary-tree.md",
+  "target": "You should aim for a solution with `O(n)` time and`O(n)` space, where `n` is the number of nodes in the given tree.",
+  "hints": [
+    "A brute force solution would involve considering every node and checking if the path from the root to that node is valid, resulting in an `O(n^2)` time complexity. Can you think of a better approach?",
+    "We can use the Depth First Search (DFS) algorithm to traverse the tree. But can you think of a way to determine if the current node is a good node in a single traversal? Maybe we need to track a value while traversing the tree.",
+    "While traversing the tree, we should track the maximum value along the current path. This allows us to determine whether the nodes we encounter are good. We can use a global variable to count the number of good nodes."
+  ]
+}

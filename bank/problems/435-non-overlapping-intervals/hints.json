@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/non-overlapping-intervals.md",
+  "target": "You should aim for a solution with `O(nlogn)` time and `O(n)` space, where `n` is the size of the input array.",
+  "hints": [
+    "If two intervals are sorted in ascending order by their start values, they overlap if the start value of the second interval is less than the end value of the first interval. And these are called overlapping intervals.",
+    "A brute force approach would be to sort the given intervals in ascending order based on their start values and recursively explore all possibilities. This would be an exponential approach. Can you think of a better way? Maybe a greedy approach works here.",
+    "We first sort the given intervals based on their start values to efficiently check for overlaps by comparing adjacent intervals. We then iterate through the sorted intervals from left to right, keeping track of the previous interval’s end value as `prevEnd`, initially set to the end value of the first interval.",
+    "We then iterate from the second interval. If the current interval doesn't overlap, we update `prevEnd` to the current interval's end and continue. Otherwise, we set `prevEnd` to the minimum of `prevEnd` and the current interval’s end, greedily removing the interval that ends last to retain as many intervals as possible."
+  ]
+}

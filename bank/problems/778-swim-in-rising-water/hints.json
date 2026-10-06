@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/swim-in-rising-water.md",
+  "target": "You should aim for a solution with `O((n^2)logn)` time and `O(n^2)` space, where `n` is the number of rows or columns of the square matrix.",
+  "hints": [
+    "Think of this problem as a graph where each cell represents a node. You can move from one cell to its adjacent cell if the time is greater than or equal to the adjacent cell's elevation. Note that swimming does not cost time, but you may need to wait at a cell for the time to reach the required elevation. What do you notice about the path from `(0, 0)` to `(n - 1, n - 1)`? Perhaps a greedy approach would be useful here.",
+    "We can observe that the maximum elevation value along the path determines the time taken for that path. Therefore, we need to find the path where the maximum elevation is minimized. Can you think of an algorithm to find such a path from the source `(0, 0)` to the destination `(n - 1, n - 1)`? Perhaps a shortest path algorithm could be useful here.",
+    "We can use Dijkstra's algorithm. We initialize a Min-heap and a matrix with infinity. We run the algorithm starting from the source `(0, 0)`, and we track the maximum elevation encountered along the paths. This maximum elevation is used as the key for comparison in Dijkstra's algorithm. If we encounter the destination `(n - 1, n - 1)`, we return the maximum elevation of the path that reached the destination."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/binary-tree-from-preorder-and-inorder-traversal.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where `n` is the number of nodes.",
+  "hints": [
+    "You can observe that the in-order traversal helps divide the array into two halves based on the root node: the left part corresponds to the left subtree, and the right part corresponds to the right subtree. Can you think of how we can get the index of the root node in the in-order array? Maybe you should look into the pre-order traversal array.",
+    "From the pre-order traversal, we know that the first node is the root node. Using this information, can you now construct the binary tree?",
+    "After getting the root node from pre-order traversal, we then look for the index of that node in the in-order array. We can linearly search for the index but this would be an `O(n^2)` solution. Can you think of a better way? Maybe we can use a data structure to get the index of a node in `O(1)`?",
+    "We can use a hash map to get the index of any node in the in-order array in `O(1)` time. How can we implement this?",
+    "We use Depth First Search (DFS) to construct the tree. A global variable tracks the current index in the pre-order array. Indices `l` and `r` represent the segment in the in-order array for the current subtree. For each node in the pre-order array, we create a node, find its index in the in-order array using the hash map, and recursively build the left and right subtrees by splitting the range `[l, r]` into two parts for the left and right subtrees."
+  ]
+}

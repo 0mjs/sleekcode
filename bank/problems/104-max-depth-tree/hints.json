@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/depth-of-binary-tree.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(n)` space, where `n` is the number of nodes in the tree.",
+  "hints": [
+    "From the definition of binary tree's maximum depth, Can you think of a way to achieve this recursively? Maybe you should consider the max depth of the subtrees first before computing the maxdepth at the root.",
+    "We use the Depth First Search (DFS) algorithm to find the maximum depth of a binary tree, starting from the `root`. For the subtrees rooted at the `left` and `right` children of the `root` node, we calculate their maximum depths recursively going through `left` and `right` subtrees. We return `1 + max(leftDepth, rightDepth)`. Why?",
+    "The `+1` accounts for the current node, as it contributes to the current depth in the recursion call. We pass the maximum depth from the current node's left and right subtrees to its parent because the current maximum depth determines the longest path from the parent to a leaf node through this subtree."
+  ]
+}

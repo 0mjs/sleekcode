@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/find-duplicate-integer.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space without modifying the input array, where `n` is the size of the input array.",
+  "hints": [
+    "A naive approach would be to use a hash set, which provides `O(1)` average-time lookups but requires `O(n)` extra space. To avoid extra space, consider treating the array like a linked list: from an index `i`, the next index is `nums[i]`. Every value is in the range `1` to `len(nums) - 1`, so every value is also a valid index.",
+    "Since one value is repeated, multiple indices point to the same next index. Following the indices starting from index `0` must therefore lead to a cycle, whose entry corresponds to the duplicate value. Which algorithm can detect a cycle using constant extra space without modifying the array?",
+    "Use Floyd's cycle detection algorithm. Initialize a slow and a fast pointer at index `0`. Repeatedly move the slow pointer one step with `slow = nums[slow]` and the fast pointer two steps with `fast = nums[nums[fast]]` until they meet. Is this first meeting point necessarily the duplicate?",
+    "The first meeting point may be anywhere inside the cycle. After the pointers meet, initialize a second slow pointer at index `0`. Move both slow pointers one step at a time using the values in `nums`. The index where they meet is the cycle entry, which is the duplicate number."
+  ]
+}

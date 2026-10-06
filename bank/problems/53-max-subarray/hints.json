@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/maximum-subarray.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute force approach would be to compute the sum of every subarray and return the maximum among them. This would be an `O(n^2)` approach. Can you think of a better way? Maybe you should consider a dynamic programming-based approach.",
+    "Instead of calculating the sum for every subarray, try maintaining a running sum. Maybe you should consider whether extending the previous sum or starting fresh with the current element gives a better result. Can you think of a way to track this efficiently?",
+    "We use a variable `curSum` to track the sum of the elements. At each index, we have two choices: either add the current element to `curSum` or start a new subarray by resetting `curSum` to the current element. Maybe you should track the maximum sum at each step and update the global maximum accordingly.",
+    "This algorithm is known as Kadane's algorithm."
+  ]
+}

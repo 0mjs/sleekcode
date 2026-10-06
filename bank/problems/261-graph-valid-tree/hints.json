@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/valid-tree.md",
+  "target": "You should aim for a solution as good or better than `O(V + E)` time and `O(V + E)` space, where `V` is the number vertices and `E` is the number of edges in the graph.",
+  "hints": [
+    "According to the definition of a tree, a tree is an undirected graph with no cycles, all the nodes are connected as one component, and any two nodes have exactly one path. Can you think of a recursive algorithm to detect a cycle in the given graph and ensure it is a tree?",
+    "We can use the Depth First Search (DFS) algorithm to detect a cycle in the graph. Since a tree has only one component, we can start the DFS from any node, say node `0`. During the traversal, we recursively visit its neighbors (children). If we encounter any already visited node that is not the parent of the current node, we return false as it indicates a cycle. How would you implement this?",
+    "We start DFS from node `0`, assuming `-1` as its parent. We initialize a hash set `visit` to track the visited nodes in the graph. During the DFS, we first check if the current node is already in `visit`. If it is, we return false, detecting a cycle. Otherwise, we mark the node as visited and perform DFS on its neighbors, skipping the parent node to avoid revisiting it. After all DFS calls, if we have visited all nodes, we return true, as the graph is connected. Otherwise, we return false because a tree must contain all nodes."
+  ]
+}

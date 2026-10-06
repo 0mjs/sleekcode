@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/max-water-container.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A brute force solution would be to try all pairs of bars in the array, compute the water for each pair, and return the maximum water among all pairs. This would be an `O(n^2)` solution. Can you think of a better way?",
+    "Can you think of an algorithm that runs in linear time and is commonly used in problems that deal with pairs of numbers? Find a formula to calculate the amount of water when we fix two heights.",
+    "We can use the two pointer algorithm. One pointer is at the start and the other at the end. At each step, we calculate the amount of water using the formula `(j - i) * min(heights[i], heights[j])`. Then, we move the pointer that has the smaller height value. Can you think why we only move the pointer at smaller height?",
+    "If `heights[i]` is smaller, then any future container using index `i` will have a smaller width, and its height is still at most `heights[i]`. So it cannot produce a larger area than the current pair. Therefore, we can safely discard the smaller height and move that pointer inward. The same logic applies when `heights[j]` is smaller."
+  ]
+}

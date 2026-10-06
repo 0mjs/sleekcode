@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/find-median-in-a-data-stream.md",
+  "target": "You should aim for a solution with `O(logn)` time for `addNum()`, `O(1)` time for `findMedian()`, and `O(n)` space, where `n` is the current number of elements.",
+  "hints": [
+    "A naive solution would be to store the data stream in an array and sort it each time to find the median, resulting in `O(nlogn)` time for each `findMedian()` call. Can you think of a better way? Perhaps using a data structure that allows efficient insertion and retrieval of the median can make the solution more efficient.",
+    "If we divide the array into two parts, we can find the median in `O(1)` if the left half can efficiently return the maximum and the right half can efficiently return the minimum. These values determine the median. However, the process changes slightly if the total number of elements is odd — in that case, the median is the element from the half with the larger size. Can you think of a data structure which is suitable to implement this?",
+    "We can use a Heap (Max-Heap for the left half and Min-Heap for the right half). Instead of dividing the array, we store the elements in these heaps as they arrive in the data stream. But how can you maintain equal halves of elements in these two heaps? How do you implement this?",
+    "We initialize a Max-Heap and a Min-Heap. When adding an element, if the element is greater than the minimum element of the Min-Heap, we push it into the Min-Heap; otherwise, we push it into the Max-Heap. If the size difference between the two heaps becomes greater than one, we rebalance them by popping an element from the larger heap and pushing it into the smaller heap. This process ensures that the elements are evenly distributed between the two heaps, allowing us to retrieve the middle element or elements in `O(1)` time."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "sleekcode",
+  "version": "0.1.0",
+  "description": "LeetCode practice in your terminal: NeetCode 150, TypeScript or Python, tests, hints, spaced repetition.",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "sk": "src/cli.ts",
+    "sleek": "src/cli.ts"
+  },
+  "scripts": {
+    "build:bank": "bun build/build-bank.ts",
+    "validate": "bun build/validate.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.8.1",
+    "turndown": "^7.2.4"
+  },
+  "devDependencies": {
+    "@datastructures-js/priority-queue": "4",
+    "@datastructures-js/queue": "4",
+    "@types/bun": "^1.4.2",
+    "@types/turndown": "^5.0.6",
+    "typescript": "^7.0.2"
+  }
+}

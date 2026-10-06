@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/string-encode-and-decode.md",
+  "target": "You should aim for a solution with `O(m)` time for each `encode()` and `decode()` call and `O(m+n)` space, where `m` is the sum of lengths of all the strings and `n` is the number of strings.",
+  "hints": [
+    "A naive solution would be to use a non-ascii character as a delimiter. Can you think of a better way?",
+    "Try to encode and decode the strings using a smart approach based on the lengths of each string. How can you differentiate between the lengths and any numbers that might be present in the strings?",
+    "We can use an encoding approach where we start with a number representing the length of the string, followed by a separator character (let's use `#` for simplicity), and then the string itself. To decode, we read the number until we reach a `#`, then use that number to read the specified number of characters as the string."
+  ]
+}

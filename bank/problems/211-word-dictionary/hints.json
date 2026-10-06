@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/design-word-search-data-structure.md",
+  "target": "You should aim for a solution with `O(n)` time for each function call and `O(t + n)` space, where `n` is the length of the string and `t` is the total number of nodes created in the Trie.",
+  "hints": [
+    "A brute force solution would be to store each added word in a list and search linearly through the list for a word every time. This would be an `O(m * n)` solution, where `m` is the size of the list and `n` is the length of the string. Can you think of a better way? Maybe there is a tree-like data structure.",
+    "We can use a Trie to implement adding and searching for words efficiently. Adding a word follows the standard Trie insertion process. However, when searching for a word containing `'.'`, which can match any character, we need a different approach. Instead of directly matching, we consider all possible characters at the position of `'.'` and recursively check the rest of the word for each possibility. How would you implement it?",
+    "We traverse the word with index `i`, starting at the root of the Trie. For normal characters, we search as usual. When encountering a dot (`'.'`), we try all possible characters by recursively extending the search in each direction. If any path leads to a valid word, we return `true`; otherwise, we return `false`. Although we try all paths for a dot, the time complexity is still `O(n)` because there are at most two dots (`'.'`) in the word, making the complexity `O((26^2) * n)`."
+  ]
+}

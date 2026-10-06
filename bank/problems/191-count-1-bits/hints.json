@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/number-of-one-bits.md",
+  "target": "You should aim for a solution with `O(1)` time and `O(1)` space.",
+  "hints": [
+    "The given integer is a `32`-bit integer. Can you think of using bitwise operators to iterate through its bits? Maybe you should consider iterating `32` times.",
+    "We iterate `32` times `(0 to 31)` using index `i`. The expression `(1",
+    "Since the mask has a set bit at the `i`-th position and all `0`s elsewhere, we can perform a bitwise-AND with `n`. If `n` has a set bit at the `i`-th position, the result is positive; otherwise, it is `0`. We increment the global count if the result is positive and return it after the iteration."
+  ]
+}

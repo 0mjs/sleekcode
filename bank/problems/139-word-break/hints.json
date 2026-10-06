@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/word-break.md",
+  "target": "You should aim for a solution as good or better than `O(n * m * t)` time and `O(n)` space, where `n` is the length of the string `s`, `m` is the number of words in `wordDict`, and `t` is the maximum length of any word in `wordDict`.",
+  "hints": [
+    "Try to think of this problem in terms of recursion, where we explore all possibilities. We iterate through the given string `s`, attempting to pick a word from `wordDict` that matches a portion of `s`, and then recursively continue processing the remaining string. Can you determine the recurrence relation and base condition?",
+    "The base condition is to return `true` if we reach the end of the string `s`. At each recursive call with index `i` iterating through `s`, we check all words in `wordDict` and recursively process the remaining string by incrementing `i` by the length of the matched word. If any recursive path returns `true`, we immediately return `true`. However, this solution is exponential. Can you think of an optimization? Maybe you should consider an approach that avoids repeated work.",
+    "We can avoid recalculating results for recursive calls by using memoization. Since we iterate with index `i`, we can use a hash map or an array of the same length as `s` to cache the results of recursive calls and prevent redundant computations."
+  ]
+}

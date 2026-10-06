@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/generate-parentheses.md",
+  "target": "You should aim for a solution as good or better than `O(4^n / sqrt(n))` time and `O(n)` space, where `n` is the number of parenthesis pairs in the string.",
+  "hints": [
+    "A brute force solution would be to generate all possible strings of size `2n` and add only the valid strings. This would be an `O(n * 2 ^ (2n))` solution. Can you think of a better way? Maybe you can use pruning to avoid generating invalid strings.",
+    "We can use backtracking with pruning. But what makes a string invalid? Can you think of a condition for this?",
+    "When the count of closing brackets exceeds the count of opening brackets, the string becomes invalid. Therefore, we can maintain two variables, `open` and `close`, to track the number of opening and closing brackets. We avoid exploring paths where `close > open`. Once the string length reaches `2n`, we add it to the result."
+  ]
+}

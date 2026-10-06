@@ -1,0 +1,11 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/longest-increasing-subsequence.md",
+  "target": "You should aim for a solution as good or better than `O(n ^ 2)` time and `O(n ^ 2)` space, where `n` is the size of the input array.",
+  "hints": [
+    "A subsequence is formed by selecting elements while maintaining their order. Using recursion, we can generate all subsequences. The recursive function returns the length of the longest increasing subsequence up to index `i`, processing from left to right. At each step, we decide whether to include or exclude the current element.",
+    "Since the sequence must be increasing, we represent choices by adding `1` when including an element and `0` when excluding it. In recursion, how can we ensure the current element is greater than the previous one? Perhaps additional information is needed to process it.",
+    "We can store the index of the previously chosen element as `j`, making it easier to process the current element at index `i`. If and only if `j == -1` or `nums[i] > nums[j]`, we include the current element and extend the recursive path. Can you determine the recurrence relation? At most, two recursive calls are made at each recursion step.",
+    "We stop the recursion when index `i` goes out of bounds and return `0` since no more elements can be added. The initial recursion call starts with `j = -1`. At each step, we include the current element if it is greater than the previous one and continue the recursion, or we exclude it and explore the next possibility. We return the maximum value obtained from both paths.",
+    "The time complexity of this approach is exponential. We can use memoization to store results of recursive calls and avoid recalculations. A hash map or a `2D` array can be used to cache these results."
+  ]
+}

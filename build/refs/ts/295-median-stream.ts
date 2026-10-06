@@ -1,0 +1,1 @@
+export class MedianFinder { a: number[] = []; addNum(n: number) { this.a.push(n); this.a.sort((x, y) => x - y); } findMedian() { const a = this.a, m = a.length >> 1; return a.length % 2 ? a[m]! : (a[m - 1]! + a[m]!) / 2; } }

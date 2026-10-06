@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/coin-change.md",
+  "target": "You should aim for a solution with `O(n * t)` time and `O(t)` space, where `n` is the number of coins and `t` is the given amount.",
+  "hints": [
+    "Think of this problem in terms of recursion and try to visualize the decision tree, as there are multiple choices at each step. We start with the given amount. At each step of recursion, we have `n` coins and branch into paths using coins that are less than or equal to the current amount. Can you express this in terms of a recurrence relation? Also, try to determine the base condition to stop the recursion.",
+    "If the amount is `0`, we return `0` coins. The recurrence relation can be expressed as `min(1 + dfs(amount - coins[i]))`, where we return the minimum coins among all paths. This results in an `O(n ^ t)` solution, where `n` is the number of coins and `t` is the total amount. Can you think of a better approach? Perhaps consider the repeated work and find a way to avoid it.",
+    "We can use memoization to avoid the repeated work of calculating the result for each recursive call. A hash map or an array of size `t` can be used to cache the computed values for a specific `amount`. At each recursion step, we iterate over every coin and extend only the valid paths. If a result has already been computed, we return it from the cache instead of recalculating it."
+  ]
+}

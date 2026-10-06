@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/time-based-key-value-store.md",
+  "target": "You should aim for a solution with `O(1)` time for `set()`, `O(logn)` time for `get()`, and `O(m * n)` space, where `n` is the total number of values associated with a key, and `m` is the total number of keys.",
+  "hints": [
+    "Can you think of a data structure that is useful for storing key-value pairs? Perhaps a hash-based data structure where we not only store unique elements but also associate additional information with each element?",
+    "We store key-value pairs in a hash map. In this case, we store the keys as usual, but instead of a single value, we store a list of values, each paired with its corresponding timestamp. This allows us to implement the `set()` method in `O(1)`. How can you leverage this hash map to implement the `get()` method?",
+    "A brute force solution would involve linearly going through every value associated with the key and returning the most recent value with a timestamp less than or equal to the given timestamp. This approach has a time complexity of `O(n)` for each `get()` call. Can you think of a better way? Since the timestamps in the value list are sorted in ascending order by default, maybe an efficient searching algorithm could help.",
+    "We can use binary search because the timestamps in the values list are sorted in ascending order. This makes it straightforward to find the value with the most recent timestamp that is less than or equal to the given timestamp."
+  ]
+}

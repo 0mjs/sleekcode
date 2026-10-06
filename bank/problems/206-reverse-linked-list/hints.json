@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/neetcode-gh/leetcode/blob/main/hints/reverse-a-linked-list.md",
+  "target": "You should aim for a solution with `O(n)` time and `O(1)` space, where `n` is the length of the given list.",
+  "hints": [
+    "A brute force solution would be to store the node values of the linked list into an array, then reverse the array, convert it back into a linked list, and return the new linked list's head. This would be an `O(n)` time solution but uses extra space. Can you think of a better way? Maybe there is an approach to reverse a linked list in place.",
+    "As you can see, the head of the linked list becomes the tail after we reverse it. Can you think of an approach to change the references of the node pointers? Perhaps reversing a simple two-node list might help clarify the process.",
+    "For example, consider a list `[2, 3]`, where `2` is the head of the list and `3` is the tail. When we reverse it, `3` becomes the new head, and its next pointer will point to `2`. Then, `2`'s next pointer will point to `null`. Can you figure out how to apply this approach to reverse a linked list of length `n` by iterating through it?",
+    "We can reverse the linked list in place by reversing the pointers between two nodes while keeping track of the next node's address. Before changing the next pointer of the current node, we must store the next node to ensure we don't lose the rest of the list during the reversal. This way, we can safely update the links between the previous and current nodes."
+  ]
+}
