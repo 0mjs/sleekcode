@@ -27,6 +27,10 @@ a log that quietly judges you. macOS only.
 git clone https://github.com/0mjs/sleekcode.git ~/sleekcode && bash ~/sleekcode/install.sh
 ```
 
+Brand-new Mac? macOS will offer to install "command line developer tools" (that's git): click Install, wait, then
+run the line again. You don't need anything else: it installs [Bun](https://bun.sh), and if you pick Python,
+[uv](https://docs.astral.sh/uv/) and Python too.
+
 Answer three questions (language, editor, folder), open a new terminal, type `sk`.
 
 ## Use
