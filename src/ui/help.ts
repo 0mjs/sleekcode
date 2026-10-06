@@ -1,7 +1,8 @@
 import { bold, c, pad } from "./colors";
 import { header } from "./header";
 
-export type Flag = { short: string; long: string; arg?: string; desc: string };
+/** arg = the flag takes a value; optional = the value can be left out (you get a picker or a question instead) */
+export type Flag = { short: string; long: string; arg?: string; optional?: boolean; desc: string };
 export type Command = { name: string; args?: string; desc: string; flags?: Flag[] };
 
 export const GROUPS: { title: string; commands: Command[] }[] = [
@@ -67,12 +68,17 @@ export const GROUPS: { title: string; commands: Command[] }[] = [
         desc: "Show or switch your language (typescript, python), like LeetCode's dropdown",
         flags: [{ short: "a", long: "all", desc: "create files for every problem now, not as you go" }],
       },
-      { name: "config", args: "[setting]", desc: "Settings menu, or jump straight to one:" },
-      { name: "config editor", args: "[name]", desc: "zed, vscode, cursor, terminal or none" },
-      { name: "config review", args: "[days]", desc: "how long a clean solve waits before review" },
-      { name: "config workspace", args: "[path]", desc: "switch the active workspace" },
-      { name: "config new", desc: "set up another workspace" },
-      { name: "config remove", args: "[path]", desc: "move a workspace to the Trash (asks first)" },
+      {
+        name: "config",
+        desc: "Settings menu, or jump straight to one setting:",
+        flags: [
+          { short: "e", long: "editor", arg: "name", optional: true, desc: "zed, vscode, cursor, terminal or none" },
+          { short: "r", long: "review", arg: "days", optional: true, desc: "days before a clean solve comes back for review" },
+          { short: "w", long: "workspace", arg: "path", optional: true, desc: "switch the active workspace" },
+          { short: "n", long: "new", desc: "set up another workspace" },
+          { short: "d", long: "delete", arg: "path", optional: true, desc: "move a workspace to the Trash (shows what's in it, asks first)" },
+        ],
+      },
       {
         name: "add",
         args: "<slug or url>",
@@ -91,7 +97,7 @@ export const GROUPS: { title: string; commands: Command[] }[] = [
 
 export const ALL = GROUPS.flatMap((g) => g.commands);
 
-const flagText = (f: Flag) => `-${f.short}, --${f.long}${f.arg ? ` <${f.arg}>` : ""}`;
+const flagText = (f: Flag) => `-${f.short}, --${f.long}${f.arg ? (f.optional ? ` [${f.arg}]` : ` <${f.arg}>`) : ""}`;
 
 function commandLines(cmd: Command): string[] {
   const usage = `sk ${cmd.name}${cmd.args ? " " + cmd.args : ""}`;
@@ -110,6 +116,7 @@ export function help(status?: string[]): string {
   }
   out.push(
     `  ${c.muted("Commands use the problem you're working on (the folder you're in, or the last one you opened).")}`,
+    `  ${c.muted("Every option is a flag with a short and long form; [values] in brackets can be left out to get a picker.")}`,
     `  ${c.muted("Add a number to pick another:")} ${c.ink("sk test 217 -w")}  ${c.muted("·")}  ${c.ink("sleek")} ${c.muted("works too.")}`,
     "",
   );

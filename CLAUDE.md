@@ -21,4 +21,5 @@ CLI (`sk` / `sleek`, Bun + TypeScript) for practising the NeetCode 150 in TypeSc
 - After changing generation or tests: `bun build/build-bank.ts && bun build/validate.ts`. Both languages must be 150/150 (fail on stub, pass on reference). Then `bun run typecheck` and `uvx ruff check bank runtime/py --select E9,F`.
 - MANUAL problems (see `build/build-bank.ts`) are hand-written in both languages; the builder never overwrites them.
 - Test new CLI behaviour with `SLEEKCODE_CONFIG_DIR=<tmp>` and `sk setup --language ts|py --editor none --dir <tmp>` so the real config and editors aren't touched.
+- CLI shape, everywhere: `sk <command> [number|name] [flags]`. Every option is a flag with a short and a long form (defined in `ui/help.ts`, which also drives parsing); a flag's value can be optional (`optional: true`), meaning "ask me / show a picker". No word sub-commands.
 - Commits: no Claude co-author trailer.

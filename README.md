@@ -115,12 +115,14 @@ sk update
 
 ```sh
 sk config                    # the settings menu
-sk config editor zed         # or vscode, cursor, terminal, none (leave it off for a picker)
-sk config review 10          # days before a clean solve comes back for review
-sk config workspace          # switch between workspaces
-sk config new                # set up another workspace
-sk config remove             # move a workspace to the Trash (shows what's in it and asks first)
+sk config -e zed             # editor: zed, vscode, cursor, terminal, none (just -e for a picker)
+sk config -r 10              # days before a clean solve comes back for review
+sk config -w                 # switch between workspaces
+sk config -n                 # set up another workspace
+sk config -d                 # move a workspace to the Trash (shows what's in it and asks first)
 ```
+
+Long forms work too (`--editor`, `--review`, `--workspace`, `--new`, `--delete`), like every flag in SleekCode.
 
 A workspace is just a folder; removing one moves it to the macOS Trash, so you can restore it from there.
 

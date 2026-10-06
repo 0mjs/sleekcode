@@ -14,6 +14,7 @@ import { syncReadmes } from "../core/sync";
 import { MARKER, openWorkspace, type Workspace } from "../core/workspace";
 import { bold, c } from "../ui/colors";
 import { header } from "../ui/header";
+import { parse } from "../core/args";
 
 const expand = (path: string) => resolve(path.trim().replace(/^~(?=$|\/)/, homedir()));
 const check = <T>(v: T): Exclude<T, symbol> => {
@@ -221,7 +222,7 @@ async function setEditor(config: Config, ws: Workspace | null, name?: string) {
 async function setReview(config: Config, days?: string) {
   if (days) {
     if (!/^\d+$/.test(days)) {
-      p.cancel("Give a number of days, e.g. sk config review 10");
+      p.cancel("Give a number of days, e.g. sk config -r 10");
       process.exit(1);
     }
     config.reviewDays = Number(days);
@@ -255,23 +256,23 @@ async function newWorkspace(config: Config) {
 }
 
 /**
- * sk config                 the settings menu
- * sk config editor [name]   sk config review [days]   sk config workspace [path]   sk config new   sk config remove [path]
+ * sk config                  the settings menu
+ * sk config -e [name]   -r [days]   -w [path]   -n   -d [path]     jump straight to one (no value = ask)
  */
 export async function configure(ws: Workspace | null, args: string[] = []) {
   const config = await loadConfig();
   if (!config) return onboarding();
-  const [action, value] = args;
+  const { values } = parse("config", args);
+  const value = (v: unknown) => (v ? String(v) : undefined);
 
-  if (action) {
+  const shortcut = ["editor", "review", "workspace", "new", "delete"].some((k) => values[k] !== undefined);
+  if (shortcut) {
     p.intro(bold(" SleekCode settings "));
-    if (action === "editor") return setEditor(config, ws, value);
-    if (action === "review") return setReview(config, value);
-    if (action === "workspace" || action === "switch") return switchWorkspace(config, value);
-    if (action === "new") return newWorkspace(config);
-    if (action === "remove" || action === "delete") return removeWorkspace(config, value);
-    p.cancel(`Unknown setting "${action}". Try: editor, review, workspace, new, remove`);
-    process.exit(1);
+    if (values.editor !== undefined) return setEditor(config, ws, value(values.editor));
+    if (values.review !== undefined) return setReview(config, value(values.review));
+    if (values.workspace !== undefined) return switchWorkspace(config, value(values.workspace));
+    if (values.new) return newWorkspace(config);
+    return removeWorkspace(config, value(values.delete));
   }
 
   console.log(header());
@@ -285,11 +286,11 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
   const choice = check(await p.select({
     message: "What do you want to change?",
     options: [
-      { value: "editor", label: "Editor", hint: `${EDITORS[config.editor]} · sk config editor` },
-      { value: "review", label: "Review timing", hint: `${config.reviewDays} days · sk config review` },
-      ...(others > 1 ? [{ value: "workspace", label: "Switch workspace", hint: "sk config workspace" }] : []),
-      { value: "new", label: "Set up another workspace", hint: "sk config new · rarely needed: sk lang switches languages" },
-      { value: "remove", label: "Remove a workspace", hint: "moves it to the Trash · sk config remove" },
+      { value: "editor", label: "Editor", hint: `${EDITORS[config.editor]} · sk config -e` },
+      { value: "review", label: "Review timing", hint: `${config.reviewDays} days · sk config -r` },
+      ...(others > 1 ? [{ value: "workspace", label: "Switch workspace", hint: "sk config -w" }] : []),
+      { value: "new", label: "Set up another workspace", hint: "sk config -n · rarely needed: sk lang switches languages" },
+      { value: "remove", label: "Remove a workspace", hint: "moves it to the Trash · sk config -d" },
       { value: "done", label: "Nothing, I'm done" },
     ],
   }));
