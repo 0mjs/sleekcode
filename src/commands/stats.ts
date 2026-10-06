@@ -22,6 +22,14 @@ const dayKey = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate(
 const avg = (xs: number[]) => (xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : null);
 const minutesOf = (as: Attempt[]) => as.map((a) => a.minutes).filter((m): m is number => m != null);
 
+/** Your most recent attempt at each problem: how well you know it now */
+const latestPerProblem = (as: Attempt[]) => [...new Map(as.map((a) => [a.folder, a])).values()];
+/** Share of problems whose latest attempt was clean (passed, on your own, no hints) */
+const cleanNow = (as: Attempt[]) => {
+  const latest = latestPerProblem(as);
+  return { n: latest.filter(clean).length, of: latest.length, rate: latest.length ? latest.filter(clean).length / latest.length : 0 };
+};
+
 function bar(value: number, max: number, width: number, color: (s: string) => string) {
   const filled = max ? Math.min(width, Math.round((value / max) * width)) : 0;
   return color("━".repeat(filled)) + c.dim("━".repeat(width - filled));
@@ -112,7 +120,7 @@ export async function stats(ws: Workspace) {
       { title: "blind 75", value: bold(c.amber(String(blind.filter(isSolved).length))) + c.muted(` / ${blind.length}`), sub: c.muted("must-knows") },
       { title: "streak", value: bold(c.green(`${streak}`)) + c.muted(streak === 1 ? " day" : " days"), sub: c.muted(`best ${best}`) },
       { title: "this week", value: bold(c.ink(String(thisWeek))) + c.muted(" solves"), sub: trend > 0 ? c.green(`▲ ${trend} vs last`) : trend < 0 ? c.red(`▼ ${-trend} vs last`) : c.muted("= last week") },
-      { title: "clean", value: bold(c.ink(pct(attempts.filter(clean).length, attempts.length))), sub: c.muted(`${attempts.filter((a) => a.help === "ai").length} with AI`) },
+      { title: "clean now", value: bold(c.ink(pct(cleanNow(attempts).n, cleanNow(attempts).of))), sub: c.muted(`${attempts.filter((a) => a.help === "ai").length} with AI`) },
       { title: "time in", value: bold(c.ink(fmtMin(totalMin))), sub: c.muted(`${attempts.length} tr${attempts.length === 1 ? "y" : "ies"}`) },
     ], width));
 
@@ -167,7 +175,7 @@ export async function stats(ws: Workspace) {
       const folders = new Set(ps.map((p) => p.folder));
       const as = attempts.filter((a) => folders.has(a.folder));
       const done = ps.filter(isSolved).length;
-      const cleanRate = as.length ? as.filter(clean).length / as.length : 0;
+      const cleanRate = cleanNow(as).rate; // latest attempt per problem, so a clean redo counts fully
       const level =
         !as.length ? c.dim("· not started")
           : done === ps.length && cleanRate >= 0.7 ? c.green("● mastered")
@@ -179,7 +187,7 @@ export async function stats(ws: Workspace) {
         `${pad((as.length ? c.ink : c.muted)(truncate(name, 23)), 25)}${bar(done, ps.length, barW, color)} ${pad(`${c.ink(String(done))}${c.muted(`/${ps.length}`)}`, 8)}` +
           `${pad(level, 14)}${padL(as.length ? c.body(`${avg(minutesOf(as)) ?? "–"}m`) : c.dim("–"), 5)}` +
           `${padL(as.length ? (hinted / as.length >= 0.5 ? c.amber : c.body)(pct(hinted, as.length)) : c.dim("–"), 7)}` +
-          `${padL(as.length ? c.body(pct(as.filter(clean).length, as.length)) : c.dim("–"), 7)}`,
+          `${padL(as.length ? c.body(pct(cleanNow(as).n, cleanNow(as).of)) : c.dim("–"), 7)}`,
       );
       levels.push({ name, clean: cleanRate, started: as.length > 0, done, total: ps.length });
     }
@@ -187,6 +195,7 @@ export async function stats(ws: Workspace) {
     const nextNew = levels.find((l) => !l.started);
     const focus = [...weak.map((w) => w.name), ...(nextNew && weak.length < 2 ? [nextNew.name] : [])];
     out.push("", `${c.green("→")} ${c.muted("Focus next:")} ${focus.length ? focus.map((f) => c.ink(f)).join(c.muted(", ")) : c.green("you've covered everything 🎉")}`);
+    out.push(c.dim("CLEAN = problems whose latest attempt had no hints or help · HINTS = all your attempts that used hints"));
     out.push(c.dim("learning = under half solved · practising = half or more · mastered = all solved, 70%+ clean"));
     return out;
   }
@@ -207,7 +216,7 @@ export async function stats(ws: Workspace) {
       const as = all.filter((a) => a.language === l);
       out.push(
         `${pad(bold(col(spec.name)), 14)}${bar(as.length, all.length, barW, col)} ${pad(c.body(pct(as.length, all.length)), 6)}` +
-          `${padL(c.ink(String(solvedBy.get(l)!.size)), 7)}${padL(c.body(`${avg(minutesOf(as)) ?? "–"}m`), 6)}${padL(c.body(pct(as.filter(clean).length, as.length)), 7)}  ` +
+          `${padL(c.ink(String(solvedBy.get(l)!.size)), 7)}${padL(c.body(`${avg(minutesOf(as)) ?? "–"}m`), 6)}${padL(c.body(pct(cleanNow(as).n, cleanNow(as).of)), 7)}  ` +
           sparkline(minutesOf(as.filter(passed)).slice(-12), col),
       );
     }
