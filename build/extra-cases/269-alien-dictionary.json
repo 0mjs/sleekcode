@@ -1,0 +1,273 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    [
+     "a"
+    ]
+   ],
+   "output": "a"
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    [
+     "zyx"
+    ]
+   ],
+   "output": "xyz"
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    [
+     "abc",
+     "ab"
+    ]
+   ],
+   "output": ""
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    [
+     "ab",
+     "adc"
+    ]
+   ],
+   "output": "cbda"
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    [
+     "z",
+     "z"
+    ]
+   ],
+   "output": "z"
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    [
+     "ab",
+     "ab",
+     "abc"
+    ]
+   ],
+   "output": "cba"
+  },
+  {
+   "name": "edge 7",
+   "input": [
+    [
+     "ac",
+     "ab",
+     "zc",
+     "zb"
+    ]
+   ],
+   "output": "cbaz"
+  },
+  {
+   "name": "edge 8",
+   "input": [
+    [
+     "a",
+     "b",
+     "c",
+     "a"
+    ]
+   ],
+   "output": ""
+  },
+  {
+   "name": "edge 9",
+   "input": [
+    [
+     "wrt",
+     "wrtkj"
+    ]
+   ],
+   "output": "jktrw"
+  },
+  {
+   "name": "edge 10",
+   "input": [
+    [
+     "baa",
+     "abcd",
+     "abca",
+     "cab",
+     "cad"
+    ]
+   ],
+   "output": "bdac"
+  },
+  {
+   "name": "random 1",
+   "input": [
+    [
+     "oeoeb"
+    ]
+   ],
+   "output": "beo"
+  },
+  {
+   "name": "random 2",
+   "input": [
+    [
+     "a",
+     "j",
+     "uajq",
+     "ud",
+     "d",
+     "d",
+     "dggax",
+     "dqgxx",
+     "q",
+     "q"
+    ]
+   ],
+   "output": "xgajudq"
+  },
+  {
+   "name": "random 3",
+   "input": [
+    [
+     "llf",
+     "lxqx",
+     "q",
+     "f",
+     "qxll",
+     "xq",
+     "bll"
+    ]
+   ],
+   "output": ""
+  },
+  {
+   "name": "random 4",
+   "input": [
+    [
+     "mmasa",
+     "a",
+     "amu",
+     "aoso",
+     "aa",
+     "asms",
+     "sama",
+     "uoams"
+    ]
+   ],
+   "output": "moasu"
+  },
+  {
+   "name": "random 5",
+   "input": [
+    [
+     "zsfz",
+     "lzz",
+     "ll",
+     "fz",
+     "fw",
+     "s",
+     "sz",
+     "sffss",
+     "ssffz"
+    ]
+   ],
+   "output": "zwlfs"
+  },
+  {
+   "name": "random 6",
+   "input": [
+    [
+     "h",
+     "vfrhh",
+     "hnhfr",
+     "n",
+     "nrvnh",
+     "fnv",
+     "frrf",
+     "r",
+     "rv",
+     "rfrrn"
+    ]
+   ],
+   "output": ""
+  },
+  {
+   "name": "random 7",
+   "input": [
+    [
+     "yby",
+     "ryb",
+     "v",
+     "bvy",
+     "bnbrb",
+     "nbny"
+    ]
+   ],
+   "output": "yrvbn"
+  },
+  {
+   "name": "random 8",
+   "input": [
+    [
+     "uzeee",
+     "x",
+     "xe",
+     "zzzuz",
+     "zeez",
+     "ezezx"
+    ]
+   ],
+   "output": "uxze"
+  },
+  {
+   "name": "random 9",
+   "input": [
+    [
+     "frfft"
+    ]
+   ],
+   "output": "trf"
+  },
+  {
+   "name": "random 10",
+   "input": [
+    [
+     "jcc"
+    ]
+   ],
+   "output": "cj"
+  },
+  {
+   "name": "random 11",
+   "input": [
+    [
+     "eeca",
+     "uzc",
+     "zau",
+     "zzuue",
+     "ce",
+     "ce"
+    ]
+   ],
+   "output": "aeuzc"
+  },
+  {
+   "name": "random 12",
+   "input": [
+    [
+     "wuwaj"
+    ]
+   ],
+   "output": "jauw"
+  }
+ ],
+ "perf": null
+}

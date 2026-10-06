@@ -26,6 +26,5 @@ Go, Java, … The language registry (`src/core/languages.ts`) is built for this:
 
 ## Known limits
 
-- Problems with hand-written tests (the 13 "manual" ones, e.g. Clone Graph, Course Schedule II) have no
-  `cases.json`, so `sk play` runs their scratchpad instead of the examples, and they have no hidden cases or
-  speed check yet.
+- A few speed checks only catch brute force in Python: at LeetCode's maximum input sizes the TypeScript brute
+  force is still fast (LeetCode behaves the same way).
