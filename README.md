@@ -1,10 +1,6 @@
 <div align="center">
 
-<pre>
-   ━━━━━ ━━ ━    ┏━━╸ ╻    ┏━━╸ ┏━━╸ ╻ ┏╸ ┏━━╸ ┏━━┓ ┳━━┓ ┏━━╸
- ━━━━━━━━ ━━    ┗━━┓ ┃    ┣━╸  ┣━╸  ┣━┻┓ ┃    ┃  ┃ ┃  ┃ ┣━╸  
-━━━━━ ━━━  ━   ╺━━┛ ┗━━╸ ┗━━╸ ┗━━╸ ╹  ╹ ┗━━╸ ┗━━┛ ┻━━┛ ┗━━╸  
-</pre>
+<img src="assets/header.png" alt="SleekCode" width="720">
 
 **LeetCode at home, for people who debug with `print`.**
 
@@ -43,8 +39,17 @@ sk hint      one hint at a time (no shame)
 sk log       record how it went (honesty encouraged)
 ```
 
-Also: `sk review` (spaced repetition), `sk stats` (graphs about your progress), `sk lang` (switch
-TypeScript ⇄ Python), `sk submit` (copy it to LeetCode when you're feeling brave). `sk` lists the rest.
+## Stats
+
+`sk stats` is a full-screen dashboard in your terminal, because of course it is. Five tabs: your
+progress and streaks, every pattern from "not started" to "mastered" (and which to focus on next),
+TypeScript vs Python if you do both, how long things take you vs how long they should, and what's due
+for review. Everything you log is tracked, so the graphs only lie if you do.
+
+## Also
+
+`sk review` (spaced repetition), `sk lang` (switch TypeScript ⇄ Python), `sk submit` (copy it to LeetCode
+when you're feeling brave). `sk` lists the rest.
 
 Works with Zed, VS Code, Cursor or vim. Update with `sk update`.
 
