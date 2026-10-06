@@ -33,7 +33,7 @@ function fit(s: string, width: number): string {
 }
 
 /** One line describing an attempt */
-export function summary(a: Attempt, withTitle = false): string {
+function summary(a: Attempt, withTitle = false): string {
   const lang = LANGUAGES[a.language];
   return [
     withTitle ? c.ink(`${a.id}. ${a.title}`) : null,

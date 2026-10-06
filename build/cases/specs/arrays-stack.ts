@@ -1,8 +1,6 @@
 // Arrays & Hashing, Two Pointers, Sliding Window and Stack problems.
 import { defineSpecs, type Rng } from "../lib";
 
-const LOWER = "abcdefghijklmnopqrstuvwxyz";
-const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /** All windows of s of minimal length that contain t (with multiplicity); [] when none */
 function minWindows(s: string, t: string): string[] {

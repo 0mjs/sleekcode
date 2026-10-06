@@ -34,7 +34,7 @@ export async function renderLog(ws: Workspace, attempts?: Attempt[]) {
 }
 
 /** Rewrites everything from "## Attempts" down. Your notes above it are never touched. */
-export async function renderReadmeAttempts(ws: Workspace, folder: string, attempts?: Attempt[]) {
+async function renderReadmeAttempts(ws: Workspace, folder: string, attempts?: Attempt[]) {
   const file = join(problemDir(ws, { folder } as never), "README.md");
   if (!existsSync(file)) return;
   const rows = (attempts ?? (await loadAttempts(ws))).filter((a) => a.folder === folder).map((a) => {

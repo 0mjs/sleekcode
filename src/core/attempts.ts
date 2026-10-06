@@ -54,7 +54,7 @@ export async function loadAttempts(ws: Workspace): Promise<Attempt[]> {
   }
 }
 
-export async function saveAttempts(ws: Workspace, attempts: Attempt[]) {
+async function saveAttempts(ws: Workspace, attempts: Attempt[]) {
   // Write a temp file, then rename over the real one: a crash mid-write can't corrupt your history
   const tmp = file(ws) + ".tmp";
   await Bun.write(tmp, JSON.stringify(attempts, null, 2) + "\n");

@@ -1,7 +1,7 @@
 {
   "name": "sleekcode",
   "version": "0.1.0",
-  "description": "LeetCode practice in your terminal: NeetCode 150, TypeScript or Python, tests, hints, spaced repetition.",
+  "description": "LeetCode practice in your terminal, where you can print your way to a solution. NeetCode 150 in TypeScript or Python.",
   "private": true,
   "type": "module",
   "bin": {
@@ -9,6 +9,7 @@
     "sleek": "src/cli.ts"
   },
   "scripts": {
+    "build:cases": "bun build/build-cases.ts",
     "build:bank": "bun build/build-bank.ts",
     "validate": "bun build/validate.ts",
     "typecheck": "tsc -p ."

@@ -1,8 +1,6 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { CONFIG_DIR, CONFIG_FILE } from "./paths";
 
-export type { Language } from "./languages";
-export { LANGUAGES } from "./languages";
 export type Editor = "zed" | "vscode" | "cursor" | "terminal" | "none";
 export type Difficulty = "Easy" | "Medium" | "Hard";
 

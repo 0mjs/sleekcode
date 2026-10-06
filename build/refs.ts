@@ -6,7 +6,7 @@ import { join } from "node:path";
 const ROOT = join(import.meta.dir, "..");
 const BANK = join(ROOT, "bank", "problems");
 
-export const PY_PRELUDE = `from typing import *
+const PY_PRELUDE = `from typing import *
 import collections, heapq, math, bisect, itertools, functools, string, random
 from collections import *
 from heapq import *

@@ -8,7 +8,7 @@ import { solutionFile, type Workspace } from "../core/workspace";
 import { c } from "../ui/colors";
 
 /** Your file minus the SleekCode bits LeetCode doesn't want: helper imports, `export`, the header, the scratchpad */
-export function forLeetCode(source: string, lang: Language): string {
+function forLeetCode(source: string, lang: Language): string {
   let code = source;
   if (lang === "ts") {
     code = code

@@ -3,11 +3,11 @@
 
 // ---------- shared parsing ----------
 
-export const decode = (s: string) =>
+const decode = (s: string) =>
   s.replace(/<[^>]+>/g, "").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").trim();
 
-export function parseOutputs(content: string): string[] {
+function parseOutputs(content: string): string[] {
   const re = /Output:?\s*<\/strong>([\s\S]*?)(?=<strong|<b>|<\/pre>|<\/p>|<\/div>|Explanation)/g;
   return [...content.matchAll(re)].map((m) => decode(m[1]!.replace(/\n/g, "")));
 }
@@ -42,54 +42,40 @@ function tsStubBody(snippet: string): string {
     .trim();
 }
 
+/** Helper imports a scratchpad call needs, in the order their types appear in the signature */
+function helpersFor(types: string[], names: Record<string, string[]>): string[] {
+  const out: string[] = [];
+  for (const t of types) for (const h of names[t] ?? []) if (!out.includes(h)) out.push(h);
+  return out;
+}
+
+/** Starting code: LeetCode's signature with a "Not implemented" body, plus a scratchpad that runs example 1 */
 export function typescript(s: Spec, snippet: string): { stub: string; test: string } {
   const { meta } = s;
-  const helpers = new Set<string>();
-  const tests: string[] = [];
-  let play = "";
-  const cmp = s.deep ? "anyOrderDeep" : "anyOrder";
-
+  const first = s.inputs[0]!.split("\n");
+  let play: string;
+  let helpers: string[];
   if (meta.classname) {
-    s.inputs.forEach((inp, i) => {
-      const [ops, args] = inp.split("\n");
-      tests.push(`  test("example ${i + 1}", () => {\n    const ops = ${ops};\n    const args = ${args};\n    expect(runOps(${meta.classname}, ops, args)).toEqual(${s.outputs[i]});\n  });`);
-      if (i === 0) play = `  console.log(runOps(${meta.classname}, ${ops}, ${args}));`;
-    });
-    helpers.add("runOps");
+    play = `  console.log(runOps(${meta.classname}, ${first[0]}, ${first[1]}));`;
+    helpers = ["runOps"];
   } else {
     const params: Param[] = meta.params;
     const ret: string = meta.return?.type ?? "void";
-    s.inputs.forEach((inp, i) => {
-      const lines = inp.split("\n");
-      const args = params.map((p, j) => tsArg(p.type, lines[j]!));
-      const expected = s.outputs[i]!;
-      let body: string;
-      if (ret === "void") {
-        const p0 = params[0]!;
-        const call = `${meta.name}(${[p0.name, ...args.slice(1)].join(", ")})`;
-        body = `    const ${p0.name} = ${args[0]};\n    ${call};\n    expect(${tsResult(p0.type, p0.name)}).toEqual(${expected});`;
-        if (i === 0) play = `  const ${p0.name} = ${args[0]};\n  ${call};\n  console.log(${tsResult(p0.type, p0.name)});`;
-      } else {
-        let call = tsResult(ret, `${meta.name}(${args.join(", ")})`);
-        // JS multiplication can produce -0, which toEqual treats as different from 0
-        if (s.slug === "product-of-array-except-self") call += ".map((x) => x + 0)";
-        body = ret === "double"
-          ? `    expect(${call}).toBeCloseTo(${expected}, 5);`
-          : s.anyOrder ? `    expect(${cmp}(${call})).toEqual(${cmp}(${expected}));` : `    expect(${call}).toEqual(${expected});`;
-        if (s.anyOrder && ret !== "double") helpers.add(cmp);
-        if (i === 0) play = `  console.log(${call});`;
-      }
-      for (const t of [...params.map((p) => p.type), ret]) {
-        if (t === "ListNode" || t === "ListNode[]") helpers.add("toList").add("fromList");
-        if (t === "TreeNode") helpers.add("toTree").add("fromTree");
-      }
-      tests.push(`  test("example ${i + 1}", () => {\n${body}\n  });`);
+    const args = params.map((p, j) => tsArg(p.type, first[j]!));
+    if (ret === "void") {
+      const p0 = params[0]!;
+      play = `  const ${p0.name} = ${args[0]};\n  ${meta.name}(${[p0.name, ...args.slice(1)].join(", ")});\n  console.log(${tsResult(p0.type, p0.name)});`;
+    } else {
+      let call = tsResult(ret, `${meta.name}(${args.join(", ")})`);
+      if (s.slug === "product-of-array-except-self") call += ".map((x) => x + 0)"; // JS can produce -0
+      play = `  console.log(${call});`;
+    }
+    helpers = helpersFor([...params.map((p) => p.type), ret], {
+      ListNode: ["toList", "fromList"], "ListNode[]": ["toList", "fromList"], TreeNode: ["toTree", "fromTree"],
     });
   }
-
   const types = ["ListNode", "TreeNode"].filter((t) => snippet.includes(t));
-  const playHelpers = [...helpers].filter((h) => new RegExp(`\\b${h}\\b`).test(play));
-  const imports = [...types, ...playHelpers];
+  const imports = [...types, ...helpers.filter((h) => new RegExp(`\\b${h}\\b`).test(play))];
   const stub =
     (imports.length ? `import { ${imports.join(", ")} } from "../../lib";\n\n` : "") +
     `/**\n${header(s).map((l) => ` *${l ? " " + l : ""}`).join("\n")}\n */\n${tsStubBody(snippet)}\n\n` +
@@ -151,56 +137,33 @@ function pyStubBody(snippet: string): string {
     .trim();
 }
 
+/** Starting code: LeetCode's signature raising NotImplementedError, plus a scratchpad that runs example 1 */
 export function python(s: Spec, snippet: string): { stub: string; test: string } {
   const { meta } = s;
-  const helpers = new Set<string>();
-  const tests: string[] = [];
-  let play = "";
-  let needsPytest = false;
-  const cmp = s.deep ? "any_order_deep" : "any_order";
-
+  const first = s.inputs[0]!.split("\n");
+  let play: string;
+  let helpers: string[];
   if (meta.classname) {
-    s.inputs.forEach((inp, i) => {
-      const [ops, args] = inp.split("\n");
-      tests.push(`def test_example_${i + 1}():\n    ops = ${pyLit(ops!)}\n    args = ${pyLit(args!)}\n    assert run_ops(${meta.classname}, ops, args) == ${pyLit(s.outputs[i]!)}`);
-      if (i === 0) play = `    print(run_ops(${meta.classname}, ${pyLit(ops!)}, ${pyLit(args!)}))`;
-    });
-    helpers.add("run_ops");
+    play = `    print(run_ops(${meta.classname}, ${pyLit(first[0]!)}, ${pyLit(first[1]!)}))`;
+    helpers = ["run_ops"];
   } else {
     const params: Param[] = meta.params;
     const ret: string = meta.return?.type ?? "void";
-    s.inputs.forEach((inp, i) => {
-      const lines = inp.split("\n");
-      const args = params.map((p, j) => pyArg(p.type, lines[j]!));
-      const expected = pyLit(s.outputs[i]!);
-      let body: string;
-      if (ret === "void") {
-        const p0 = params[0]!;
-        const call = `Solution().${meta.name}(${[p0.name, ...args.slice(1)].join(", ")})`;
-        body = `    ${p0.name} = ${args[0]}\n    ${call}\n    assert ${pyResult(p0.type, p0.name)} == ${expected}`;
-        if (i === 0) play = `    ${p0.name} = ${args[0]}\n    ${call}\n    print(${pyResult(p0.type, p0.name)})`;
-      } else {
-        const call = pyResult(ret, `Solution().${meta.name}(${args.join(", ")})`);
-        if (ret === "double") needsPytest = true;
-        body = ret === "double"
-          ? `    assert ${call} == pytest.approx(${expected})`
-          : s.anyOrder ? `    assert ${cmp}(${call}) == ${cmp}(${expected})` : `    assert ${call} == ${expected}`;
-        if (s.anyOrder && ret !== "double") helpers.add(cmp);
-        if (i === 0) play = `    print(${call})`;
-      }
-      for (const t of [...params.map((p) => p.type), ret]) {
-        if (t === "ListNode" || t === "ListNode[]") helpers.add("to_list").add("from_list");
-        if (t === "TreeNode") helpers.add("to_tree").add("from_tree");
-      }
-      tests.push(`def test_example_${i + 1}():\n${body}`);
+    const args = params.map((p, j) => pyArg(p.type, first[j]!));
+    if (ret === "void") {
+      const p0 = params[0]!;
+      play = `    ${p0.name} = ${args[0]}\n    Solution().${meta.name}(${[p0.name, ...args.slice(1)].join(", ")})\n    print(${pyResult(p0.type, p0.name)})`;
+    } else {
+      play = `    print(${pyResult(ret, `Solution().${meta.name}(${args.join(", ")})`)})`;
+    }
+    helpers = helpersFor([...params.map((p) => p.type), ret], {
+      ListNode: ["to_list", "from_list"], "ListNode[]": ["to_list", "from_list"], TreeNode: ["to_tree", "from_tree"],
     });
   }
-
   const body = pyStubBody(snippet);
   const typing = ["List", "Optional"].filter((t) => new RegExp(`\\b${t}\\[`).test(body));
   const types = ["ListNode", "TreeNode"].filter((t) => body.includes(t));
-  const playHelpers = [...helpers].filter((h) => new RegExp(`\\b${h}\\(`).test(play));
-  const imports = [...types, ...playHelpers];
+  const imports = [...types, ...helpers.filter((h) => new RegExp(`\\b${h}\\(`).test(play))];
   const stub =
     `"""\n${header(s).join("\n")}\n"""\n\n` +
     (typing.length ? `from typing import ${typing.join(", ")}\n\n` : "") +

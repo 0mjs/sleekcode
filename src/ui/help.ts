@@ -2,10 +2,10 @@ import { bold, c, pad } from "./colors";
 import { header } from "./header";
 
 /** arg = the flag takes a value; optional = the value can be left out (you get a picker or a question instead) */
-export type Flag = { short: string; long: string; arg?: string; optional?: boolean; desc: string };
-export type Command = { name: string; args?: string; desc: string; flags?: Flag[] };
+type Flag = { short: string; long: string; arg?: string; optional?: boolean; desc: string };
+type Command = { name: string; args?: string; desc: string; flags?: Flag[] };
 
-export const GROUPS: { title: string; commands: Command[] }[] = [
+const GROUPS: { title: string; commands: Command[] }[] = [
   {
     title: "Daily loop",
     commands: [

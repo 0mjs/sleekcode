@@ -25,7 +25,7 @@ const bail = () => {
 export const ask = <T>(v: T): Exclude<T, symbol> => (p.isCancel(v) ? bail() : v) as Exclude<T, symbol>;
 
 /** O(N²) / O(n^2) / O(n*n) → one comparable form */
-export function norm(s: string): string {
+function norm(s: string): string {
   return s.toLowerCase().replace(/\s|\*|·|×/g, "").replace(/²/g, "^2").replace(/³/g, "^3").replace(/ⁿ/g, "^n")
     .replace(/√n|sqrt\(n\)/g, "sqrtn").replace(/n\^2|n\.n|nn(?!a)/g, "n^2");
 }
@@ -34,7 +34,7 @@ const LADDER = ["o(1)", "o(logn)", "o(sqrtn)", "o(n)", "o(nlogn)", "o(n^2)", "o(
 const rank = (s: string) => LADDER.indexOf(norm(s));
 
 /** Same complexity? Also treats O(m·n) and O(n·m) as the same */
-export const same = (a: string, b: string) => norm(a) === norm(b) || [...norm(a)].sort().join("") === [...norm(b)].sort().join("");
+const same = (a: string, b: string) => norm(a) === norm(b) || [...norm(a)].sort().join("") === [...norm(b)].sort().join("");
 
 export async function pickComplexity(kind: "time" | "space", options: string[], current?: string): Promise<string> {
   const known = current ? options.find((o) => same(o, current)) : undefined;

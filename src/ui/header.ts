@@ -26,7 +26,7 @@ const speed = (line: string) => [...line].map((ch, i) => rgb(mix(NIGHT, MINT, (i
 /** "sleek" runs mint → blue, "code" is white */
 const letterColor = (i: number) => (i < 5 ? mix(MINT, BLUE, i / 4) : WHITE);
 
-export function wordmark(): string[] {
+function wordmark(): string[] {
   const word = "sleekcode";
   return [0, 1, 2].map((row) => {
     const letters = [...word].map((ch, i) => rgb(letterColor(i))(GLYPHS[ch]![row]!)).join(" ");
@@ -34,7 +34,7 @@ export function wordmark(): string[] {
   });
 }
 
-export const TAGLINE = "leetcode practice, in your terminal";
+const TAGLINE = "leetcode practice, in your terminal";
 
 /** Big header if the terminal is wide enough, otherwise a one-liner */
 export function header(): string {

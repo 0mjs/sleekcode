@@ -4,7 +4,6 @@ import { join } from "node:path";
 import type { Editor } from "./config";
 import { writeEditorFiles } from "./editor-files";
 import { LANGUAGES, type Language } from "./languages";
-import { renderList } from "./list";
 import { renderLog, renderRecords } from "./records";
 import { ensureProblemFiles } from "./materialize";
 import { BANK } from "./paths";

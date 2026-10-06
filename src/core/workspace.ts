@@ -32,7 +32,7 @@ export const MARKER = ".sleekcode.json";
 type Marker = { version: number; language: Language; languages?: Language[]; created: string };
 
 /** Walks up from `from` looking for a workspace */
-export function findWorkspaceDir(from = process.cwd()): string | null {
+function findWorkspaceDir(from = process.cwd()): string | null {
   for (let dir = resolve(from); ; dir = dirname(dir)) {
     if (existsSync(join(dir, MARKER))) return dir;
     if (dirname(dir) === dir) return null;
@@ -89,11 +89,11 @@ export const stubFile = (ws: Workspace, p: Problem, lang = ws.language) =>
 export const bankTestFile = (p: Problem, lang: Language) => join(BANK, "problems", p.folder, lang, LANGUAGES[lang].test);
 export const hintsFile = (ws: Workspace, p: Problem) =>
   p.extra ? join(ws.dir, ".sleekcode", "hints", `${p.folder}.json`) : join(BANK, "problems", p.folder, "hints.json");
-export const currentFile = (ws: Workspace) => join(ws.dir, ".current");
+const currentFile = (ws: Workspace) => join(ws.dir, ".current");
 
 // ---------- picking a problem ----------
 
-export function findProblem(ws: Workspace, query: string): Problem | undefined {
+function findProblem(ws: Workspace, query: string): Problem | undefined {
   const q = basename(query);
   return ws.problems.find((p) => p.id === q || p.folder === q || p.slug === q) ?? ws.problems.find((p) => p.folder.includes(q));
 }

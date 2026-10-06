@@ -5,7 +5,6 @@ import { join } from "node:path";
 export const TOOL = join(import.meta.dir, "..", "..");
 export const BANK = join(TOOL, "bank");
 export const RUNTIME = join(TOOL, "runtime");
-export const TEMPLATES = join(TOOL, "templates");
 
 /** User settings. SLEEKCODE_CONFIG_DIR overrides it (handy for testing). */
 export const CONFIG_DIR = process.env.SLEEKCODE_CONFIG_DIR ?? join(homedir(), ".config", "sleekcode");

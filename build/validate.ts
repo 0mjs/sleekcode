@@ -3,7 +3,7 @@
 // 1. Each test file must FAIL against the blank stub.
 // 2. Each test file must PASS against a reference solution:
 //    build/refs/<lang>/<folder>.* if present, else NeetCode's solution from .cache/.
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, symlinkSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, rmSync, symlinkSync } from "node:fs";
 import { join } from "node:path";
 import { referenceSource, TS_PRELOAD } from "./refs";
 

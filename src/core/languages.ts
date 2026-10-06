@@ -162,6 +162,3 @@ export async function ensureTool(lang: Language, interactive = true): Promise<bo
   spin.stop(ok ? `${tool.name} installed` : `Couldn't install ${tool.name}. See ${tool.url}`);
   return ok;
 }
-
-export const hasLanguageSetup = (dir: string, lang: Language) =>
-  lang === "ts" ? existsSync(join(dir, "package.json")) : existsSync(join(dir, "pyproject.toml"));

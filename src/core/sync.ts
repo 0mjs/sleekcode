@@ -24,7 +24,7 @@ function withProblem(readme: string, text: string) {
   return readme.slice(0, start) + `## Problem\n\n${text}\n` + readme.slice(end);
 }
 
-export const needsSync = async (ws: Workspace, p: Problem) =>
+const needsSync = async (ws: Workspace, p: Problem) =>
   !existsSync(readmeOf(ws, p)) || (await Bun.file(readmeOf(ws, p)).text()).includes(PENDING);
 
 /** Fills in every README that's still waiting for its text. Returns how many failed. */

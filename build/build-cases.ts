@@ -5,7 +5,7 @@
 // Then: bun build/build-bank.ts && bun build/validate.ts
 import { mkdirSync, readdirSync, rmSync, symlinkSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { normalize, same } from "../runtime/ts/lib/cases";
+import { same } from "../runtime/ts/lib/cases";
 import { rng, type CaseSpec } from "./cases/lib";
 import { referenceSource, TS_PRELOAD } from "./refs";
 
