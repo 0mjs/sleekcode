@@ -43,7 +43,7 @@ The installer sets up everything SleekCode needs (a tool called Bun), then asks 
 Use the **arrow keys** to choose and **Enter** to confirm:
 
 1. **Language:** TypeScript or Python. You can switch any time later. (If you pick Python, it offers to install `uv`, the Python tool it uses. Say yes.)
-2. **Editor:** Zed, VS Code, or something else.
+2. **Editor:** Zed, VS Code, Cursor, a terminal editor like vim (uses your `$EDITOR`), or none.
 3. **Where to put your practice folder:** just press Enter for the suggested place.
 
 It then downloads the problems (about 10 seconds). That's it.
@@ -66,12 +66,12 @@ Open your practice folder in your editor, open its built-in terminal (**ctrl + `
 | 3 | `sk test -w` | Runs the tests every time you save. Green = solved |
 | | `sk play -w` | Runs your code and shows what you `print` / `console.log` |
 | | `sk hint` | Stuck? Shows one hint (run it again for the next) |
-| 4 | `sk log` | Records how it went: time, hints, complexity, notes |
+| 4 | `sk log` | Records how it went. The time comes from the timer; you pick how you solved it (on your own / AI / looked it up) and your time & space complexity from a list, and it checks them against the target |
 
 Then `sk next` again. Every few days, `sk review` brings back problems you found hard, with a blank
 file so you solve them fresh.
 
-`sk stats` shows a dashboard (use ← → to switch tabs, q to quit).
+`sk stats` shows a dashboard (use ← → to switch tabs, q to quit). `sk list` shows your checklist (`sk list -t` for just what's left).
 
 ### Switching language
 
@@ -87,7 +87,8 @@ Your progress, notes and reviews are shared. A problem gets files for a language
 ### Editor shortcuts
 
 - **Zed:** with a problem open, press **alt + shift + t** and pick a task like `sk: test (watch)`. **alt + t** re-runs the last one.
-- **VS Code:** **cmd + shift + p** → "Tasks: Run Task" → pick `sk: test (watch)`, `sk: hint`, … Problem descriptions open as formatted previews.
+- **VS Code / Cursor:** **cmd + shift + p** → "Tasks: Run Task" → pick `sk: test (watch)`, `sk: hint`, … Problem descriptions open as formatted previews.
+- **Terminal editor:** `sk next` opens the problem in your `$EDITOR` right in the terminal (vim and neovim get the description and your solution side by side).
 
 ### All commands
 

@@ -33,7 +33,7 @@ export async function createWorkspace(dir: string, language: Language, editor: E
   await setupLanguage(dir, language);
   await writeEditorFiles(dir, [language], editor);
   await Bun.write(join(dir, "README.md"), workspaceReadme());
-  await Bun.write(join(dir, "LOG.md"), "# Results Log\n\n| Date | Problem | Lang | Difficulty | Tests | Minutes | Solo? | Complexity | Notes |\n| ---- | ------- | ---- | ---------- | ----- | ------- | ----- | ---------- | ----- |\n");
+  await Bun.write(join(dir, "LOG.md"), "# Results Log\n\n| Date | Problem | Lang | Difficulty | Tests | Time | Solved | Complexity | Notes |\n| ---- | ------- | ---- | ---------- | ----- | ------- | ----- | ---------- | ----- |\n");
 
   // Every problem gets its folder + README now, and starting code in the first language
   const ws = await openWorkspace(dir, { workspace: dir, editor, reviewDays: 7, targets: { Easy: 15, Medium: 30, Hard: 45 } });
@@ -90,7 +90,8 @@ Run \`sk\` on its own for every command.
 ## Editors
 
 - **Zed:** with a problem's file open, **alt-shift-t** → pick a task (\`sk: test (watch)\`, \`sk: hint\`, …). **alt-t** re-runs the last one.
-- **VS Code:** **cmd-shift-p → "Tasks: Run Task"**. Problem READMEs open as formatted previews.
+- **VS Code / Cursor:** **cmd-shift-p → "Tasks: Run Task"**. Problem READMEs open as formatted previews.
+- **Terminal editor:** \`sk next\` opens problems in your \`$EDITOR\` (vim/neovim: description and solution side by side).
 - Both: the built-in terminal is **ctrl-\`**.
 
 ## Back it up (optional)

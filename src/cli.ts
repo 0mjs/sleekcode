@@ -96,7 +96,7 @@ switch (cmd) {
   case "review": await review(ws, rest); break;
   case "reset": await reset(ws, rest); break;
   case "stats": await stats(ws); break;
-  case "list": await list(ws); break;
+  case "list": await list(ws, rest); break;
   case "add": await add(ws, rest); break;
   case "sync": await sync(ws); break;
   case "lang": await lang(ws, rest); break;

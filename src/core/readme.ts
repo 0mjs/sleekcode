@@ -14,5 +14,5 @@ export function problemReadme(p: Problem, body: string | null): string {
   ].join("\n");
   const premium = p.paid ? `> 🔒 LeetCode Premium. A free version is on https://neetcode.io/practice (search "${p.title}"). The statement below is a write-up of the original.\n\n` : "";
   const text = body ?? `${PENDING}\n\nOpen the link above to read the problem.`;
-  return `${header}\n\n${premium}## Problem\n\n${text}\n\n## My Notes\n\n<!-- approach, gotchas, what you'd do differently -->\n\n## Attempts\n\n| Date | Lang | Tests | Minutes | Solo? | Complexity | Notes |\n| ---- | ---- | ----- | ------- | ----- | ---------- | ----- |\n`;
+  return `${header}\n\n${premium}## Problem\n\n${text}\n\n## My Notes\n\n<!-- approach, gotchas, what you'd do differently -->\n\n## Attempts\n\n| Date | Lang | Tests | Time | Solved | Complexity | Notes |\n| ---- | ---- | ----- | ------- | ----- | ---------- | ----- |\n`;
 }

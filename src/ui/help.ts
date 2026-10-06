@@ -17,8 +17,8 @@ export const GROUPS: { title: string; commands: Command[] }[] = [
         name: "log",
         desc: "Record your result (asks a few quick questions)",
         flags: [
-          { short: "m", long: "minutes", arg: "n", desc: "minutes taken" },
-          { short: "s", long: "solo", arg: "y/n", desc: "solved without help?" },
+          { short: "t", long: "time", arg: "duration", desc: 'e.g. 25, "1h 10m" (automatic with sk start)' },
+          { short: "s", long: "solo", arg: "y/n", desc: "solved on your own (no AI, no looking it up)?" },
           { short: "c", long: "complexity", arg: "text", desc: 'e.g. "O(n) / O(1)"' },
           { short: "n", long: "notes", arg: "text", desc: "anything worth remembering" },
         ],
@@ -38,7 +38,14 @@ export const GROUPS: { title: string; commands: Command[] }[] = [
     title: "Progress",
     commands: [
       { name: "stats", desc: "Dashboard: overview, patterns, history, review" },
-      { name: "list", desc: "Rebuild LIST.md, your checklist" },
+      {
+        name: "list",
+        desc: "Your checklist, in study order (LIST.md updates by itself)",
+        flags: [
+          { short: "t", long: "todo", desc: "only what's left" },
+          { short: "p", long: "pattern", arg: "name", desc: 'one pattern, e.g. "graphs"' },
+        ],
+      },
     ],
   },
   {

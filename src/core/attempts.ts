@@ -15,12 +15,21 @@ export type Attempt = {
   language: Language;
   pass: number;
   total: number;
+  /** Exact time taken (from the timer, or what you typed) */
+  seconds: number | null;
+  /** Rounded, for charts and older records */
   minutes: number | null;
+  /** How you got there. Hints are tracked separately and don't count as help here. */
+  help: Help;
+  /** true when help is "none" (kept for older records) */
   solo: boolean;
   hints: number;
   complexity: string;
   notes: string;
 };
+
+export type Help = "none" | "ai" | "lookup" | "person";
+export const HELP_LABEL: Record<Help, string> = { none: "on my own", ai: "used AI", lookup: "looked it up", person: "had help" };
 
 const file = (ws: Workspace) => join(ws.dir, "attempts.json");
 
@@ -31,7 +40,12 @@ export async function loadAttempts(ws: Workspace): Promise<Attempt[]> {
     // Fill gaps in older or hand-edited records so nothing downstream has to care
     return raw
       .filter((a) => a && a.folder && a.at && !Number.isNaN(Date.parse(a.at)))
-      .map((a) => ({ language: ws.language, pass: 0, total: 0, minutes: null, solo: false, hints: 0, complexity: "", notes: "", difficulty: "Medium", pattern: "", id: "", title: a.folder!, ...a }) as Attempt)
+      .map((a) => {
+        const full = { language: ws.language, pass: 0, total: 0, minutes: null, solo: false, hints: 0, complexity: "", notes: "", difficulty: "Medium", pattern: "", id: "", title: a.folder!, ...a } as Attempt;
+        full.help ??= full.solo ? "none" : "lookup";
+        full.seconds ??= full.minutes != null ? full.minutes * 60 : null;
+        return full;
+      })
       .sort((a, b) => a.at.localeCompare(b.at));
   } catch {
     return [];
@@ -44,7 +58,7 @@ export async function addAttempt(ws: Workspace, a: Attempt) {
 
 export const passed = (a: Attempt) => a.total > 0 && a.pass === a.total;
 /** Passed, on your own, no hints */
-export const clean = (a: Attempt) => passed(a) && a.solo && a.hints === 0;
+export const clean = (a: Attempt) => passed(a) && a.help === "none" && a.hints === 0;
 
 export const solvedFolders = async (ws: Workspace) => new Set((await loadAttempts(ws)).filter(passed).map((a) => a.folder));
 
@@ -54,8 +68,8 @@ export type Review = { folder: string; last: Attempt; due: Date; reason: string;
 
 /**
  * Spaced repetition, from your latest attempt of each problem:
- * - failed, used hints, or needed help → due again after 1 day
- * - passed solo but slower than target → 3 days
+ * - failed, or used AI / looked it up / had help → due again after 1 day
+ * - used hints, or slower than target          → 3 days
  * - clean and quick                    → reviewDays (7), doubling with each clean repeat (7, 14, 28, …)
  */
 export function reviews(ws: Workspace, attempts: Attempt[]): Review[] {
@@ -71,7 +85,8 @@ export function reviews(ws: Workspace, attempts: Attempt[]): Review[] {
 
     let days: number, reason: string;
     if (!passed(last)) [days, reason] = [1, "tests didn't pass"];
-    else if (last.hints || !last.solo) [days, reason] = [1, last.hints ? `used ${last.hints} hint${last.hints > 1 ? "s" : ""}` : "needed help"];
+    else if (last.help !== "none") [days, reason] = [1, HELP_LABEL[last.help]];
+    else if (last.hints) [days, reason] = [3, `used ${last.hints} hint${last.hints > 1 ? "s" : ""}`];
     else if (slow) [days, reason] = [3, `slow (${last.minutes} min)`];
     else [days, reason] = [ws.config.reviewDays * 2 ** Math.max(0, streak - 1), streak > 1 ? `clean ×${streak}` : "clean"];
 

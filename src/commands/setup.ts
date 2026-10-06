@@ -52,11 +52,13 @@ async function askEditor(initial?: Editor): Promise<Editor> {
   const installed = (app: string) => existsSync(`/Applications/${app}.app`) || existsSync(join(homedir(), "Applications", `${app}.app`));
   return check(await p.select<Editor>({
     message: "Which editor do you use?",
-    initialValue: initial ?? (installed("Zed") ? "zed" : installed("Visual Studio Code") ? "vscode" : "none"),
+    initialValue: initial ?? (installed("Zed") ? "zed" : installed("Visual Studio Code") ? "vscode" : installed("Cursor") ? "cursor" : "none"),
     options: [
       { value: "zed", label: "Zed", hint: installed("Zed") ? "installed" : undefined },
       { value: "vscode", label: "VS Code", hint: installed("Visual Studio Code") ? "installed" : undefined },
-      { value: "none", label: "Something else", hint: "I'll open the files myself" },
+      { value: "cursor", label: "Cursor", hint: installed("Cursor") ? "installed" : undefined },
+      { value: "terminal", label: "A terminal editor", hint: `vim, nvim, helix… (uses $EDITOR${process.env.EDITOR ? `: ${process.env.EDITOR}` : ""})` },
+      { value: "none", label: "Something else", hint: "SleekCode prints file paths; open them yourself" },
     ],
   }));
 }
@@ -79,7 +81,8 @@ async function askDir(): Promise<string> {
 function nextSteps(ws: Workspace) {
   const editorLine =
     ws.config.editor === "zed" ? `Open ${c.ink(tilde(ws.dir))} in Zed, then use alt-shift-t for tasks.`
-      : ws.config.editor === "vscode" ? `Open ${c.ink(tilde(ws.dir))} in VS Code, then cmd-shift-p → "Tasks: Run Task".`
+      : ws.config.editor === "vscode" || ws.config.editor === "cursor" ? `Open ${c.ink(tilde(ws.dir))} in ${EDITORS[ws.config.editor]}, then cmd-shift-p → "Tasks: Run Task".`
+        : ws.config.editor === "terminal" ? `sk next opens problems in ${c.ink(process.env.EDITOR || "vim")}, right here in the terminal.`
         : `Your files are in ${c.ink(tilde(ws.dir))}.`;
   p.note(
     [

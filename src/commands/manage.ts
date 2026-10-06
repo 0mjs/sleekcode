@@ -12,12 +12,45 @@ import { TOOL } from "../core/paths";
 import { problemReadme } from "../core/readme";
 import { syncReadmes } from "../core/sync";
 import { openWorkspace, problemDir, type Problem, type Workspace } from "../core/workspace";
-import { c } from "../ui/colors";
+import { loadAttempts, passed } from "../core/attempts";
+import type { Language } from "../core/languages";
+import { resolveProblem } from "../core/workspace";
+import { bold, c, diffColor, pad, rgb } from "../ui/colors";
 import { describe } from "./practice";
 
-export async function list(ws: Workspace) {
+export async function list(ws: Workspace, args: string[]) {
+  const { values } = parse("list", args);
   await renderList(ws);
-  console.log(`\n  ${c.green("LIST.md updated")} ${c.muted(join(ws.dir, "LIST.md"))}\n`);
+  const attempts = await loadAttempts(ws);
+  const solvedIn = new Map<string, Set<Language>>();
+  for (const a of attempts.filter(passed)) solvedIn.set(a.folder, (solvedIn.get(a.folder) ?? new Set()).add(a.language));
+  const current = await resolveProblem(ws);
+  const want = values.pattern ? String(values.pattern).toLowerCase() : null;
+
+  const groups = new Map<string, Problem[]>();
+  for (const p of ws.problems) groups.set(p.pattern, [...(groups.get(p.pattern) ?? []), p]);
+  const out = [""];
+  for (const [pattern, ps] of groups) {
+    if (want && !pattern.toLowerCase().includes(want)) continue;
+    const done = ps.filter((p) => solvedIn.has(p.folder)).length;
+    const shown = values.todo ? ps.filter((p) => !solvedIn.has(p.folder)) : ps;
+    if (!shown.length) continue;
+    const barW = 16;
+    const filled = Math.round((done / ps.length) * barW);
+    out.push(`  ${bold(c.green(pattern.toUpperCase()))}  ${c.ink(String(done))}${c.muted(`/${ps.length}`)}  ${c.green("━".repeat(filled))}${c.dim("━".repeat(barW - filled))}`);
+    for (const p of shown) {
+      const langs = solvedIn.get(p.folder);
+      const mark = p === current ? c.amber("▸") : langs ? c.green("✓") : c.dim("○");
+      const name = `${p.id}`.padEnd(5) + p.title;
+      out.push(
+        `    ${mark} ${pad((langs ? c.body : c.ink)(name.length > 46 ? name.slice(0, 45) + "…" : name), 48)}${pad(diffColor[p.difficulty](p.difficulty), 8)}` +
+          `${p.blind75 ? c.amber("⭐") : "  "} ${langs ? [...langs].map((l) => rgb(LANGUAGES[l].color)(LANGUAGES[l].tag)).join(" ") : ""}${p === current ? c.amber("  ← current") : ""}`,
+      );
+    }
+    out.push("");
+  }
+  if (out.length === 1) out.push(`  ${c.muted(want ? `No pattern matching "${want}".` : "Nothing left. You've solved them all! 🎉")}`, "");
+  console.log(out.join("\n"));
 }
 
 export async function sync(ws: Workspace) {

@@ -36,7 +36,8 @@ export async function writeEditorFiles(dir: string, languages: Language[], edito
     await Bun.write(join(dir, ".zed", "tasks.json"), "// SleekCode tasks: run them with alt-shift-t (or cmd-shift-p → \"task: spawn\").\n" + json(tasks));
   }
 
-  if (editor === "vscode") {
+  // Cursor is built on VS Code and reads the same files
+  if (editor === "vscode" || editor === "cursor") {
     mkdirSync(join(dir, ".vscode"), { recursive: true });
     await Bun.write(join(dir, ".vscode", "tasks.json"), json({
       version: "2.0.0",

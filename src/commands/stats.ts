@@ -1,7 +1,8 @@
 // sk stats: a full-screen dashboard.
 //   ←/→ or 1-5   switch tabs        l   filter by language
 //   ↑/↓ or j/k   scroll             q   quit
-import { ago, clean, dueNow, loadAttempts, passed, reviews, type Attempt } from "../core/attempts";
+import { ago, clean, dueNow, HELP_LABEL, loadAttempts, passed, reviews, type Attempt } from "../core/attempts";
+import { formatDuration } from "../core/duration";
 import { LANGUAGES, type Language } from "../core/languages";
 import { label } from "../core/problem";
 import type { Problem, Workspace } from "../core/workspace";
@@ -111,7 +112,7 @@ export async function stats(ws: Workspace) {
       { title: "blind 75", value: bold(c.amber(String(blind.filter(isSolved).length))) + c.muted(` / ${blind.length}`), sub: c.muted("must-knows") },
       { title: "streak", value: bold(c.green(`${streak}`)) + c.muted(streak === 1 ? " day" : " days"), sub: c.muted(`best ${best}`) },
       { title: "this week", value: bold(c.ink(String(thisWeek))) + c.muted(" solves"), sub: trend > 0 ? c.green(`▲ ${trend} vs last`) : trend < 0 ? c.red(`▼ ${-trend} vs last`) : c.muted("= last week") },
-      { title: "clean", value: bold(c.ink(pct(attempts.filter(clean).length, attempts.length))), sub: c.muted("no hints") },
+      { title: "clean", value: bold(c.ink(pct(attempts.filter(clean).length, attempts.length))), sub: c.muted(`${attempts.filter((a) => a.help === "ai").length} with AI`) },
       { title: "time in", value: bold(c.ink(fmtMin(totalMin))), sub: c.muted(`${attempts.length} tr${attempts.length === 1 ? "y" : "ies"}`) },
     ], width));
 
@@ -280,14 +281,14 @@ export async function stats(ws: Workspace) {
     }
 
     out.push("", section("recent"), "");
-    const titleW = Math.max(16, width - 40);
+    const titleW = Math.max(16, width - 46);
     for (const a of attempts.slice(-12).reverse()) {
       const spec = LANGUAGES[a.language];
-      const help = a.hints ? c.amber(`${a.hints} hint${a.hints > 1 ? "s" : ""}`) : a.solo ? c.muted("solo") : c.amber("help");
+      const help = a.help !== "none" ? c.red(HELP_LABEL[a.help]) : a.hints ? c.amber(`${a.hints} hint${a.hints > 1 ? "s" : ""}`) : c.muted("on my own");
       out.push(
         `${c.dim(a.at.slice(5, 10))} ${passed(a) ? c.green("✓") : c.red("✗")} ${rgb(spec?.color ?? "#868e97")(pad(spec?.tag ?? "?", 3))}` +
           `${pad(c.ink(truncate(`${a.id}. ${a.title}`, titleW)), titleW + 1)}${pad(diffColor[a.difficulty](a.difficulty), 7)}` +
-          `${padL(a.minutes == null ? c.dim("–") : c.body(`${a.minutes}m`), 5)}  ${help}`,
+          `${padL(a.seconds == null ? c.dim("–") : c.body(formatDuration(a.seconds)), 8)}  ${help}`,
       );
     }
     return out;
