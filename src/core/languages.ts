@@ -69,8 +69,11 @@ export const LANGUAGES: Record<Language, LanguageSpec> = {
       }));
     },
     install: ["bun", "install"],
-    run: (kind, _ws, watch) =>
-      kind === "test" ? ["bun", "test", ...(watch ? ["--watch"] : [])] : ["bun", ...(watch ? ["--watch"] : []), "solution.ts"],
+    // Tests stay clean: lib/quiet.ts mutes console.log while they run. `sk play` is where logs go.
+    run: (kind, wsDir, watch) =>
+      kind === "test"
+        ? ["bun", "test", ...(existsSync(join(wsDir, "lib", "quiet.ts")) ? ["--preload", join(wsDir, "lib", "quiet.ts")] : []), ...(watch ? ["--watch"] : [])]
+        : ["bun", ...(watch ? ["--watch"] : []), "solution.ts"],
     nativeWatch: true,
     generate: typescript,
     vscodeExtensions: ["oven.bun-vscode"],
@@ -102,7 +105,7 @@ dev = ["pytest>=8", "ruff>=0.6"]
 package = false
 
 [tool.pytest.ini_options]
-addopts = "-s -v -p no:cacheprovider --color=yes"
+addopts = "-q -p no:cacheprovider --color=yes"
 pythonpath = ["."]
 python_files = ["test_*.py"]
 
@@ -118,8 +121,8 @@ line-length = 120
     install: ["uv", "sync", "--quiet"],
     run: (kind, wsDir) => {
       const uv = ["uv", "run", "--quiet", "--project", wsDir];
-      // -s: show print() output even when tests pass (the whole point); -v: label it with the test name
-      return kind === "test" ? [...uv, "pytest", "-s", "-v"] : [...uv, "python", "solution.py"];
+      // Tests stay clean (pytest only shows prints for a failing test); `sk play` is where prints go
+      return kind === "test" ? [...uv, "pytest"] : [...uv, "python", "solution.py"];
     },
     nativeWatch: false,
     generate: python,
