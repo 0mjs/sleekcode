@@ -1,7 +1,8 @@
 // Every `sk log` is stored in <workspace>/attempts.json. Stats, review and LIST.md read it.
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type { Difficulty, Language } from "./config";
+import type { Difficulty } from "./config";
+import type { Language } from "./languages";
 import type { Workspace } from "./workspace";
 
 export type Attempt = {
@@ -23,8 +24,19 @@ export type Attempt = {
 
 const file = (ws: Workspace) => join(ws.dir, "attempts.json");
 
-export const loadAttempts = async (ws: Workspace): Promise<Attempt[]> =>
-  existsSync(file(ws)) ? Bun.file(file(ws)).json() : [];
+export async function loadAttempts(ws: Workspace): Promise<Attempt[]> {
+  if (!existsSync(file(ws))) return [];
+  try {
+    const raw: Partial<Attempt>[] = await Bun.file(file(ws)).json();
+    // Fill gaps in older or hand-edited records so nothing downstream has to care
+    return raw
+      .filter((a) => a && a.folder && a.at && !Number.isNaN(Date.parse(a.at)))
+      .map((a) => ({ language: ws.language, pass: 0, total: 0, minutes: null, solo: false, hints: 0, complexity: "", notes: "", difficulty: "Medium", pattern: "", id: "", title: a.folder!, ...a }) as Attempt)
+      .sort((a, b) => a.at.localeCompare(b.at));
+  } catch {
+    return [];
+  }
+}
 
 export async function addAttempt(ws: Workspace, a: Attempt) {
   await Bun.write(file(ws), JSON.stringify([...(await loadAttempts(ws)), a], null, 2) + "\n");

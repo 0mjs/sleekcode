@@ -1,10 +1,18 @@
 import { join } from "node:path";
-import { solvedFolders } from "./attempts";
+import { loadAttempts, passed } from "./attempts";
+import { LANGUAGES, type Language } from "./languages";
 import type { Problem, Workspace } from "./workspace";
 
 /** Rebuilds LIST.md (the checklist, in study order) from the problem list + attempts */
 export async function renderList(ws: Workspace) {
-  const solved = await solvedFolders(ws);
+  const attempts = await loadAttempts(ws);
+  const solvedIn = new Map<string, Set<Language>>();
+  for (const a of attempts.filter(passed)) solvedIn.set(a.folder, (solvedIn.get(a.folder) ?? new Set()).add(a.language ?? ws.language));
+  const solved = new Set(solvedIn.keys());
+  const tags = (folder: string) => {
+    const langs = solvedIn.get(folder);
+    return langs && (ws.languages.length > 1 || langs.size > 1) ? ` · ${[...langs].map((l) => LANGUAGES[l].tag).join(" ")}` : "";
+  };
   const count = (ps: Problem[]) => `${ps.filter((p) => solved.has(p.folder)).length}/${ps.length}`;
   const by = (d: string) => ws.problems.filter((p) => p.difficulty === d);
 
@@ -22,7 +30,7 @@ export async function renderList(ws: Workspace) {
   for (const [pattern, ps] of groups) {
     lines.push("", `## ${pattern} (${count(ps)})`, "");
     for (const p of ps) {
-      lines.push(`- [${solved.has(p.folder) ? "x" : " "}] ${p.blind75 ? "⭐ " : ""}[${p.id}. ${p.title}](problems/${p.folder}/README.md) — ${p.difficulty}${p.paid ? " 🔒" : ""}`);
+      lines.push(`- [${solved.has(p.folder) ? "x" : " "}] ${p.blind75 ? "⭐ " : ""}[${p.id}. ${p.title}](problems/${p.folder}/README.md) — ${p.difficulty}${p.paid ? " 🔒" : ""}${tags(p.folder)}`);
     }
   }
   await Bun.write(join(ws.dir, "LIST.md"), lines.join("\n") + "\n");

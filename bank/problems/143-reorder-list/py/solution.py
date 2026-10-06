@@ -14,6 +14,7 @@ class Solution:
         """
         Do not return anything, modify head in-place instead.
         """
+        raise NotImplementedError("Not implemented")
 
 
 # Scratchpad: `sk play` runs this, tests skip it

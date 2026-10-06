@@ -141,6 +141,16 @@ function pyStubBody(snippet: string): string {
     }
   }
   // Blank line between methods
+  // A method whose body is only a docstring ("Do not return anything…") still needs a raise
+  for (let i = 0; i < out.length; i++) {
+    const def = out[i]!.match(/^(\s*)def .*:\s*$/);
+    if (!def || !/^\s+"""/.test(out[i + 1] ?? "")) continue;
+    let end = i + 1;
+    if (!/""".*"""/.test(out[end]!.trim()) || out[end]!.trim() === '"""') while (end + 1 < out.length && !out[++end]!.includes('"""'));
+    const after = out.slice(end + 1).find((l) => l.trim() !== "");
+    if (!after || after.match(/^\s*/)![0].length <= def[1]!.length)
+      out.splice(end + 1, 0, `${def[1]}    raise NotImplementedError("Not implemented")`);
+  }
   return out
     .join("\n")
     .replace(/(raise NotImplementedError\("Not implemented"\))\n(\s+def )/g, "$1\n\n$2")

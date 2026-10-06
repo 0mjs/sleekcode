@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { dueNow, loadAttempts, solvedFolders } from "../core/attempts";
 import { parse } from "../core/args";
 import { openInEditor } from "../core/editor";
+import { ensureProblemFiles } from "../core/materialize";
 import { label, needProblem } from "../core/problem";
 import { runOnce, runWatching, type Kind } from "../core/run";
 import { problemDir, setCurrent, solutionFile, stubFile, type Problem, type Workspace } from "../core/workspace";
@@ -13,6 +14,7 @@ export const describe = (p: Problem) =>
   `${bold(c.ink(label(p)))} ${c.muted("·")} ${diffColor[p.difficulty](p.difficulty)} ${c.muted("·")} ${c.body(p.pattern)}${p.blind75 ? c.amber(" ⭐") : ""}`;
 
 export async function select(ws: Workspace, p: Problem) {
+  await ensureProblemFiles(ws, p);
   await setCurrent(ws, p);
   openInEditor(ws, [join(problemDir(ws, p), "README.md"), solutionFile(ws, p)]);
 }

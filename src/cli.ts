@@ -2,7 +2,9 @@
 // SleekCode: `sk` (or `sleek`). Run with no arguments for help.
 import { existsSync } from "node:fs";
 import { dueNow, loadAttempts, solvedFolders } from "./core/attempts";
-import { EDITORS, LANGUAGES, loadConfig } from "./core/config";
+import { EDITORS, loadConfig } from "./core/config";
+import { LANGUAGES } from "./core/languages";
+import { lang } from "./commands/lang";
 import { tilde } from "./core/paths";
 import { label } from "./core/problem";
 import { currentWorkspace, resolveProblem, type Workspace } from "./core/workspace";
@@ -36,7 +38,9 @@ async function status(ws: Workspace): Promise<string[]> {
   const due = dueNow(ws, attempts).length;
   const current = await resolveProblem(ws);
   return [
-    `  ${c.muted("Workspace")}  ${c.ink(tilde(ws.dir))} ${c.muted(`· ${LANGUAGES[ws.language].name} · ${EDITORS[ws.config.editor]}`)}`,
+    `  ${c.muted("Workspace")}  ${c.ink(tilde(ws.dir))} ${c.muted(`· ${EDITORS[ws.config.editor]}`)}`,
+    `  ${c.muted("Language ")}  ${c.ink(LANGUAGES[ws.language].name)}` +
+      (ws.languages.length > 1 ? ` ${c.muted(`· also set up: ${ws.languages.filter((l) => l !== ws.language).map((l) => LANGUAGES[l].name).join(", ")}`)}` : ` ${c.muted("· switch with sk lang")}`),
     `  ${c.muted("Progress ")}  ${c.ink(`${solved}/${ws.problems.length}`)} ${c.muted("solved")}` +
       (due ? ` ${c.muted("·")} ${c.amber(`${due} due for review`)}` : "") +
       (current ? ` ${c.muted("· current:")} ${c.body(label(current))}` : ""),
@@ -95,6 +99,7 @@ switch (cmd) {
   case "list": await list(ws); break;
   case "add": await add(ws, rest); break;
   case "sync": await sync(ws); break;
+  case "lang": await lang(ws, rest); break;
   default: {
     const guess = ALL.map((x) => ({ x, d: distance(cmd, x.name) })).sort((a, b) => a.d - b.d).find((g) => g.d <= 2)?.x;
     console.log(`\n  ${c.red(`Unknown command "${cmd}".`)}${guess ? ` ${c.muted("Did you mean")} ${c.ink(`sk ${guess.name}`)}${c.muted("?")}` : ""}`);

@@ -1,7 +1,8 @@
 // Editor integration written into a workspace: tasks that run `sk` on whichever problem file is open.
 import { mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
-import type { Editor, Language } from "./config";
+import type { Editor } from "./config";
+import { LANGUAGES, type Language } from "./languages";
 
 const TASKS: { label: string; args: string; perFile: boolean }[] = [
   { label: "sk: test (watch)", args: "test --watch", perFile: true },
@@ -18,7 +19,7 @@ const TASKS: { label: string; args: string; perFile: boolean }[] = [
 
 const json = (v: unknown) => JSON.stringify(v, null, 2) + "\n";
 
-export async function writeEditorFiles(dir: string, language: Language, editor: Editor) {
+export async function writeEditorFiles(dir: string, languages: Language[], editor: Editor) {
   rmSync(join(dir, ".zed"), { recursive: true, force: true });
   rmSync(join(dir, ".vscode"), { recursive: true, force: true });
 
@@ -52,7 +53,7 @@ export async function writeEditorFiles(dir: string, language: Language, editor: 
       // Problem READMEs open as formatted previews
       "workbench.editorAssociations": { "**/problems/*/README.md": "vscode.markdown.preview.editor" },
       "files.exclude": { "**/.started": true, "**/.hints-used": true, ".current": true, "**/__pycache__": true },
-      ...(language === "py"
+      ...(languages.includes("py")
         ? {
             "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
             "python.analysis.extraPaths": ["${workspaceFolder}"],
@@ -61,7 +62,7 @@ export async function writeEditorFiles(dir: string, language: Language, editor: 
         : {}),
     }));
     await Bun.write(join(dir, ".vscode", "extensions.json"), json({
-      recommendations: language === "py" ? ["ms-python.python", "charliermarsh.ruff"] : ["oven.bun-vscode"],
+      recommendations: [...new Set(languages.flatMap((l) => LANGUAGES[l].vscodeExtensions))],
     }));
   }
 }

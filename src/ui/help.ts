@@ -44,6 +44,12 @@ export const GROUPS: { title: string; commands: Command[] }[] = [
   {
     title: "Setup",
     commands: [
+      {
+        name: "lang",
+        args: "[language]",
+        desc: "Show or switch your language (typescript, python), like LeetCode's dropdown",
+        flags: [{ short: "a", long: "all", desc: "create files for every problem now, not as you go" }],
+      },
       { name: "config", desc: "Change editor, review timing, or set up another workspace" },
       {
         name: "add",

@@ -4,8 +4,10 @@ import { existsSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { DEFAULTS, EDITORS, LANGUAGES, loadConfig, saveConfig, type Config, type Editor, type Language } from "../core/config";
-import { createWorkspace, finishWorkspace, installDeps } from "../core/create";
+import { DEFAULTS, EDITORS, loadConfig, saveConfig, type Config, type Editor } from "../core/config";
+import { LANGUAGE_IDS, LANGUAGES, ensureTool, type Language } from "../core/languages";
+import { renderList } from "../core/list";
+import { createWorkspace, installDeps } from "../core/create";
 import { writeEditorFiles } from "../core/editor-files";
 import { tilde } from "../core/paths";
 import { syncReadmes } from "../core/sync";
@@ -22,19 +24,6 @@ const check = <T>(v: T): Exclude<T, symbol> => {
   return v as Exclude<T, symbol>;
 };
 
-async function ensureUv(): Promise<boolean> {
-  if (Bun.which("uv")) return true;
-  const ok = check(await p.confirm({ message: "Python practice uses uv (a fast Python tool). It isn't installed yet. Install it now?", initialValue: true }));
-  if (!ok) return false;
-  const spin = p.spinner();
-  spin.start("Installing uv");
-  const proc = Bun.spawn(["sh", "-c", "curl -LsSf https://astral.sh/uv/install.sh | sh"], { stdout: "pipe", stderr: "pipe" });
-  const code = await proc.exited;
-  process.env.PATH = `${join(homedir(), ".local", "bin")}:${process.env.PATH}`;
-  spin.stop(code === 0 && Bun.which("uv") ? "uv installed" : c.red("Couldn't install uv. See https://docs.astral.sh/uv/"));
-  return code === 0 && !!Bun.which("uv");
-}
-
 /** Creates the workspace with progress output. Returns the opened workspace. */
 async function build(dir: string, language: Language, editor: Editor, config: Config): Promise<Workspace> {
   const spin = p.spinner();
@@ -43,9 +32,9 @@ async function build(dir: string, language: Language, editor: Editor, config: Co
   const ws = await openWorkspace(dir, config);
   spin.message("Downloading problems from LeetCode");
   const failed = await syncReadmes(ws, (done, total) => spin.message(`Downloading problems from LeetCode (${done}/${total})`));
-  spin.message(language === "ts" ? "Installing TypeScript tools (bun install)" : "Setting up Python (uv sync)");
+  spin.message(`Setting up ${LANGUAGES[language].name} (${LANGUAGES[language].install.slice(0, 2).join(" ")})`);
   const deps = await installDeps(dir, language);
-  await finishWorkspace(ws);
+  await renderList(ws);
   spin.stop(`Workspace ready at ${c.ink(tilde(dir))}`);
   if (failed) p.log.warn(`${failed} problem descriptions couldn't be downloaded (no internet?). Run ${c.ink("sk sync")} later; the links work meanwhile.`);
   if (!deps.ok) p.log.warn(`Installing dependencies didn't finish:\n${c.muted(deps.output.trim().split("\n").slice(-4).join("\n"))}`);
@@ -54,11 +43,8 @@ async function build(dir: string, language: Language, editor: Editor, config: Co
 
 async function askLanguage(): Promise<Language> {
   return check(await p.select<Language>({
-    message: "Which language do you want to practise in?",
-    options: [
-      { value: "ts", label: "TypeScript", hint: "runs with Bun" },
-      { value: "py", label: "Python", hint: "runs with uv + pytest" },
-    ],
+    message: "Which language do you want to practise in? (you can switch any time with sk lang)",
+    options: LANGUAGE_IDS.map((id) => ({ value: id, label: LANGUAGES[id].name, hint: `runs with ${LANGUAGES[id].tool.name}` })),
   }));
 }
 
@@ -75,8 +61,8 @@ async function askEditor(initial?: Editor): Promise<Editor> {
   }));
 }
 
-async function askDir(language: Language): Promise<string> {
-  const suggestion = `~/sleekcode-${language === "ts" ? "typescript" : "python"}`;
+async function askDir(): Promise<string> {
+  const suggestion = "~/sleekcode-practice";
   const v = check(await p.text({
     message: "Where should your workspace folder go?",
     placeholder: suggestion,
@@ -126,12 +112,12 @@ export async function onboarding(args: string[] = []) {
   p.log.message(c.body("The NeetCode 150 (the classic interview problems) with tests, hints and progress tracking.\nThree quick questions and you're ready."));
 
   const language = await askLanguage();
-  if (language === "py" && !(await ensureUv())) {
-    p.cancel("Python needs uv. Install it from https://docs.astral.sh/uv/ and run sk again.");
+  if (!(await ensureTool(language))) {
+    p.cancel(`${LANGUAGES[language].name} needs ${LANGUAGES[language].tool.name}. Install it from ${LANGUAGES[language].tool.url} and run sk again.`);
     process.exit(1);
   }
   const editor = await askEditor();
-  const dir = await askDir(language);
+  const dir = await askDir();
 
   const go = check(await p.confirm({
     message: `Create a ${LANGUAGES[language].name} workspace in ${tilde(dir)}, set up for ${EDITORS[editor]}?`,
@@ -166,7 +152,7 @@ export async function configure(ws: Workspace | null) {
     options: [
       { value: "editor", label: "Editor", hint: EDITORS[config.editor] },
       { value: "review", label: "Review timing", hint: `${config.reviewDays} days` },
-      { value: "new", label: "Set up another workspace", hint: "e.g. to try the other language" },
+      { value: "new", label: "Set up another workspace", hint: "rarely needed: sk lang switches languages" },
       { value: "switch", label: "Switch the active workspace" },
       { value: "done", label: "Nothing, I'm done" },
     ],
@@ -174,7 +160,7 @@ export async function configure(ws: Workspace | null) {
 
   if (choice === "editor") {
     config.editor = await askEditor(config.editor);
-    if (ws) await writeEditorFiles(ws.dir, ws.language, config.editor);
+    if (ws) await writeEditorFiles(ws.dir, ws.languages, config.editor);
   } else if (choice === "review") {
     const days = check(await p.text({ message: "Days until a clean solve comes back for review", defaultValue: String(config.reviewDays), placeholder: String(config.reviewDays), validate: (s) => (s && !/^\d+$/.test(s) ? "A number of days" : undefined) }));
     config.reviewDays = Number(days || config.reviewDays);
@@ -184,8 +170,8 @@ export async function configure(ws: Workspace | null) {
     }
   } else if (choice === "new") {
     const language = await askLanguage();
-    if (language === "py" && !(await ensureUv())) process.exit(1);
-    const dir = await askDir(language);
+    if (!(await ensureTool(language))) process.exit(1);
+    const dir = await askDir();
     config.workspace = dir;
     const created = await build(dir, language, config.editor, config);
     await saveConfig(config);

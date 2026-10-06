@@ -7,6 +7,7 @@ import { renderList } from "../core/list";
 import { label, needProblem } from "../core/problem";
 import { runOnce } from "../core/run";
 import { hintsFile, problemDir, solutionFile, type Workspace } from "../core/workspace";
+import { LANGUAGES } from "../core/languages";
 import { c } from "../ui/colors";
 import type { Hints } from "./hint";
 
@@ -23,7 +24,7 @@ export async function log(ws: Workspace, args: string[]) {
 
   // 1. Run the tests
   const spin = p.spinner();
-  spin.start(`Running the tests for ${label(prob)}`);
+  spin.start(`Running the ${LANGUAGES[ws.language].name} tests for ${label(prob)}`);
   const output = (await runOnce(ws, prob, "test", true)).output.replace(/\x1b\[[0-9;]*m/g, "");
   const pass = Number(output.match(/(\d+) pass(ed)?/)?.[1] ?? 0);
   const fail = Number(output.match(/(\d+) fail(ed)?/)?.[1] ?? 0) + Number(output.match(/(\d+) error/)?.[1] ?? 0);
@@ -89,10 +90,10 @@ export async function log(ws: Workspace, args: string[]) {
   const tests = `${pass}/${total} ${ok ? "✅" : "❌"}`;
   const soloCell = `${solo ? "✅" : "❌"}${hintsUsed ? ` 💡${hintsUsed}` : ""}`;
   const readme = join(dir, "README.md");
-  await Bun.write(readme, (await Bun.file(readme).text()).trimEnd() + `\n| ${date} | ${tests} | ${minutes || "–"} | ${soloCell} | ${esc(complexity)} | ${esc(notes)} |\n`);
+  await Bun.write(readme, (await Bun.file(readme).text()).trimEnd() + `\n| ${date} | ${LANGUAGES[ws.language].tag} | ${tests} | ${minutes || "–"} | ${soloCell} | ${esc(complexity)} | ${esc(notes)} |\n`);
   const logFile = join(ws.dir, "LOG.md");
   await Bun.write(logFile, (await Bun.file(logFile).text()).trimEnd() +
-    `\n| ${date} | [${label(prob)}](problems/${prob.folder}/README.md) | ${prob.difficulty} | ${tests} | ${minutes || "–"} | ${soloCell} | ${esc(complexity)} | ${esc(notes)} |\n`);
+    `\n| ${date} | [${label(prob)}](problems/${prob.folder}/README.md) | ${LANGUAGES[ws.language].tag} | ${prob.difficulty} | ${tests} | ${minutes || "–"} | ${soloCell} | ${esc(complexity)} | ${esc(notes)} |\n`);
 
   const snapshots = join(dir, "attempts");
   mkdirSync(snapshots, { recursive: true });

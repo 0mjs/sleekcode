@@ -5,6 +5,7 @@ CLI (`sk` / `sleek`, Bun + TypeScript) for practising the NeetCode 150 in TypeSc
 ## Layout
 
 - `src/cli.ts`: entry and dispatch. `src/commands/*`: commands. `src/core/*`: config, workspace, attempts, generation, sync, run, editor. `src/ui/*`: colours, header wordmark, help (the help definitions in `ui/help.ts` also drive flag parsing in `core/args.ts`, so add flags there).
+- `src/core/languages.ts`: the language registry (files, tools, run commands, generator, colours). One workspace holds any number of languages; `.sleekcode.json` has the current `language` and the set-up `languages`. Problem files for a language are created on first use (`core/materialize.ts`, called from `needProblem` / `select`).
 - `bank/problems.json`: index. `bank/problems/<id>-<short-name>/`: `hints.json` (NeetCode, MIT), `ts/` + `py/` (solution stub + tests), `problem.md` (Premium write-ups only).
 - `runtime/ts/lib`, `runtime/py/sleek`: helpers copied into each workspace (ListNode/TreeNode builders, runOps / run_ops, anyOrder / any_order).
 - `build/`: maintainer scripts. `fetch-cache.ts` → `build-bank.ts` → `validate.ts`. `build/refs/<lang>/` holds reference solutions where NeetCode's are missing or broken, plus the 13 MANUAL problems. `build/neetcode-hint-names.json` is a hand-checked 1:1 map; don't regenerate it by fuzzy matching.

@@ -42,7 +42,7 @@ The installer sets up everything SleekCode needs (a tool called Bun), then asks 
 
 Use the **arrow keys** to choose and **Enter** to confirm:
 
-1. **Language:** TypeScript or Python. (If you pick Python, it offers to install `uv`, the Python tool it uses. Say yes.)
+1. **Language:** TypeScript or Python. You can switch any time later. (If you pick Python, it offers to install `uv`, the Python tool it uses. Say yes.)
 2. **Editor:** Zed, VS Code, or something else.
 3. **Where to put your practice folder:** just press Enter for the suggested place.
 
@@ -73,6 +73,17 @@ file so you solve them fresh.
 
 `sk stats` shows a dashboard (use ← → to switch tabs, q to quit).
 
+### Switching language
+
+Like the language dropdown on LeetCode:
+
+```sh
+sk lang            # which language you're using
+sk lang python     # switch to Python (or: sk lang typescript)
+```
+
+Your progress, notes and reviews are shared. A problem gets files for a language the first time you open it in that language, so you can re-solve problems you've done in one language in the other. `sk stats` compares the two.
+
 ### Editor shortcuts
 
 - **Zed:** with a problem open, press **alt + shift + t** and pick a task like `sk: test (watch)`. **alt + t** re-runs the last one.
@@ -98,7 +109,7 @@ sk update
 sk config
 ```
 
-Change your editor or review timing, or set up a second workspace (e.g. to try the other language).
+Change your editor or review timing.
 
 ## Troubleshooting
 
@@ -132,6 +143,10 @@ bun build/build-bank.ts    # regenerate bank/ (hand-written problems are kept)
 bun build/validate.ts      # every test must fail on the blank stub and pass on a reference solution
 bun run typecheck
 ```
+
+**Adding a language** (Go, Java, …): add an entry to `src/core/languages.ts`, a generator in
+`src/core/generate.ts`, helpers in `runtime/<id>/`, then rebuild and validate the bank. Everything else
+(commands, stats, editors) picks it up from the registry.
 
 ## Credits
 

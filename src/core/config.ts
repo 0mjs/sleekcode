@@ -1,7 +1,8 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { CONFIG_DIR, CONFIG_FILE } from "./paths";
 
-export type Language = "ts" | "py";
+export type { Language } from "./languages";
+export { LANGUAGES } from "./languages";
 export type Editor = "zed" | "vscode" | "none";
 export type Difficulty = "Easy" | "Medium" | "Hard";
 
@@ -19,11 +20,6 @@ export const DEFAULTS: Omit<Config, "workspace"> = {
   editor: "none",
   reviewDays: 7,
   targets: { Easy: 15, Medium: 30, Hard: 45 },
-};
-
-export const LANGUAGES: Record<Language, { name: string; ext: string; test: string }> = {
-  ts: { name: "TypeScript", ext: "ts", test: "solution.test.ts" },
-  py: { name: "Python", ext: "py", test: "test_solution.py" },
 };
 
 export const EDITORS: Record<Editor, string> = { zed: "Zed", vscode: "VS Code", none: "No editor" };
