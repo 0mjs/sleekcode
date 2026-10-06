@@ -155,8 +155,8 @@ async function describeWorkspace(dir: string): Promise<string> {
 async function pickWorkspace(config: Config, message: string, query?: string): Promise<string> {
   const known = knownWorkspaces(config);
   if (query) {
-    const dir = expand(query);
-    const match = existsSync(join(dir, MARKER)) ? dir : known.find((d) => d.endsWith("/" + query) || d.includes(query));
+    const siblings = [...new Set(known.map((d) => join(d, "..", query)))].map((d) => resolve(d));
+    const match = [expand(query), ...siblings].find((d) => existsSync(join(d, MARKER))) ?? known.find((d) => d.endsWith("/" + query) || d.includes(query));
     if (!match) {
       p.cancel(`No workspace matching "${query}".`);
       process.exit(1);

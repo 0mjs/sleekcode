@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
-import { loadConfig, type Config, type Difficulty } from "./config";
+import { loadConfig, saveConfig, type Config, type Difficulty } from "./config";
 import { LANGUAGES, type Language } from "./languages";
 import { BANK } from "./paths";
 
@@ -66,7 +66,13 @@ export async function openWorkspace(dir: string, config: Config): Promise<Worksp
 export async function currentWorkspace(): Promise<Workspace | null> {
   const config = await loadConfig();
   if (!config) return null;
-  const dir = findWorkspaceDir() ?? (existsSync(join(config.workspace, MARKER)) ? config.workspace : null);
+  const here = findWorkspaceDir();
+  if (here && !(config.workspaces ?? []).includes(here)) {
+    // Remember workspaces you use, so `sk config` can switch to / remove them later
+    config.workspaces = [...(config.workspaces ?? []), here];
+    await saveConfig(config);
+  }
+  const dir = here ?? (existsSync(join(config.workspace, MARKER)) ? config.workspace : null);
   return dir ? openWorkspace(dir, config) : null;
 }
 
