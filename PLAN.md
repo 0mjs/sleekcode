@@ -15,6 +15,11 @@ Open questions before building it:
   separate category everywhere, or their own tab in `sk stats`.
 - Should a mock count as an attempt for spaced repetition at all?
 
+### Dispute a test (`sk dispute`)
+If a hidden test case looks wrong, a way to flag it from the CLI: shows the full input, your answer and the
+expected one, and saves a report the maintainer can check (and fix the spec or reference). SleekCode stays the
+judge; no "go check it on LeetCode" step.
+
 ### More languages
 Go, Java, … The language registry (`src/core/languages.ts`) is built for this: one entry, a generator in
 `src/core/generate.ts`, helpers in `runtime/<id>/`, then build + validate the bank.
