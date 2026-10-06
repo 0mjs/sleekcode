@@ -1,5 +1,5 @@
 // Every `sk log` is stored in <workspace>/attempts.json. Stats, review and LIST.md read it.
-import { existsSync } from "node:fs";
+import { existsSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import type { Difficulty } from "./config";
 import type { Language } from "./languages";
@@ -55,7 +55,10 @@ export async function loadAttempts(ws: Workspace): Promise<Attempt[]> {
 }
 
 export async function saveAttempts(ws: Workspace, attempts: Attempt[]) {
-  await Bun.write(file(ws), JSON.stringify(attempts, null, 2) + "\n");
+  // Write a temp file, then rename over the real one: a crash mid-write can't corrupt your history
+  const tmp = file(ws) + ".tmp";
+  await Bun.write(tmp, JSON.stringify(attempts, null, 2) + "\n");
+  renameSync(tmp, file(ws));
 }
 
 export async function addAttempt(ws: Workspace, a: Attempt) {

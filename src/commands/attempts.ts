@@ -10,13 +10,27 @@ import { LANGUAGES } from "../core/languages";
 import { needProblem } from "../core/problem";
 import { renderRecords } from "../core/records";
 import { problemDir, type Workspace } from "../core/workspace";
-import { c, rgb } from "../ui/colors";
+import { c, rgb, visible } from "../ui/colors";
 import { ask, COMPLEXITIES, pickComplexity, pickHelp } from "./log";
 
 const when = (a: Attempt) => {
   const d = new Date(a.at);
   return `${d.toLocaleDateString("en-GB", { day: "numeric", month: "short" })} ${d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`;
 };
+
+/** Cuts a coloured string to `width` visible characters, ending in … */
+function fit(s: string, width: number): string {
+  let out = "", n = 0;
+  for (const part of s.split(/(\x1b\[[0-9;]*m)/)) {
+    if (part.startsWith("\x1b[")) { out += part; continue; }
+    for (const ch of part) {
+      if (n >= width - 1) return out + "…\x1b[0m";
+      out += ch;
+      n++;
+    }
+  }
+  return out;
+}
 
 /** One line describing an attempt */
 export function summary(a: Attempt, withTitle = false): string {
@@ -29,7 +43,7 @@ export function summary(a: Attempt, withTitle = false): string {
     a.seconds == null ? c.dim("no time") : c.body(formatDuration(a.seconds)),
     a.help === "none" ? c.body(a.hints ? `on my own · ${a.hints} hint${a.hints > 1 ? "s" : ""}` : "on my own") : c.amber(HELP_LABEL[a.help]),
     a.complexity ? c.body(a.complexity) : null,
-  ].filter(Boolean).join(c.dim("  ·  "));
+  ].filter(Boolean).join(c.dim(" · "));
 }
 
 /** Deletes an attempt. Its code snapshot is kept, renamed so it's clearly not a logged attempt any more. */
@@ -90,7 +104,15 @@ export async function attempts(ws: Workspace, args: string[]) {
     message: "Which attempt?",
     maxItems: 10,
     options: [
-      ...list.map((a) => ({ value: a.at, label: summary(a, !!values.all), hint: a.notes ? a.notes.slice(0, 40) : undefined })),
+      ...list.map((a) => {
+        // Fit each row on one line: the summary first, then as much of the note as there's room for
+        const room = (process.stdout.columns || 100) - 16; // clack adds a prefix and trims long rows itself
+        let label = summary(a, !!values.all);
+        if (visible(label) > room) label = fit(label, room);
+        const left = room - visible(label) - 3;
+        const hint = a.notes && left >= 8 ? (a.notes.length > left ? a.notes.slice(0, left - 1).trimEnd() + "…" : a.notes) : undefined;
+        return { value: a.at, label, hint };
+      }),
       { value: "", label: c.muted("Cancel") },
     ],
   }));

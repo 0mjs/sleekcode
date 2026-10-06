@@ -102,7 +102,7 @@ dev = ["pytest>=8", "ruff>=0.6"]
 package = false
 
 [tool.pytest.ini_options]
-addopts = "-q -p no:cacheprovider --color=yes"
+addopts = "-s -v -p no:cacheprovider --color=yes"
 pythonpath = ["."]
 python_files = ["test_*.py"]
 
@@ -118,7 +118,8 @@ line-length = 120
     install: ["uv", "sync", "--quiet"],
     run: (kind, wsDir) => {
       const uv = ["uv", "run", "--quiet", "--project", wsDir];
-      return kind === "test" ? [...uv, "pytest"] : [...uv, "python", "solution.py"];
+      // -s: show print() output even when tests pass (the whole point); -v: label it with the test name
+      return kind === "test" ? [...uv, "pytest", "-s", "-v"] : [...uv, "python", "solution.py"];
     },
     nativeWatch: false,
     generate: python,
