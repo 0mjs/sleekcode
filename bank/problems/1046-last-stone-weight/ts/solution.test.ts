@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { lastStoneWeight } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("1046. Last Stone Weight", () => {
-  test("example 1", () => {
-    expect(lastStoneWeight([2,7,4,1,8,1])).toEqual(1);
-  });
-
-  test("example 2", () => {
-    expect(lastStoneWeight([1])).toEqual(1);
-  });
-});
+suite(cases, solution, import.meta.path);

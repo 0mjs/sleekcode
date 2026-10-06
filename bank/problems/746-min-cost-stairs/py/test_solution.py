@@ -1,12 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 746. Min Cost Climbing Stairs
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().minCostClimbingStairs([10, 15, 20]) == 15
-
-
-def test_example_2():
-    assert Solution().minCostClimbingStairs([1, 100, 1, 1, 1, 100, 1, 1, 100, 1]) == 6
+def test_fast_enough():
+    check_perf(FILE, __file__)

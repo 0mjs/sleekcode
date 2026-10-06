@@ -1,13 +1,16 @@
-from sleek import any_order_deep
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 40. Combination Sum II
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert any_order_deep(Solution().combinationSum2([10, 1, 2, 7, 6, 1, 5], 8)) == any_order_deep([[1, 1, 6], [1, 2, 5], [1, 7], [2, 6]])
-
-
-def test_example_2():
-    assert any_order_deep(Solution().combinationSum2([2, 5, 2, 1, 2], 5)) == any_order_deep([[1, 2, 2], [5]])
+def test_fast_enough():
+    check_perf(FILE, __file__)

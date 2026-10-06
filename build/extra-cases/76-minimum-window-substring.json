@@ -1,0 +1,165 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    "a",
+    "b"
+   ],
+   "output": ""
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    "ab",
+    "b"
+   ],
+   "output": "b"
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    "bba",
+    "ab"
+   ],
+   "output": "ba"
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    "aA",
+    "a"
+   ],
+   "output": "a"
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    "abc",
+    "cba"
+   ],
+   "output": "abc"
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    "aaflslflsldkalskaaa",
+    "aaa"
+   ],
+   "output": "aaa"
+  },
+  {
+   "name": "edge 7",
+   "input": [
+    "cabwefgewcwaefgcf",
+    "cae"
+   ],
+   "output": "cwae"
+  },
+  {
+   "name": "edge 8",
+   "input": [
+    "ABBBBBCA",
+    "AB"
+   ],
+   "output": "AB"
+  },
+  {
+   "name": "random 1",
+   "input": [
+    "cYdXcdXXae",
+    "b"
+   ],
+   "output": ""
+  },
+  {
+   "name": "random 2",
+   "input": [
+    "cAccBaB",
+    "cAaa"
+   ],
+   "output": ""
+  },
+  {
+   "name": "random 3",
+   "input": [
+    "YZZfXbedadXYdYXbdYffacbZd",
+    "ff"
+   ],
+   "output": "ff"
+  },
+  {
+   "name": "random 4",
+   "input": [
+    "bAAacccaccbbBabBa",
+    "AB"
+   ],
+   "output": "AacccaccbbB"
+  },
+  {
+   "name": "random 5",
+   "input": [
+    "bXZaYf",
+    "Xe"
+   ],
+   "output": ""
+  },
+  {
+   "name": "random 6",
+   "input": [
+    "BabAAbbbcAacBcccaAB",
+    "cbAa"
+   ],
+   "output": "bcAa"
+  },
+  {
+   "name": "random 7",
+   "input": [
+    "cfdeYbdeedcfabdbZZbccXaf",
+    "Xeac"
+   ],
+   "output": "edcfabdbZZbccX"
+  },
+  {
+   "name": "random 8",
+   "input": [
+    "abcaAa",
+    "bbBb"
+   ],
+   "output": ""
+  },
+  {
+   "name": "random 9",
+   "input": [
+    "ZXZccXXYcfcefZaf",
+    "ddbX"
+   ],
+   "output": ""
+  },
+  {
+   "name": "random 10",
+   "input": [
+    "bBAc",
+    "a"
+   ],
+   "output": ""
+  }
+ ],
+ "perf": {
+  "input": [
+   {
+    "text": "ab",
+    "n": 100000
+   },
+   {
+    "text": "ab",
+    "n": 99999
+   }
+  ],
+  "about": "s of length 100,000, t of length 99,999",
+  "limit": {
+   "ts": 0.5,
+   "py": 1.5
+  }
+ }
+}

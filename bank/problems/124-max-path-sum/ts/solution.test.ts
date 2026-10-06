@@ -1,13 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { toTree } from "../../lib";
-import { maxPathSum } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("124. Binary Tree Maximum Path Sum", () => {
-  test("example 1", () => {
-    expect(maxPathSum(toTree([1,2,3]))).toEqual(6);
-  });
-
-  test("example 2", () => {
-    expect(maxPathSum(toTree([-10,9,20,null,null,15,7]))).toEqual(42);
-  });
-});
+suite(cases, solution, import.meta.path);

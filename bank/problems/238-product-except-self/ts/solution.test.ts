@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { productExceptSelf } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("238. Product of Array Except Self", () => {
-  test("example 1", () => {
-    expect(productExceptSelf([1,2,3,4]).map((x) => x + 0)).toEqual([24,12,8,6]);
-  });
-
-  test("example 2", () => {
-    expect(productExceptSelf([-1,1,0,-3,3]).map((x) => x + 0)).toEqual([0,0,9,0,0]);
-  });
-});
+suite(cases, solution, import.meta.path);

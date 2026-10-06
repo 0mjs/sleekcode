@@ -1,16 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 739. Daily Temperatures
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]) == [1, 1, 4, 2, 1, 1, 0, 0]
-
-
-def test_example_2():
-    assert Solution().dailyTemperatures([30, 40, 50, 60]) == [1, 1, 1, 0]
-
-
-def test_example_3():
-    assert Solution().dailyTemperatures([30, 60, 90]) == [1, 1, 0]
+def test_fast_enough():
+    check_perf(FILE, __file__)

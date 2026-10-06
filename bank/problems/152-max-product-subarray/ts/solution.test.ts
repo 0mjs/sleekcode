@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { maxProduct } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("152. Maximum Product Subarray", () => {
-  test("example 1", () => {
-    expect(maxProduct([2,3,-2,4])).toEqual(6);
-  });
-
-  test("example 2", () => {
-    expect(maxProduct([-2,0,-1])).toEqual(0);
-  });
-});
+suite(cases, solution, import.meta.path);

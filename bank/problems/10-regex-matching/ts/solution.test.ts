@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { isMatch } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("10. Regular Expression Matching", () => {
-  test("example 1", () => {
-    expect(isMatch("aa", "a")).toEqual(false);
-  });
-
-  test("example 2", () => {
-    expect(isMatch("aa", "a*")).toEqual(true);
-  });
-
-  test("example 3", () => {
-    expect(isMatch("ab", ".*")).toEqual(true);
-  });
-});
+suite(cases, solution, import.meta.path);

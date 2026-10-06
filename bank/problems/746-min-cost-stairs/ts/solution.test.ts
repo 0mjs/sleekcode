@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { minCostClimbingStairs } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("746. Min Cost Climbing Stairs", () => {
-  test("example 1", () => {
-    expect(minCostClimbingStairs([10,15,20])).toEqual(15);
-  });
-
-  test("example 2", () => {
-    expect(minCostClimbingStairs([1,100,1,1,1,100,1,1,100,1])).toEqual(6);
-  });
-});
+suite(cases, solution, import.meta.path);

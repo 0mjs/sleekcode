@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { findTargetSumWays } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("494. Target Sum", () => {
-  test("example 1", () => {
-    expect(findTargetSumWays([1,1,1,1,1], 3)).toEqual(5);
-  });
-
-  test("example 2", () => {
-    expect(findTargetSumWays([1], 1)).toEqual(1);
-  });
-});
+suite(cases, solution, import.meta.path);

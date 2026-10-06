@@ -1,17 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { anyOrder } from "../../lib";
-import { permute } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("46. Permutations", () => {
-  test("example 1", () => {
-    expect(anyOrder(permute([1,2,3]))).toEqual(anyOrder([[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]));
-  });
-
-  test("example 2", () => {
-    expect(anyOrder(permute([0,1]))).toEqual(anyOrder([[0,1],[1,0]]));
-  });
-
-  test("example 3", () => {
-    expect(anyOrder(permute([1]))).toEqual(anyOrder([[1]]));
-  });
-});
+suite(cases, solution, import.meta.path);

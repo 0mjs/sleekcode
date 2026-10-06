@@ -1,13 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { anyOrder } from "../../lib";
-import { generateParenthesis } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("22. Generate Parentheses", () => {
-  test("example 1", () => {
-    expect(anyOrder(generateParenthesis(3))).toEqual(anyOrder(["((()))","(()())","(())()","()(())","()()()"]));
-  });
-
-  test("example 2", () => {
-    expect(anyOrder(generateParenthesis(1))).toEqual(anyOrder(["()"]));
-  });
-});
+suite(cases, solution, import.meta.path);

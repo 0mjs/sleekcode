@@ -1,3 +1,5 @@
+import { INSPECT, showTree } from "./inspect";
+
 export class TreeNode {
   val: number;
   left: TreeNode | null;
@@ -6,6 +8,13 @@ export class TreeNode {
     this.val = val === undefined ? 0 : val;
     this.left = left === undefined ? null : left;
     this.right = right === undefined ? null : right;
+  }
+  /** console.log(root) draws the tree */
+  [INSPECT]() {
+    return this.left || this.right ? `TreeNode\n${showTree(this)}` : `TreeNode(${this.val})`;
+  }
+  toString() {
+    return `TreeNode(${JSON.stringify(fromTree(this))})`;
   }
 }
 

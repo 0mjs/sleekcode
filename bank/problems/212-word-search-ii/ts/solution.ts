@@ -9,7 +9,7 @@ export function findWords(board: string[][], words: string[]): string[] {
   throw new Error("Not implemented");
 }
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(findWords([["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], ["oath","pea","eat","rain"]));
 }

@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { lengthOfLongestSubstring } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("3. Longest Substring Without Repeating Characters", () => {
-  test("example 1", () => {
-    expect(lengthOfLongestSubstring("abcabcbb")).toEqual(3);
-  });
-
-  test("example 2", () => {
-    expect(lengthOfLongestSubstring("bbbbb")).toEqual(1);
-  });
-
-  test("example 3", () => {
-    expect(lengthOfLongestSubstring("pwwkew")).toEqual(3);
-  });
-});
+suite(cases, solution, import.meta.path);

@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { longestCommonSubsequence } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("1143. Longest Common Subsequence", () => {
-  test("example 1", () => {
-    expect(longestCommonSubsequence("abcde", "ace")).toEqual(3);
-  });
-
-  test("example 2", () => {
-    expect(longestCommonSubsequence("abc", "abc")).toEqual(3);
-  });
-
-  test("example 3", () => {
-    expect(longestCommonSubsequence("abc", "def")).toEqual(0);
-  });
-});
+suite(cases, solution, import.meta.path);

@@ -1,0 +1,221 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    "a",
+    "a"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    "a",
+    "."
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    "a",
+    "b*a"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    "aab",
+    "c*a*b"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    "mississippi",
+    "mis*is*p*."
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    "ab",
+    ".*c"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 7",
+   "input": [
+    "aaa",
+    "a*a"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 8",
+   "input": [
+    "aaa",
+    "ab*a*c*a"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 9",
+   "input": [
+    "a",
+    ".*..a*"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 10",
+   "input": [
+    "aaaaaaaaaaaaaaaaaaab",
+    "a*a*a*a*a*a*a*a*a*c"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 11",
+   "input": [
+    "a",
+    "ab*"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 12",
+   "input": [
+    "bbbba",
+    ".*a*a"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 13",
+   "input": [
+    "abcd",
+    "d*"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 1",
+   "input": [
+    "acccbacca",
+    "ab*c*b.*a.*a*"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 2",
+   "input": [
+    "cac",
+    "ca*a.*"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 3",
+   "input": [
+    "baabbbcaabbcaabbcca",
+    "ba*b*bca*ab*bca*ab*b"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 4",
+   "input": [
+    "cbaccabacaccaa",
+    ".c.c*aaaa*c"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 5",
+   "input": [
+    "aababbaabaaabbbbbbab",
+    "ac*.*"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 6",
+   "input": [
+    "bbba",
+    "b*a"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 7",
+   "input": [
+    "bbabaaaab",
+    "ba*.a"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 8",
+   "input": [
+    "cca",
+    "c.a*ab*."
+   ],
+   "output": false
+  },
+  {
+   "name": "random 9",
+   "input": [
+    "aab",
+    "a*b"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 10",
+   "input": [
+    "c",
+    "b"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 11",
+   "input": [
+    "aababbbbbaaabbabba",
+    "a*b*ab*ba*b*bab*."
+   ],
+   "output": true
+  },
+  {
+   "name": "random 12",
+   "input": [
+    "abaaaba",
+    "a*ab*b*a*ba*a"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 13",
+   "input": [
+    "baaab",
+    "ba*b*."
+   ],
+   "output": true
+  },
+  {
+   "name": "random 14",
+   "input": [
+    "aabbac",
+    "a*"
+   ],
+   "output": false
+  }
+ ],
+ "perf": null
+}

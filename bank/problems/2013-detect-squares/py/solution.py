@@ -27,6 +27,6 @@ class DetectSquares:
 # param_2 = obj.count(point)
 
 
-# Scratchpad: `sk play` runs this, tests skip it
+# Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if __name__ == "__main__":
     print(run_ops(DetectSquares, ["DetectSquares", "add", "add", "add", "count", "count", "add", "count"], [[], [[3, 10]], [[11, 2]], [[3, 2]], [[11, 10]], [[14, 8]], [[11, 2]], [[11, 10]]]))

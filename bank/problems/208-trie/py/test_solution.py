@@ -1,11 +1,16 @@
-from sleek import run_ops
-from solution import Trie
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 208. Implement Trie (Prefix Tree)
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    ops = ["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
-    args = [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
-    assert run_ops(Trie, ops, args) == [None, None, True, False, True, None, True]
+def test_fast_enough():
+    check_perf(FILE, __file__)

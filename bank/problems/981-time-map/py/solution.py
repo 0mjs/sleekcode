@@ -27,6 +27,6 @@ class TimeMap:
 # param_2 = obj.get(key,timestamp)
 
 
-# Scratchpad: `sk play` runs this, tests skip it
+# Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if __name__ == "__main__":
     print(run_ops(TimeMap, ["TimeMap", "set", "get", "get", "set", "get", "get"], [[], ["foo", "bar", 1], ["foo", 1], ["foo", 3], ["foo", "bar2", 4], ["foo", 4], ["foo", 5]]))

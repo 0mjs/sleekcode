@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { numIslands } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("200. Number of Islands", () => {
-  test("example 1", () => {
-    expect(numIslands([["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]])).toEqual(1);
-  });
-
-  test("example 2", () => {
-    expect(numIslands([["1","1","0","0","0"],["1","1","0","0","0"],["0","0","1","0","0"],["0","0","0","1","1"]])).toEqual(3);
-  });
-});
+suite(cases, solution, import.meta.path);

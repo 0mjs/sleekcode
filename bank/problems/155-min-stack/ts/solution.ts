@@ -38,7 +38,7 @@ export class MinStack {
  * var param_4 = obj.getMin()
  */
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(runOps(MinStack, ["MinStack","push","push","push","getMin","pop","top","getMin"], [[],[-2],[0],[-3],[],[],[],[]]));
 }

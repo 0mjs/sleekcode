@@ -1,16 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 76. Minimum Window Substring
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().minWindow("ADOBECODEBANC", "ABC") == "BANC"
-
-
-def test_example_2():
-    assert Solution().minWindow("a", "a") == "a"
-
-
-def test_example_3():
-    assert Solution().minWindow("a", "aa") == ""
+def test_fast_enough():
+    check_perf(FILE, __file__)

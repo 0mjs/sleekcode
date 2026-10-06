@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { exist } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("79. Word Search", () => {
-  test("example 1", () => {
-    expect(exist([["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], "ABCCED")).toEqual(true);
-  });
-
-  test("example 2", () => {
-    expect(exist([["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], "SEE")).toEqual(true);
-  });
-
-  test("example 3", () => {
-    expect(exist([["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], "ABCB")).toEqual(false);
-  });
-});
+suite(cases, solution, import.meta.path);

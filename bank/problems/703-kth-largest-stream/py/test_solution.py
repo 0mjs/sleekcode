@@ -1,17 +1,16 @@
-from sleek import run_ops
-from solution import KthLargest
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 703. Kth Largest Element in a Stream
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    ops = ["KthLargest", "add", "add", "add", "add", "add"]
-    args = [[3, [4, 5, 8, 2]], [3], [5], [10], [9], [4]]
-    assert run_ops(KthLargest, ops, args) == [None, 4, 5, 5, 8, 8]
-
-
-def test_example_2():
-    ops = ["KthLargest", "add", "add", "add", "add"]
-    args = [[4, [7, 7, 7, 7, 8, 3]], [2], [10], [9], [9]]
-    assert run_ops(KthLargest, ops, args) == [None, 7, 7, 7, 8]
+def test_fast_enough():
+    check_perf(FILE, __file__)

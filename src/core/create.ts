@@ -7,6 +7,7 @@ import { LANGUAGES, type Language } from "./languages";
 import { renderList } from "./list";
 import { renderLog, renderRecords } from "./records";
 import { ensureProblemFiles } from "./materialize";
+import { BANK } from "./paths";
 import { problemReadme } from "./readme";
 import { MARKER, bankProblems, bankTestFile, openWorkspace, problemDir, solutionFile, testFile, writeMarker, type Workspace } from "./workspace";
 
@@ -50,9 +51,15 @@ export async function refreshWorkspace(ws: Workspace) {
   await writeEditorFiles(ws.dir, ws.languages, ws.config.editor);
   await Bun.write(join(ws.dir, "README.md"), workspaceReadme());
   for (const p of await bankProblems()) {
+    let touched = false;
     for (const lang of ws.languages) {
-      if (existsSync(solutionFile(ws, p, lang))) copyFileSync(bankTestFile(p, lang), testFile(ws, p, lang));
+      if (existsSync(solutionFile(ws, p, lang))) {
+        copyFileSync(bankTestFile(p, lang), testFile(ws, p, lang));
+        touched = true;
+      }
     }
+    const cases = join(BANK, "problems", p.folder, "cases.json");
+    if (touched && existsSync(cases)) copyFileSync(cases, join(problemDir(ws, p), "cases.json"));
     if (!existsSync(join(problemDir(ws, p), "README.md"))) {
       mkdirSync(problemDir(ws, p), { recursive: true });
       await Bun.write(join(problemDir(ws, p), "README.md"), problemReadme(p, null));

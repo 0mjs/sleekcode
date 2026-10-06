@@ -1,11 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { runOps } from "../../lib";
-import { MinStack } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("155. Min Stack", () => {
-  test("example 1", () => {
-    const ops = ["MinStack","push","push","push","getMin","pop","top","getMin"];
-    const args = [[],[-2],[0],[-3],[],[],[],[]];
-    expect(runOps(MinStack, ops, args)).toEqual([null,null,null,null,-3,null,0,-2]);
-  });
-});
+suite(cases, solution, import.meta.path);

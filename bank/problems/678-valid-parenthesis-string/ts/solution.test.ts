@@ -1,20 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { checkValidString } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("678. Valid Parenthesis String", () => {
-  test("example 1", () => {
-    expect(checkValidString("()")).toEqual(true);
-  });
-
-  test("example 2", () => {
-    expect(checkValidString("(*)")).toEqual(true);
-  });
-
-  test("example 3", () => {
-    expect(checkValidString("(*))")).toEqual(true);
-  });
-
-  test("example 4", () => {
-    expect(checkValidString("(")).toEqual(false);
-  });
-});
+suite(cases, solution, import.meta.path);

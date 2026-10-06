@@ -11,7 +11,7 @@ export function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNod
   throw new Error("Not implemented");
 }
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(fromList(addTwoNumbers(toList([2,4,3]), toList([5,6,4]))));
 }

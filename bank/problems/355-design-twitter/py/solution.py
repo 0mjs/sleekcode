@@ -35,6 +35,6 @@ class Twitter:
 # obj.unfollow(followerId,followeeId)
 
 
-# Scratchpad: `sk play` runs this, tests skip it
+# Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if __name__ == "__main__":
     print(run_ops(Twitter, ["Twitter", "postTweet", "getNewsFeed", "follow", "postTweet", "getNewsFeed", "unfollow", "getNewsFeed"], [[], [1, 5], [1], [1, 2], [2, 6], [1], [1, 2], [1]]))

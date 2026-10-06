@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { minWindow } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("76. Minimum Window Substring", () => {
-  test("example 1", () => {
-    expect(minWindow("ADOBECODEBANC", "ABC")).toEqual("BANC");
-  });
-
-  test("example 2", () => {
-    expect(minWindow("a", "a")).toEqual("a");
-  });
-
-  test("example 3", () => {
-    expect(minWindow("a", "aa")).toEqual("");
-  });
-});
+suite(cases, solution, import.meta.path);

@@ -9,7 +9,7 @@ export function minCostConnectPoints(points: number[][]): number {
   throw new Error("Not implemented");
 }
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(minCostConnectPoints([[0,0],[2,2],[3,10],[5,2],[7,0]]));
 }

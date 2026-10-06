@@ -1,4 +1,6 @@
 /** Linked-list node with a random pointer, used by Copy List with Random Pointer (LeetCode calls it `_Node`). */
+import { INSPECT, showList } from "./inspect";
+
 export class RandomNode {
   val: number;
   next: RandomNode | null;
@@ -7,6 +9,12 @@ export class RandomNode {
     this.val = val === undefined ? 0 : val;
     this.next = next === undefined ? null : next;
     this.random = random === undefined ? null : random;
+  }
+  /** console.log(head) → Node(7 → 13 → 11, random: 7→·, 13→7, 11→13) */
+  [INSPECT]() {
+    const nodes: RandomNode[] = [];
+    for (let n: RandomNode | null = this; n && nodes.length < 30; n = n.next) nodes.push(n);
+    return `Node(${showList(this)}, random: ${nodes.map((n) => `${n.val}→${n.random ? n.random.val : "·"}`).join(", ")})`;
   }
 }
 

@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { minEatingSpeed } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("875. Koko Eating Bananas", () => {
-  test("example 1", () => {
-    expect(minEatingSpeed([3,6,7,11], 8)).toEqual(4);
-  });
-
-  test("example 2", () => {
-    expect(minEatingSpeed([30,11,23,4,20], 5)).toEqual(30);
-  });
-
-  test("example 3", () => {
-    expect(minEatingSpeed([30,11,23,4,20], 6)).toEqual(23);
-  });
-});
+suite(cases, solution, import.meta.path);

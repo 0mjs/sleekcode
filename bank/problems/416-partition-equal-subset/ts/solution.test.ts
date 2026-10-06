@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { canPartition } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("416. Partition Equal Subset Sum", () => {
-  test("example 1", () => {
-    expect(canPartition([1,5,11,5])).toEqual(true);
-  });
-
-  test("example 2", () => {
-    expect(canPartition([1,2,3,5])).toEqual(false);
-  });
-});
+suite(cases, solution, import.meta.path);

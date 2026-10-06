@@ -1,13 +1,16 @@
-from sleek import to_tree
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 104. Maximum Depth of Binary Tree
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().maxDepth(to_tree([3, 9, 20, None, None, 15, 7])) == 3
-
-
-def test_example_2():
-    assert Solution().maxDepth(to_tree([1, None, 2])) == 2
+def test_fast_enough():
+    check_perf(FILE, __file__)

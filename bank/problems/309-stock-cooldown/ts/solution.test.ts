@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { maxProfit } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("309. Best Time to Buy and Sell Stock with Cooldown", () => {
-  test("example 1", () => {
-    expect(maxProfit([1,2,3,0,2])).toEqual(3);
-  });
-
-  test("example 2", () => {
-    expect(maxProfit([1])).toEqual(0);
-  });
-});
+suite(cases, solution, import.meta.path);

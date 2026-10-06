@@ -1,17 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { fromList, toList } from "../../lib";
-import { reorderList } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("143. Reorder List", () => {
-  test("example 1", () => {
-    const head = toList([1,2,3,4]);
-    reorderList(head);
-    expect(fromList(head)).toEqual([1,4,2,3]);
-  });
-
-  test("example 2", () => {
-    const head = toList([1,2,3,4,5]);
-    reorderList(head);
-    expect(fromList(head)).toEqual([1,5,2,4,3]);
-  });
-});
+suite(cases, solution, import.meta.path);

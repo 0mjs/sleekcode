@@ -1,13 +1,16 @@
-from sleek import any_order
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 212. Word Search II
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert any_order(Solution().findWords([["o", "a", "a", "n"], ["e", "t", "a", "e"], ["i", "h", "k", "r"], ["i", "f", "l", "v"]], ["oath", "pea", "eat", "rain"])) == any_order(["eat", "oath"])
-
-
-def test_example_2():
-    assert any_order(Solution().findWords([["a", "b"], ["c", "d"]], ["abcb"])) == any_order([])
+def test_fast_enough():
+    check_perf(FILE, __file__)

@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { multiply } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("43. Multiply Strings", () => {
-  test("example 1", () => {
-    expect(multiply("2", "3")).toEqual("6");
-  });
-
-  test("example 2", () => {
-    expect(multiply("123", "456")).toEqual("56088");
-  });
-});
+suite(cases, solution, import.meta.path);

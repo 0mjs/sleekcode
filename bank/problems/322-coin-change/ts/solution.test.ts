@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { coinChange } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("322. Coin Change", () => {
-  test("example 1", () => {
-    expect(coinChange([1,2,5], 11)).toEqual(3);
-  });
-
-  test("example 2", () => {
-    expect(coinChange([2], 3)).toEqual(-1);
-  });
-
-  test("example 3", () => {
-    expect(coinChange([1], 0)).toEqual(0);
-  });
-});
+suite(cases, solution, import.meta.path);

@@ -1,0 +1,526 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    [
+     [
+      "a"
+     ]
+    ],
+    [
+     "a"
+    ]
+   ],
+   "output": [
+    "a"
+   ]
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    [
+     [
+      "a"
+     ]
+    ],
+    [
+     "b"
+    ]
+   ],
+   "output": []
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    [
+     [
+      "a",
+      "a"
+     ]
+    ],
+    [
+     "aaa",
+     "aa",
+     "a"
+    ]
+   ],
+   "output": [
+    "a",
+    "aa"
+   ]
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    [
+     [
+      "a",
+      "b"
+     ],
+     [
+      "c",
+      "d"
+     ]
+    ],
+    [
+     "abdc",
+     "acdb",
+     "abcd",
+     "dcba",
+     "ab",
+     "ba"
+    ]
+   ],
+   "output": [
+    "acdb",
+    "ab",
+    "abdc",
+    "ba"
+   ]
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    [
+     [
+      "a",
+      "b",
+      "c"
+     ],
+     [
+      "a",
+      "e",
+      "d"
+     ],
+     [
+      "a",
+      "f",
+      "g"
+     ]
+    ],
+    [
+     "abcdefg",
+     "gfedcbaaa",
+     "eaabcdgfa",
+     "befa",
+     "dgc",
+     "ade"
+    ]
+   ],
+   "output": [
+    "abcdefg",
+    "befa",
+    "eaabcdgfa",
+    "gfedcbaaa"
+   ]
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    [
+     [
+      "o",
+      "a",
+      "b",
+      "n"
+     ],
+     [
+      "o",
+      "t",
+      "a",
+      "e"
+     ],
+     [
+      "a",
+      "h",
+      "k",
+      "r"
+     ],
+     [
+      "a",
+      "f",
+      "l",
+      "v"
+     ]
+    ],
+    [
+     "oa",
+     "oaa"
+    ]
+   ],
+   "output": [
+    "oa",
+    "oaa"
+   ]
+  },
+  {
+   "name": "random 1",
+   "input": [
+    [
+     [
+      "e",
+      "d",
+      "e",
+      "b",
+      "c"
+     ]
+    ],
+    [
+     "b",
+     "ccdaae",
+     "ad",
+     "cbed",
+     "ccc",
+     "cdb",
+     "e",
+     "cececb"
+    ]
+   ],
+   "output": [
+    "e",
+    "b",
+    "cbed"
+   ]
+  },
+  {
+   "name": "random 2",
+   "input": [
+    [
+     [
+      "b"
+     ],
+     [
+      "a"
+     ],
+     [
+      "b"
+     ]
+    ],
+    [
+     "abcbca",
+     "bab"
+    ]
+   ],
+   "output": [
+    "bab"
+   ]
+  },
+  {
+   "name": "random 3",
+   "input": [
+    [
+     [
+      "a",
+      "a",
+      "e",
+      "a"
+     ]
+    ],
+    [
+     "bedca",
+     "aeb",
+     "abbdcb",
+     "aea",
+     "eec",
+     "de",
+     "aeaa"
+    ]
+   ],
+   "output": [
+    "aea",
+    "aeaa"
+   ]
+  },
+  {
+   "name": "random 4",
+   "input": [
+    [
+     [
+      "a",
+      "a",
+      "b",
+      "c",
+      "a"
+     ],
+     [
+      "b",
+      "a",
+      "b",
+      "a",
+      "b"
+     ],
+     [
+      "c",
+      "a",
+      "a",
+      "c",
+      "b"
+     ],
+     [
+      "c",
+      "b",
+      "a",
+      "c",
+      "a"
+     ],
+     [
+      "c",
+      "c",
+      "c",
+      "c",
+      "c"
+     ]
+    ],
+    [
+     "abcaaa",
+     "bcccc",
+     "cabba",
+     "ab",
+     "a",
+     "acacba",
+     "cbbcb",
+     "accc",
+     "ccacabca",
+     "aababb",
+     "bcaba",
+     "aa"
+    ]
+   ],
+   "output": [
+    "a",
+    "ab",
+    "abcaaa",
+    "aa",
+    "aababb",
+    "bcaba",
+    "cabba",
+    "acacba",
+    "bcccc",
+    "accc",
+    "ccacabca"
+   ]
+  },
+  {
+   "name": "random 5",
+   "input": [
+    [
+     [
+      "a",
+      "a",
+      "a"
+     ],
+     [
+      "a",
+      "a",
+      "a"
+     ]
+    ],
+    [
+     "aa",
+     "bbbab",
+     "aaaaaa",
+     "a",
+     "aaa",
+     "bbba",
+     "babbbb"
+    ]
+   ],
+   "output": [
+    "a",
+    "aa",
+    "aaa",
+    "aaaaaa"
+   ]
+  },
+  {
+   "name": "random 6",
+   "input": [
+    [
+     [
+      "a",
+      "c",
+      "a"
+     ],
+     [
+      "d",
+      "d",
+      "e"
+     ],
+     [
+      "c",
+      "b",
+      "e"
+     ],
+     [
+      "b",
+      "a",
+      "b"
+     ]
+    ],
+    [
+     "acdda",
+     "a"
+    ]
+   ],
+   "output": [
+    "a",
+    "acdda"
+   ]
+  },
+  {
+   "name": "random 7",
+   "input": [
+    [
+     [
+      "a",
+      "b",
+      "a",
+      "a",
+      "a"
+     ],
+     [
+      "b",
+      "a",
+      "a",
+      "a",
+      "b"
+     ]
+    ],
+    [
+     "aaa",
+     "aabaab",
+     "ab",
+     "b",
+     "aaabab"
+    ]
+   ],
+   "output": [
+    "ab",
+    "b",
+    "aaa",
+    "aaabab"
+   ]
+  },
+  {
+   "name": "random 8",
+   "input": [
+    [
+     [
+      "e",
+      "d",
+      "e",
+      "b",
+      "c"
+     ],
+     [
+      "a",
+      "d",
+      "e",
+      "b",
+      "d"
+     ],
+     [
+      "b",
+      "a",
+      "c",
+      "a",
+      "c"
+     ],
+     [
+      "d",
+      "c",
+      "d",
+      "b",
+      "e"
+     ],
+     [
+      "d",
+      "d",
+      "b",
+      "a",
+      "e"
+     ]
+    ],
+    [
+     "ebc",
+     "caca",
+     "ceba",
+     "ebcd",
+     "addcec"
+    ]
+   ],
+   "output": [
+    "ebc",
+    "ebcd",
+    "ceba",
+    "caca"
+   ]
+  },
+  {
+   "name": "random 9",
+   "input": [
+    [
+     [
+      "b",
+      "a",
+      "a"
+     ],
+     [
+      "a",
+      "b",
+      "a"
+     ]
+    ],
+    [
+     "ababa",
+     "bb"
+    ]
+   ],
+   "output": [
+    "ababa"
+   ]
+  },
+  {
+   "name": "random 10",
+   "input": [
+    [
+     [
+      "b",
+      "b"
+     ],
+     [
+      "b",
+      "b"
+     ],
+     [
+      "b",
+      "c"
+     ]
+    ],
+    [
+     "c",
+     "bbbbbc",
+     "bbbbcb",
+     "bcb",
+     "bc",
+     "bbbb",
+     "bcbbbb",
+     "babaaa",
+     "cb"
+    ]
+   ],
+   "output": [
+    "bbbb",
+    "bbbbbc",
+    "bbbbcb",
+    "bc",
+    "bcb",
+    "bcbbbb",
+    "c",
+    "cb"
+   ]
+  }
+ ],
+ "perf": null
+}

@@ -11,7 +11,7 @@ export function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
   throw new Error("Not implemented");
 }
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(fromList(mergeKLists([[1,4,5],[1,3,4],[2,6]].map(toList))));
 }

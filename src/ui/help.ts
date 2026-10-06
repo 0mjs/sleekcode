@@ -10,7 +10,14 @@ export const GROUPS: { title: string; commands: Command[] }[] = [
     commands: [
       { name: "next", desc: "Open the next unsolved problem (and make it current)", flags: [{ short: "b", long: "blind", desc: "Blind 75 problems only" }] },
       { name: "start", desc: "Start the timer" },
-      { name: "play", desc: "Run your solution and see what you print", flags: [{ short: "w", long: "watch", desc: "re-run every time you save" }] },
+      {
+        name: "play",
+        desc: "Run every example: your logs/prints, then your answer vs the expected one",
+        flags: [
+          { short: "w", long: "watch", desc: "re-run every time you save" },
+          { short: "s", long: "scratch", desc: "run your own scratchpad block at the bottom of the file instead" },
+        ],
+      },
       { name: "test", desc: "Run the tests", flags: [{ short: "w", long: "watch", desc: "re-run every time you save" }] },
       { name: "hint", desc: "Stuck? Show the next hint (target complexity first)", flags: [{ short: "r", long: "reset", desc: "start the hints over" }] },
       {
@@ -31,6 +38,7 @@ export const GROUPS: { title: string; commands: Command[] }[] = [
       { name: "review", desc: "Redo what's due (spaced repetition), most overdue first", flags: [{ short: "l", long: "list", desc: "just show what's due" }] },
       { name: "open", args: "<number>", desc: "Jump to a specific problem" },
       { name: "reset", desc: "Blank your solution again (your code is saved first)" },
+      { name: "submit", desc: "Copy your solution for LeetCode and open the problem, to submit it there" },
       { name: "which", desc: "Show the current problem" },
     ],
   },

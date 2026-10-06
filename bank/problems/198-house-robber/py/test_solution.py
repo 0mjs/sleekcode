@@ -1,12 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 198. House Robber
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().rob([1, 2, 3, 1]) == 4
-
-
-def test_example_2():
-    assert Solution().rob([2, 7, 9, 3, 1]) == 12
+def test_fast_enough():
+    check_perf(FILE, __file__)

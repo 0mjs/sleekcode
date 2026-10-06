@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { maxSlidingWindow } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("239. Sliding Window Maximum", () => {
-  test("example 1", () => {
-    expect(maxSlidingWindow([1,3,-1,-3,5,3,6,7], 3)).toEqual([3,3,5,5,6,7]);
-  });
-
-  test("example 2", () => {
-    expect(maxSlidingWindow([1], 1)).toEqual([1]);
-  });
-});
+suite(cases, solution, import.meta.path);

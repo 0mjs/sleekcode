@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { search } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("704. Binary Search", () => {
-  test("example 1", () => {
-    expect(search([-1,0,3,5,9,12], 9)).toEqual(4);
-  });
-
-  test("example 2", () => {
-    expect(search([-1,0,3,5,9,12], 2)).toEqual(-1);
-  });
-});
+suite(cases, solution, import.meta.path);

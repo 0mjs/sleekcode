@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { largestRectangleArea } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("84. Largest Rectangle in Histogram", () => {
-  test("example 1", () => {
-    expect(largestRectangleArea([2,1,5,6,2,3])).toEqual(10);
-  });
-
-  test("example 2", () => {
-    expect(largestRectangleArea([2,4])).toEqual(4);
-  });
-});
+suite(cases, solution, import.meta.path);

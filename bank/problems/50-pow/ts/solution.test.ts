@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { myPow } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("50. Pow(x, n)", () => {
-  test("example 1", () => {
-    expect(myPow(2.00000, 10)).toBeCloseTo(1024.00000, 5);
-  });
-
-  test("example 2", () => {
-    expect(myPow(2.10000, 3)).toBeCloseTo(9.26100, 5);
-  });
-
-  test("example 3", () => {
-    expect(myPow(2.00000, -2)).toBeCloseTo(0.25000, 5);
-  });
-});
+suite(cases, solution, import.meta.path);

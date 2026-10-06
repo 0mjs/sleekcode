@@ -33,7 +33,7 @@ export class Trie {
  * var param_3 = obj.startsWith(prefix)
  */
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(runOps(Trie, ["Trie","insert","search","search","startsWith","insert","search"], [[],["apple"],["apple"],["app"],["app"],["app"],["app"]]));
 }

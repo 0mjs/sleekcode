@@ -14,6 +14,6 @@ class Solution:
         raise NotImplementedError("Not implemented")
 
 
-# Scratchpad: `sk play` runs this, tests skip it
+# Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if __name__ == "__main__":
     print(Solution().kthSmallest(to_tree([3, 1, 4, None, 2]), 1))

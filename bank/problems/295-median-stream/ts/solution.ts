@@ -28,7 +28,7 @@ export class MedianFinder {
  * var param_2 = obj.findMedian()
  */
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(runOps(MedianFinder, ["MedianFinder","addNum","addNum","findMedian","addNum","findMedian"], [[],[1],[2],[],[3],[]]));
 }

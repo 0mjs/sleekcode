@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { reverse } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("7. Reverse Integer", () => {
-  test("example 1", () => {
-    expect(reverse(123)).toEqual(321);
-  });
-
-  test("example 2", () => {
-    expect(reverse(-123)).toEqual(-321);
-  });
-
-  test("example 3", () => {
-    expect(reverse(120)).toEqual(21);
-  });
-});
+suite(cases, solution, import.meta.path);

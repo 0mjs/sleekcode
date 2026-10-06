@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { maxCoins } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("312. Burst Balloons", () => {
-  test("example 1", () => {
-    expect(maxCoins([3,1,5,8])).toEqual(167);
-  });
-
-  test("example 2", () => {
-    expect(maxCoins([1,5])).toEqual(10);
-  });
-});
+suite(cases, solution, import.meta.path);

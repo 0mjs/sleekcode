@@ -1,11 +1,16 @@
-from sleek import run_ops
-from solution import WordDictionary
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 211. Design Add and Search Words Data Structure
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    ops = ["WordDictionary", "addWord", "addWord", "addWord", "search", "search", "search", "search"]
-    args = [[], ["bad"], ["dad"], ["mad"], ["pad"], ["bad"], [".ad"], ["b.."]]
-    assert run_ops(WordDictionary, ops, args) == [None, None, None, None, False, True, True, True]
+def test_fast_enough():
+    check_perf(FILE, __file__)

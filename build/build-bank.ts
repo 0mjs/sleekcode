@@ -4,7 +4,8 @@
 // Hand-written problems (MANUAL) are never overwritten.
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { python, specFrom, typescript } from "../src/core/generate";
+import { caseFile, python, specFrom, typescript } from "../src/core/generate";
+import { existsSync } from "node:fs";
 
 const ROOT = join(import.meta.dir, "..");
 const CACHE = join(ROOT, ".cache");
@@ -95,6 +96,16 @@ for (const x of nc) {
   const spec = specFrom(q, { id, title: q.title, slug, difficulty: x.difficulty, pattern: x.pattern, blind75: !!x.blind75 },
     { anyOrder: FORCE_ANY_ORDER.has(slug), deep: DEEP_ANY_ORDER.has(slug) });
   if (spec.inputs.length !== spec.outputs.length) report.push(`${folder}: ${spec.inputs.length} inputs, ${spec.outputs.length} outputs`);
+
+  // cases.json: the examples, plus extra edge/random cases + speed check from build/build-cases.ts
+  const cases = caseFile(spec);
+  const extraFile = join(import.meta.dir, "extra-cases", `${folder}.json`);
+  if (existsSync(extraFile)) {
+    const extra = await Bun.file(extraFile).json();
+    cases.cases.push(...extra.cases);
+    cases.perf = extra.perf ?? null;
+  }
+  await Bun.write(join(dir, "cases.json"), JSON.stringify(cases) + "\n");
 
   const snippet = (lang: string) => q.codeSnippets.find((c: any) => c.langSlug === lang).code;
   const ts = typescript(spec, snippet("typescript"));

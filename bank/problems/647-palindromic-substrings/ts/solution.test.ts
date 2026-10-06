@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { countSubstrings } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("647. Palindromic Substrings", () => {
-  test("example 1", () => {
-    expect(countSubstrings("abc")).toEqual(3);
-  });
-
-  test("example 2", () => {
-    expect(countSubstrings("aaa")).toEqual(6);
-  });
-});
+suite(cases, solution, import.meta.path);

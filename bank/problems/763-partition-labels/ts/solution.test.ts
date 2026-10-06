@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { partitionLabels } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("763. Partition Labels", () => {
-  test("example 1", () => {
-    expect(partitionLabels("ababcbacadefegdehijhklij")).toEqual([9,7,8]);
-  });
-
-  test("example 2", () => {
-    expect(partitionLabels("eccbbbbdec")).toEqual([10]);
-  });
-});
+suite(cases, solution, import.meta.path);

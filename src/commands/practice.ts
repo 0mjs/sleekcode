@@ -53,10 +53,12 @@ export async function start(ws: Workspace, args: string[]) {
   console.log(`     ${c.muted("Then:")} ${c.ink("sk test -w")} ${c.muted("·")} ${c.ink("sk play -w")} ${c.muted("·")} ${c.ink("sk hint")} ${c.muted("·")} ${c.ink("sk log")}\n`);
 }
 
-export async function run(ws: Workspace, kind: Kind, args: string[]) {
-  const { values, positionals } = parse(kind, args);
+export async function run(ws: Workspace, command: "test" | "play", args: string[]) {
+  const { values, positionals } = parse(command, args);
   const p = await needProblem(ws, positionals[0]);
-  console.log(c.muted(`→ ${label(p)}`));
+  // Problems with custom checks (no cases.json) have no example runner: play runs the scratchpad
+  const kind: Kind = command === "play" && (values.scratch || !existsSync(join(problemDir(ws, p), "cases.json"))) ? "scratch" : command;
+  console.log(c.muted(`→ ${label(p)}${kind === "scratch" && command === "play" ? " (your scratchpad)" : ""}`));
   if (values.watch) await runWatching(ws, p, kind);
   process.exit((await runOnce(ws, p, kind)).code);
 }

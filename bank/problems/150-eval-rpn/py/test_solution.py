@@ -1,16 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 150. Evaluate Reverse Polish Notation
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().evalRPN(["2", "1", "+", "3", "*"]) == 9
-
-
-def test_example_2():
-    assert Solution().evalRPN(["4", "13", "5", "/", "+"]) == 6
-
-
-def test_example_3():
-    assert Solution().evalRPN(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]) == 22
+def test_fast_enough():
+    check_perf(FILE, __file__)

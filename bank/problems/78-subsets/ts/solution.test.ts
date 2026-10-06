@@ -1,13 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { anyOrderDeep } from "../../lib";
-import { subsets } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("78. Subsets", () => {
-  test("example 1", () => {
-    expect(anyOrderDeep(subsets([1,2,3]))).toEqual(anyOrderDeep([[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]));
-  });
-
-  test("example 2", () => {
-    expect(anyOrderDeep(subsets([0]))).toEqual(anyOrderDeep([[],[0]]));
-  });
-});
+suite(cases, solution, import.meta.path);

@@ -1,17 +1,16 @@
-from sleek import from_list, to_list
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 21. Merge Two Sorted Lists
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert from_list(Solution().mergeTwoLists(to_list([1, 2, 4]), to_list([1, 3, 4]))) == [1, 1, 2, 3, 4, 4]
-
-
-def test_example_2():
-    assert from_list(Solution().mergeTwoLists(to_list([]), to_list([]))) == []
-
-
-def test_example_3():
-    assert from_list(Solution().mergeTwoLists(to_list([]), to_list([0]))) == [0]
+def test_fast_enough():
+    check_perf(FILE, __file__)

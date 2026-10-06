@@ -1,9 +1,18 @@
+import { INSPECT, showList } from "./inspect";
+
 export class ListNode {
   val: number;
   next: ListNode | null;
   constructor(val?: number, next?: ListNode | null) {
     this.val = val === undefined ? 0 : val;
     this.next = next === undefined ? null : next;
+  }
+  /** console.log(head) → ListNode(1 → 2 → 3) */
+  [INSPECT]() {
+    return `ListNode(${showList(this)})`;
+  }
+  toString() {
+    return `ListNode(${showList(this)})`;
   }
 }
 

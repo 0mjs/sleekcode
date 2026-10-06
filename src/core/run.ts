@@ -33,7 +33,7 @@ export async function runWatching(ws: Workspace, p: Problem, kind: Kind): Promis
   const start = () => {
     running?.kill();
     process.stdout.write("\x1b[2J\x1b[H");
-    console.log(`\x1b[2m${kind === "test" ? "Testing" : "Running"} ${p.id}. ${p.title} (${lang.name}) · watching for changes, ctrl-c to stop\x1b[0m\n`);
+    console.log(`\x1b[2m${kind === "test" ? "Testing" : kind === "play" ? "Playing the examples of" : "Running your scratchpad for"} ${p.id}. ${p.title} (${lang.name}) · watching for changes, ctrl-c to stop\x1b[0m\n`);
     running = Bun.spawn(lang.run(kind, ws.dir, false), { cwd: problemDir(ws, p), env: env(ws, true), stdio: ["inherit", "inherit", "inherit"] });
   };
   watchDir(problemDir(ws, p), (_event, file) => {

@@ -27,6 +27,6 @@ class WordDictionary:
 # param_2 = obj.search(word)
 
 
-# Scratchpad: `sk play` runs this, tests skip it
+# Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if __name__ == "__main__":
     print(run_ops(WordDictionary, ["WordDictionary", "addWord", "addWord", "addWord", "search", "search", "search", "search"], [[], ["bad"], ["dad"], ["mad"], ["pad"], ["bad"], [".ad"], ["b.."]]))

@@ -9,7 +9,7 @@ export function minInterval(intervals: number[][], queries: number[]): number[] 
   throw new Error("Not implemented");
 }
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(minInterval([[1,4],[2,4],[3,6],[4,4]], [2,3,4,5]));
 }

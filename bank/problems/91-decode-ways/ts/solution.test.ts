@@ -1,16 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { numDecodings } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("91. Decode Ways", () => {
-  test("example 1", () => {
-    expect(numDecodings("12")).toEqual(2);
-  });
-
-  test("example 2", () => {
-    expect(numDecodings("226")).toEqual(3);
-  });
-
-  test("example 3", () => {
-    expect(numDecodings("06")).toEqual(0);
-  });
-});
+suite(cases, solution, import.meta.path);

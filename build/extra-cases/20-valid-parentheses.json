@@ -1,0 +1,124 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    "("
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    ")"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    "]"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    "{[]}"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    "(("
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    "(){}}{"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 7",
+   "input": [
+    "[({})]()"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 1",
+   "input": [
+    "()[[]]"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 2",
+   "input": [
+    "][]((()[])()))({}{})"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 3",
+   "input": [
+    "([[]])"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 4",
+   "input": [
+    "({}[])([[][]]({})"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 5",
+   "input": [
+    "{}{{()}{{}}{}}[]"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 6",
+   "input": [
+    "[([]{[]})][][]{{[]}}"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 7",
+   "input": [
+    "{}[{}[[]]]"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 8",
+   "input": [
+    "{{()}[](){}}()[]()"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 9",
+   "input": [
+    "[](()())(())"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 10",
+   "input": [
+    "((}}))"
+   ],
+   "output": false
+  }
+ ],
+ "perf": null
+}

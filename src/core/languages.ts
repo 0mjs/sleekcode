@@ -9,7 +9,8 @@ import { python, typescript, type Spec } from "./generate";
 import { RUNTIME } from "./paths";
 
 export type Language = "ts" | "py";
-export type Kind = "test" | "play";
+/** test = the test file · play = every example with your logs · scratch = your own scratchpad block */
+export type Kind = "test" | "play" | "scratch";
 
 export type LanguageSpec = {
   id: Language;
@@ -63,17 +64,19 @@ export const LANGUAGES: Record<Language, LanguageSpec> = {
       await Bun.write(join(dir, "tsconfig.json"), json({
         compilerOptions: {
           target: "ESNext", module: "ESNext", moduleResolution: "bundler", strict: true,
-          noUncheckedIndexedAccess: true, noEmit: true, skipLibCheck: true, types: ["bun"],
+          noUncheckedIndexedAccess: true, noEmit: true, skipLibCheck: true, resolveJsonModule: true, types: ["bun"],
         },
         include: ["lib", "problems"],
       }));
     },
     install: ["bun", "install"],
     // Tests stay clean: lib/quiet.ts mutes console.log while they run. `sk play` is where logs go.
-    run: (kind, wsDir, watch) =>
-      kind === "test"
-        ? ["bun", "test", ...(existsSync(join(wsDir, "lib", "quiet.ts")) ? ["--preload", join(wsDir, "lib", "quiet.ts")] : []), ...(watch ? ["--watch"] : [])]
-        : ["bun", ...(watch ? ["--watch"] : []), "solution.ts"],
+    run: (kind, wsDir, watch) => {
+      const w = watch ? ["--watch"] : [];
+      if (kind === "test") return ["bun", "test", ...(existsSync(join(wsDir, "lib", "quiet.ts")) ? ["--preload", join(wsDir, "lib", "quiet.ts")] : []), ...w];
+      if (kind === "play" && existsSync(join(wsDir, "lib", "play.ts"))) return ["bun", ...w, join(wsDir, "lib", "play.ts"), "."];
+      return ["bun", ...w, "solution.ts"];
+    },
     nativeWatch: true,
     generate: typescript,
     vscodeExtensions: ["oven.bun-vscode"],
@@ -122,7 +125,9 @@ line-length = 120
     run: (kind, wsDir) => {
       const uv = ["uv", "run", "--quiet", "--project", wsDir];
       // Tests stay clean (pytest only shows prints for a failing test); `sk play` is where prints go
-      return kind === "test" ? [...uv, "pytest"] : [...uv, "python", "solution.py"];
+      if (kind === "test") return [...uv, "pytest"];
+      if (kind === "play" && existsSync(join(wsDir, "sleek", "play.py"))) return [...uv, "python", "-m", "sleek.play", "."];
+      return [...uv, "python", "solution.py"];
     },
     nativeWatch: false,
     generate: python,

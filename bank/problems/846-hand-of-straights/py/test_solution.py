@@ -1,12 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 846. Hand of Straights
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().isNStraightHand([1, 2, 3, 6, 2, 3, 4, 7, 8], 3) == True
-
-
-def test_example_2():
-    assert Solution().isNStraightHand([1, 2, 3, 4, 5], 4) == False
+def test_fast_enough():
+    check_perf(FILE, __file__)

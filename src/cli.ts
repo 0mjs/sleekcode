@@ -14,6 +14,7 @@ import { log } from "./commands/log";
 import { add, list, sync, update } from "./commands/manage";
 import { next, open, reset, run, start, which } from "./commands/practice";
 import { review } from "./commands/review";
+import { submit } from "./commands/submit";
 import { configure, onboarding } from "./commands/setup";
 import { stats } from "./commands/stats";
 import { c } from "./ui/colors";
@@ -103,6 +104,7 @@ switch (cmd) {
   case "lang": await lang(ws, rest); break;
   case "attempts": await attempts(ws, rest); break;
   case "undo": await undo(ws); break;
+  case "submit": await submit(ws, rest); break;
   default: {
     const guess = ALL.map((x) => ({ x, d: distance(cmd, x.name) })).sort((a, b) => a.d - b.d).find((g) => g.d <= 2)?.x;
     console.log(`\n  ${c.red(`Unknown command "${cmd}".`)}${guess ? ` ${c.muted("Did you mean")} ${c.ink(`sk ${guess.name}`)}${c.muted("?")}` : ""}`);

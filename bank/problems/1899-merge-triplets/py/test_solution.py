@@ -1,16 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 1899. Merge Triplets to Form Target Triplet
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().mergeTriplets([[2, 5, 3], [1, 8, 4], [1, 7, 5]], [2, 7, 5]) == True
-
-
-def test_example_2():
-    assert Solution().mergeTriplets([[3, 4, 5], [4, 5, 6]], [3, 2, 5]) == False
-
-
-def test_example_3():
-    assert Solution().mergeTriplets([[2, 5, 3], [2, 3, 4], [1, 2, 5], [5, 2, 3]], [5, 5, 5]) == True
+def test_fast_enough():
+    check_perf(FILE, __file__)

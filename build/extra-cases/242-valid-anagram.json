@@ -1,0 +1,151 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    "a",
+    "a"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    "a",
+    "b"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    "ab",
+    "a"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    "aacc",
+    "ccac"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    "abc",
+    "cba"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    "aabbcc",
+    "abcabc"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 1",
+   "input": [
+    "a",
+    "d"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 2",
+   "input": [
+    "aedcc",
+    "dccae"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 3",
+   "input": [
+    "cdeaddbebcebaebedbdbeae",
+    "bdbdccbedbbdecdccdaebdc"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 4",
+   "input": [
+    "ccbebadcdb",
+    "cdeabbcbdc"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 5",
+   "input": [
+    "aedbedeba",
+    "badaedadd"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 6",
+   "input": [
+    "adecaaacbccbcecab",
+    "cbcdaccbaeacabace"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 7",
+   "input": [
+    "eeceaccebd",
+    "aaabeddbea"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 8",
+   "input": [
+    "dcaabadcccacbcdc",
+    "beedadbdadedcccb"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 9",
+   "input": [
+    "ccbaaacdbabeddddbbbbeacb",
+    "bbbadcddbdabbccbaebdeaac"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 10",
+   "input": [
+    "cbaddddcdcadaadc",
+    "adbddacceaccdedc"
+   ],
+   "output": false
+  }
+ ],
+ "perf": {
+  "input": [
+   {
+    "string": 50000,
+    "alphabet": "abcdefghijklmnopqrstuvwxyz",
+    "seed": 1
+   },
+   {
+    "string": 50000,
+    "alphabet": "abcdefghijklmnopqrstuvwxyz",
+    "seed": 2
+   }
+  ],
+  "about": "strings of length 50,000",
+  "limit": {
+   "ts": 0.5,
+   "py": 1.5
+  }
+ }
+}

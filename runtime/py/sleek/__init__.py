@@ -6,6 +6,46 @@ import json
 from typing import Any, Iterable
 
 
+# ---------- how nodes look when printed ----------
+
+
+def show_list(head, limit: int = 60) -> str:
+    """1 → 2 → 3, or 1 → 2 → 3 → ↺ 2 when the tail loops back"""
+    seen, parts, node = set(), [], head
+    while node:
+        if id(node) in seen:
+            return " → ".join(parts) + f" → ↺ {node.val}"
+        if len(parts) >= limit:
+            return " → ".join(parts) + " → …"
+        seen.add(id(node))
+        parts.append(str(node.val))
+        node = node.next
+    return " → ".join(parts) if parts else "(empty)"
+
+
+def show_tree(root, limit: int = 120) -> str:
+    """A drawn tree; a missing left child shows as ·, so left and right stay unambiguous."""
+    if root is None:
+        return "(empty tree)"
+    lines: list[str] = []
+
+    def walk(node, prefix: str, last: bool, top: bool) -> None:
+        if len(lines) > limit:
+            return
+        label = str(node.val) if node else "·"
+        lines.append(label if top else f"{prefix}{'└─ ' if last else '├─ '}{label}")
+        if not node or (not node.left and not node.right):
+            return
+        nxt = "" if top else prefix + ("   " if last else "│  ")
+        walk(node.left, nxt, False, False)
+        walk(node.right, nxt, True, False)
+
+    walk(root, "", True, True)
+    if len(lines) > limit:
+        lines.append("…")
+    return "\n".join(lines)
+
+
 # ---------- linked lists ----------
 
 
@@ -15,7 +55,8 @@ class ListNode:
         self.next = next
 
     def __repr__(self) -> str:
-        return f"ListNode({from_list(self)})"
+        """print(head) → ListNode(1 → 2 → 3)"""
+        return f"ListNode({show_list(self)})"
 
 
 def to_list(values: Iterable[int]) -> ListNode | None:
@@ -60,7 +101,12 @@ class TreeNode:
         self.right = right
 
     def __repr__(self) -> str:
+        """Inside lists etc.: TreeNode([3, 9, 20, None, None, 15, 7])"""
         return f"TreeNode({from_tree(self)})"
+
+    def __str__(self) -> str:
+        """print(root) draws the tree"""
+        return f"TreeNode\n{show_tree(self)}" if self.left or self.right else f"TreeNode({self.val})"
 
 
 def to_tree(values: list[int | None]) -> TreeNode | None:
@@ -110,6 +156,9 @@ class GraphNode:
         self.val = val
         self.neighbors = neighbors if neighbors is not None else []
 
+    def __repr__(self) -> str:
+        return f"Node({self.val} → {[n.val for n in self.neighbors]})"
+
 
 def to_graph(adj: list[list[int]]) -> GraphNode | None:
     """Adjacency list (1-indexed values) -> node 1, e.g. [[2, 4], [1, 3], [2, 4], [1, 3]]"""
@@ -147,6 +196,11 @@ class RandomNode:
         self.val = int(x)
         self.next = next
         self.random = random
+
+    def __repr__(self) -> str:
+        nodes = random_list_nodes(self)[:30]
+        links = ", ".join(f"{n.val}→{n.random.val if n.random else '·'}" for n in nodes)
+        return f"Node({show_list(self)}, random: {links})"
 
 
 def to_random_list(pairs: list[list[int | None]]) -> RandomNode | None:
@@ -208,6 +262,7 @@ def any_order_deep(value: Any) -> Any:
 Node = GraphNode  # LeetCode's name in Clone Graph
 
 __all__ = [
+    "show_list", "show_tree",
     "ListNode", "to_list", "from_list", "to_cycle_list",
     "TreeNode", "to_tree", "from_tree", "find_node",
     "GraphNode", "Node", "to_graph", "from_graph", "graph_nodes",

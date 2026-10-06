@@ -1,17 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { anyOrderDeep } from "../../lib";
-import { combinationSum } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("39. Combination Sum", () => {
-  test("example 1", () => {
-    expect(anyOrderDeep(combinationSum([2,3,6,7], 7))).toEqual(anyOrderDeep([[2,2,3],[7]]));
-  });
-
-  test("example 2", () => {
-    expect(anyOrderDeep(combinationSum([2,3,5], 8))).toEqual(anyOrderDeep([[2,2,2,2],[2,3,3],[3,5]]));
-  });
-
-  test("example 3", () => {
-    expect(anyOrderDeep(combinationSum([2], 1))).toEqual(anyOrderDeep([]));
-  });
-});
+suite(cases, solution, import.meta.path);

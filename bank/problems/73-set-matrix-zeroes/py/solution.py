@@ -15,7 +15,7 @@ class Solution:
         raise NotImplementedError("Not implemented")
 
 
-# Scratchpad: `sk play` runs this, tests skip it
+# Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if __name__ == "__main__":
     matrix = [[1, 1, 1], [1, 0, 1], [1, 1, 1]]
     Solution().setZeroes(matrix)

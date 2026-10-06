@@ -1,13 +1,16 @@
-from sleek import to_tree
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 98. Validate Binary Search Tree
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().isValidBST(to_tree([2, 1, 3])) == True
-
-
-def test_example_2():
-    assert Solution().isValidBST(to_tree([5, 1, 4, None, None, 3, 6])) == False
+def test_fast_enough():
+    check_perf(FILE, __file__)

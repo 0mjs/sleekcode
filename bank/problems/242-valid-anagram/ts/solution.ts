@@ -9,7 +9,7 @@ export function isAnagram(s: string, t: string): boolean {
   throw new Error("Not implemented");
 }
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(isAnagram("anagram", "nagaram"));
 }

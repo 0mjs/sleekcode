@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { climbStairs } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("70. Climbing Stairs", () => {
-  test("example 1", () => {
-    expect(climbStairs(2)).toEqual(2);
-  });
-
-  test("example 2", () => {
-    expect(climbStairs(3)).toEqual(3);
-  });
-});
+suite(cases, solution, import.meta.path);

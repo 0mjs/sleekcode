@@ -1,12 +1,16 @@
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 121. Best Time to Buy and Sell Stock
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert Solution().maxProfit([7, 1, 5, 3, 6, 4]) == 5
-
-
-def test_example_2():
-    assert Solution().maxProfit([7, 6, 4, 3, 1]) == 0
+def test_fast_enough():
+    check_perf(FILE, __file__)

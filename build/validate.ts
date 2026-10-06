@@ -5,6 +5,7 @@
 //    build/refs/<lang>/<folder>.* if present, else NeetCode's solution from .cache/.
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import { join } from "node:path";
+import { referenceSource, TS_PRELOAD } from "./refs";
 
 const ROOT = join(import.meta.dir, "..");
 const BANK = join(ROOT, "bank", "problems");
@@ -13,19 +14,6 @@ const langs = process.argv[2] === "ts" || process.argv[2] === "py" ? [process.ar
 const only = process.argv.find((a, i) => i > 1 && a !== "ts" && a !== "py");
 
 const index: any[] = await Bun.file(join(ROOT, "bank", "problems.json")).json();
-const nc: any[] = await Bun.file(join(ROOT, ".cache", "neetcode-list.json")).json();
-const code = (slug: string) => nc.find((x) => x.link.replace(/\/$/, "") === slug).code;
-
-const PY_PRELUDE = `from typing import *
-import collections, heapq, math, bisect, itertools, functools, string, random
-from collections import *
-from heapq import *
-from functools import *
-from itertools import *
-from bisect import *
-from math import inf
-from sleek import ListNode, TreeNode
-`;
 
 async function pool<T>(items: T[], size: number, fn: (t: T) => Promise<void>) {
   const queue = [...items];
@@ -40,7 +28,7 @@ for (const lang of langs) {
   if (lang === "ts") {
     symlinkSync(join(ROOT, "runtime", "ts", "lib"), join(dir, "lib"));
     symlinkSync(join(ROOT, "node_modules"), join(dir, "node_modules"));
-    await Bun.write(join(dir, "preload.ts"), `import * as PQ from "@datastructures-js/priority-queue";\nimport { Queue } from "@datastructures-js/queue";\nObject.assign(globalThis, PQ, { Queue });\n`);
+    await Bun.write(join(dir, "preload.ts"), TS_PRELOAD);
   } else {
     symlinkSync(join(ROOT, "runtime", "py", "sleek"), join(dir, "sleek"));
   }
@@ -53,24 +41,15 @@ for (const lang of langs) {
     const solFile = lang === "ts" ? "solution.ts" : "solution.py";
     if (!existsSync(join(src, testFile))) return void bad.push(`${p.folder}: no ${testFile}`);
 
-    // reference solution
-    const override = readdirSync(join(ROOT, "build", "refs", lang)).find((f) => f.startsWith(p.folder + "."));
-    let ref: string;
-    if (override) ref = await Bun.file(join(ROOT, "build", "refs", lang, override)).text();
-    else if (lang === "py") ref = PY_PRELUDE + (await Bun.file(join(ROOT, ".cache", "neetcode-py", `${code(p.slug)}.py`)).text());
-    else {
-      const base = join(ROOT, ".cache", "neetcode-solutions", code(p.slug));
-      ref = await Bun.file(existsSync(base + ".ts") ? base + ".ts" : base + ".js").text();
-      const exported = (await Bun.file(join(src, testFile)).text()).match(/import \{ (\w+) \} from "\.\/solution"/)![1]!;
-      const needs = ["ListNode", "TreeNode"].filter((t) => ref.includes(t) && !new RegExp(`^(export )?class ${t}\\b`, "m").test(ref));
-      ref = (needs.length ? `import { ${needs.join(", ")} } from "../../lib";\n` : "") + ref + `\nexport { ${exported} };\n`;
-    }
+    let ref = await referenceSource(p, lang as "ts" | "py");
+    if (lang === "ts" && /PriorityQueue|\bQueue\b/.test(ref)) ref = `import "../../preload.ts";\n` + ref;
 
     const run = async (solution: string) => {
       const d = join(dir, "problems", p.folder);
       rmSync(d, { recursive: true, force: true });
       mkdirSync(d, { recursive: true });
       cpSync(join(src, testFile), join(d, testFile));
+      if (existsSync(join(BANK, p.folder, "cases.json"))) cpSync(join(BANK, p.folder, "cases.json"), join(d, "cases.json"));
       await Bun.write(join(d, solFile), solution);
       const cmd = lang === "ts"
         ? ["bun", "test", "--timeout", "10000", "--preload", join(dir, "preload.ts")]
@@ -84,7 +63,8 @@ for (const lang of langs) {
     if (stub.ok) bad.push(`${p.folder}: passes against the blank stub`);
     const good = await run(ref);
     if (!good.ok) {
-      const why = good.out.split("\n").find((l) => /Error|error:|assert|FAILED|fail\)/.test(l))?.trim().slice(0, 160);
+      const lines = good.out.split("\n");
+      const why = (lines.find((l) => /^error:|^E\s|FAILED|Too slow/.test(l.trim())) ?? lines.find((l) => /Error|assert|fail\)/.test(l)))?.trim().slice(0, 200);
       bad.push(`${p.folder}: fails against reference: ${why}`);
     }
   });

@@ -1,0 +1,143 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    "a"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    ".,"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    "0P"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    "ab_a"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    "Aa"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    "1a2"
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 7",
+   "input": [
+    "No 'x' in Nixon"
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 8",
+   "input": [
+    "a.b,.B A"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 1",
+   "input": [
+    "1Bb#C1B?@1bab_bAb:1b1cBB:1"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 2",
+   "input": [
+    "a-0,-_-bbx"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 3",
+   "input": [
+    "1A0b 1;@b!A!BB ?B:BAB1:B0a1"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 4",
+   "input": [
+    "C.-0BBB.0bB'a"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 5",
+   "input": [
+    "B0:_:0AA 00B"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 6",
+   "input": [
+    "bx"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 7",
+   "input": [
+    "B1b_;Bb-:bB.B_ bb1B"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 8",
+   "input": [
+    "cC!?:!A:abb1ac?"
+   ],
+   "output": false
+  },
+  {
+   "name": "random 9",
+   "input": [
+    "A'A"
+   ],
+   "output": true
+  },
+  {
+   "name": "random 10",
+   "input": [
+    "bBbb100Cx"
+   ],
+   "output": false
+  }
+ ],
+ "perf": {
+  "input": [
+   {
+    "text": "Ab1, 1bA ",
+    "n": 199998
+   }
+  ],
+  "about": "a palindrome of 200,000 characters",
+  "limit": {
+   "ts": 0.5,
+   "py": 1.5
+  }
+ }
+}

@@ -1,0 +1,124 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    1
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    7
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    4
+   ],
+   "output": false
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    10
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    100
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    1111111
+   ],
+   "output": true
+  },
+  {
+   "name": "edge 7",
+   "input": [
+    2147483647
+   ],
+   "output": false
+  },
+  {
+   "name": "random 1",
+   "input": [
+    549
+   ],
+   "output": false
+  },
+  {
+   "name": "random 2",
+   "input": [
+    396
+   ],
+   "output": false
+  },
+  {
+   "name": "random 3",
+   "input": [
+    1878285686
+   ],
+   "output": false
+  },
+  {
+   "name": "random 4",
+   "input": [
+    994926562
+   ],
+   "output": false
+  },
+  {
+   "name": "random 5",
+   "input": [
+    139
+   ],
+   "output": true
+  },
+  {
+   "name": "random 6",
+   "input": [
+    713603941
+   ],
+   "output": false
+  },
+  {
+   "name": "random 7",
+   "input": [
+    968907877
+   ],
+   "output": false
+  },
+  {
+   "name": "random 8",
+   "input": [
+    54
+   ],
+   "output": false
+  },
+  {
+   "name": "random 9",
+   "input": [
+    420
+   ],
+   "output": false
+  },
+  {
+   "name": "random 10",
+   "input": [
+    633
+   ],
+   "output": false
+  }
+ ],
+ "perf": null
+}

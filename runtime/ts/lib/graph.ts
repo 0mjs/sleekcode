@@ -1,10 +1,16 @@
 /** Graph node used by Clone Graph (LeetCode calls it `_Node`). */
+import { INSPECT } from "./inspect";
+
 export class GraphNode {
   val: number;
   neighbors: GraphNode[];
   constructor(val?: number, neighbors?: GraphNode[]) {
     this.val = val === undefined ? 0 : val;
     this.neighbors = neighbors === undefined ? [] : neighbors;
+  }
+  /** console.log(node) → Node(1 → [2, 4]) */
+  [INSPECT]() {
+    return `Node(${this.val} → [${this.neighbors.map((n) => n.val).join(", ")}])`;
   }
 }
 

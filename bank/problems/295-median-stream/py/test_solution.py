@@ -1,11 +1,16 @@
-from sleek import run_ops
-from solution import MedianFinder
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 295. Find Median from Data Stream
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    ops = ["MedianFinder", "addNum", "addNum", "findMedian", "addNum", "findMedian"]
-    args = [[], [1], [2], [], [3], []]
-    assert run_ops(MedianFinder, ops, args) == [None, None, None, 1.5, None, 2]
+def test_fast_enough():
+    check_perf(FILE, __file__)

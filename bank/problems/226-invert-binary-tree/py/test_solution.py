@@ -1,17 +1,16 @@
-from sleek import from_tree, to_tree
-from solution import Solution
+# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
 
 
-# 226. Invert Binary Tree
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
 
 
-def test_example_1():
-    assert from_tree(Solution().invertTree(to_tree([4, 2, 7, 1, 3, 6, 9]))) == [4, 7, 2, 9, 6, 3, 1]
-
-
-def test_example_2():
-    assert from_tree(Solution().invertTree(to_tree([2, 1, 3]))) == [2, 3, 1]
-
-
-def test_example_3():
-    assert from_tree(Solution().invertTree(to_tree([]))) == []
+def test_fast_enough():
+    check_perf(FILE, __file__)

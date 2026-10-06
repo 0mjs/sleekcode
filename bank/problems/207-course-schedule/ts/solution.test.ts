@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { canFinish } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("207. Course Schedule", () => {
-  test("example 1", () => {
-    expect(canFinish(2, [[1,0]])).toEqual(true);
-  });
-
-  test("example 2", () => {
-    expect(canFinish(2, [[1,0],[0,1]])).toEqual(false);
-  });
-});
+suite(cases, solution, import.meta.path);

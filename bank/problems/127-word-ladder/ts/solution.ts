@@ -9,7 +9,7 @@ export function ladderLength(beginWord: string, endWord: string, wordList: strin
   throw new Error("Not implemented");
 }
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"]));
 }

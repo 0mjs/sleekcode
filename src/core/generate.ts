@@ -93,15 +93,8 @@ export function typescript(s: Spec, snippet: string): { stub: string; test: stri
   const stub =
     (imports.length ? `import { ${imports.join(", ")} } from "../../lib";\n\n` : "") +
     `/**\n${header(s).map((l) => ` *${l ? " " + l : ""}`).join("\n")}\n */\n${tsStubBody(snippet)}\n\n` +
-    `// Scratchpad: \`sk play\` runs this, tests skip it\nif (import.meta.main) {\n${play}\n}\n`;
-  const exported = meta.classname ?? meta.name;
-  const used = [...helpers].filter((h) => tests.some((t) => new RegExp(`\\b${h}\\b`).test(t))).sort();
-  const test =
-    `import { describe, expect, test } from "bun:test";\n` +
-    (used.length ? `import { ${used.join(", ")} } from "../../lib";\n` : "") +
-    `import { ${exported} } from "./solution";\n\n` +
-    `describe("${s.id}. ${s.title}", () => {\n${tests.join("\n\n")}\n});\n`;
-  return { stub, test };
+    `// Scratchpad, for your own experiments: \`sk play --scratch\` runs this (\`sk play\` runs the examples)\nif (import.meta.main) {\n${play}\n}\n`;
+  return { stub, test: TS_TEST };
 }
 
 // ---------- Python ----------
@@ -212,16 +205,69 @@ export function python(s: Spec, snippet: string): { stub: string; test: string }
     `"""\n${header(s).join("\n")}\n"""\n\n` +
     (typing.length ? `from typing import ${typing.join(", ")}\n\n` : "") +
     (imports.length ? `from sleek import ${imports.join(", ")}\n\n` : "") +
-    `\n${body}\n\n\n# Scratchpad: \`sk play\` runs this, tests skip it\nif __name__ == "__main__":\n${play}\n`;
-  const exported = meta.classname ?? "Solution";
-  const used = [...helpers].filter((h) => tests.some((t) => new RegExp(`\\b${h}\\b`).test(t))).sort();
-  const test =
-    (needsPytest ? "import pytest\n\n" : "") +
-    (used.length ? `from sleek import ${used.join(", ")}\n` : "") +
-    `from solution import ${exported}\n\n\n` +
-    `# ${s.id}. ${s.title}\n\n\n${tests.join("\n\n\n")}\n`;
-  return { stub, test };
+    `\n${body}\n\n\n# Scratchpad, for your own experiments: \`sk play --scratch\` runs this (\`sk play\` runs the examples)\nif __name__ == "__main__":\n${play}\n`;
+  return { stub, test: PY_TEST };
 }
+
+// ---------- cases.json: the data every test, `sk play` and the speed check run from ----------
+
+/** Problems where several different answers are correct: a validator decides (runtime cases.ts / cases.py) */
+const COMPARE_OVERRIDE: Record<string, CaseFile["compare"]> = {
+  "longest-palindromic-substring": "validator:longestPalindrome",
+};
+
+export type CaseFile = {
+  title: string;
+  call: { kind: "function"; name: string; params: Param[]; returns: string } | { kind: "design"; className: string };
+  compare: "exact" | "anyOrder" | "anyOrderDeep" | "float" | `validator:${string}`;
+  cases: { name: string; input: unknown[]; output: unknown }[];
+  perf: { input: unknown[]; about: string; limit: { ts: number; py: number } } | null;
+};
+
+/** The problem's examples as data; extra edge/random cases and the speed check are added by build/build-cases.ts */
+export function caseFile(s: Spec): CaseFile {
+  const { meta } = s;
+  const ret: string = meta.return?.type ?? "void";
+  return {
+    title: `${s.id}. ${s.title}`,
+    call: meta.classname
+      ? { kind: "design", className: meta.classname }
+      : { kind: "function", name: meta.name, params: meta.params.map((p: Param) => ({ name: p.name, type: p.type })), returns: ret },
+    compare: COMPARE_OVERRIDE[s.slug] ?? (ret === "double" ? "float" : s.deep ? "anyOrderDeep" : s.anyOrder ? "anyOrder" : "exact"),
+    cases: s.inputs.map((inp, i) => ({
+      name: `example ${i + 1}`,
+      input: inp.split("\n").map((line) => JSON.parse(line)),
+      output: JSON.parse(s.outputs[i]!),
+    })),
+    perf: null,
+  };
+}
+
+const TS_TEST = `// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
+
+suite(cases, solution, import.meta.path);
+`;
+
+const PY_TEST = `# Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import pytest
+
+import solution
+from sleek.testing import check, check_perf, ids, load
+
+FILE = load(__file__)
+
+
+@pytest.mark.parametrize("case", FILE["cases"], ids=ids(FILE))
+def test_case(case):
+    check(FILE, solution, case)
+
+
+def test_fast_enough():
+    check_perf(FILE, __file__)
+`;
 
 /** Builds a Spec from a LeetCode API question */
 export function specFrom(q: any, p: { id: string; title: string; slug: string; difficulty: string; pattern: string; blind75: boolean },

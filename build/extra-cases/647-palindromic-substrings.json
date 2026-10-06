@@ -1,0 +1,143 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    "a"
+   ],
+   "output": 1
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    "ab"
+   ],
+   "output": 2
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    "aa"
+   ],
+   "output": 3
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    "aaaa"
+   ],
+   "output": 10
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    "abcba"
+   ],
+   "output": 7
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    "abba"
+   ],
+   "output": 6
+  },
+  {
+   "name": "edge 7",
+   "input": [
+    "abcd"
+   ],
+   "output": 4
+  },
+  {
+   "name": "edge 8",
+   "input": [
+    "zzazz"
+   ],
+   "output": 9
+  },
+  {
+   "name": "random 1",
+   "input": [
+    "bccbcccabccbcbabcccaabccbcbc"
+   ],
+   "output": 51
+  },
+  {
+   "name": "random 2",
+   "input": [
+    "qprhjxqbbdnajkpqqsag"
+   ],
+   "output": 22
+  },
+  {
+   "name": "random 3",
+   "input": [
+    "bccabccbbbacbbacbcbcbaacac"
+   ],
+   "output": 42
+  },
+  {
+   "name": "random 4",
+   "input": [
+    "aabbbbbaabaaaabbbbbaaabaaa"
+   ],
+   "output": 73
+  },
+  {
+   "name": "random 5",
+   "input": [
+    "cacaacaabbbcbcaccac"
+   ],
+   "output": 37
+  },
+  {
+   "name": "random 6",
+   "input": [
+    "bbccccbbbabbccaccbabacbccbaa"
+   ],
+   "output": 54
+  },
+  {
+   "name": "random 7",
+   "input": [
+    "mbjdeg"
+   ],
+   "output": 6
+  },
+  {
+   "name": "random 8",
+   "input": [
+    "fkrliidaqzgaclnyhdjpgzmzlc"
+   ],
+   "output": 28
+  },
+  {
+   "name": "random 9",
+   "input": [
+    "bcaaccbbbbacbcc"
+   ],
+   "output": 26
+  },
+  {
+   "name": "random 10",
+   "input": [
+    "bbaabbabbabb"
+   ],
+   "output": 28
+  }
+ ],
+ "perf": {
+  "input": [
+   {
+    "text": "a",
+    "n": 1000
+   }
+  ],
+  "about": "a string of 1,000 \"a\"s",
+  "limit": {
+   "ts": 0.5,
+   "py": 1.5
+  }
+ }
+}

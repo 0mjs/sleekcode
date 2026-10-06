@@ -1,17 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { anyOrderDeep } from "../../lib";
-import { groupAnagrams } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("49. Group Anagrams", () => {
-  test("example 1", () => {
-    expect(anyOrderDeep(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))).toEqual(anyOrderDeep([["bat"],["nat","tan"],["ate","eat","tea"]]));
-  });
-
-  test("example 2", () => {
-    expect(anyOrderDeep(groupAnagrams([""]))).toEqual(anyOrderDeep([[""]]));
-  });
-
-  test("example 3", () => {
-    expect(anyOrderDeep(groupAnagrams(["a"]))).toEqual(anyOrderDeep([["a"]]));
-  });
-});
+suite(cases, solution, import.meta.path);

@@ -1,0 +1,167 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    "a",
+    "a"
+   ],
+   "output": 1
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    "a",
+    "b"
+   ],
+   "output": 0
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    "abc",
+    "cba"
+   ],
+   "output": 1
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    "aaaa",
+    "aa"
+   ],
+   "output": 2
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    "bl",
+    "yby"
+   ],
+   "output": 1
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    "abcdef",
+    "fedcba"
+   ],
+   "output": 1
+  },
+  {
+   "name": "edge 7",
+   "input": [
+    "ezupkr",
+    "ubmrapg"
+   ],
+   "output": 2
+  },
+  {
+   "name": "edge 8",
+   "input": [
+    "oxcpqrsvwf",
+    "shmtulqrypy"
+   ],
+   "output": 2
+  },
+  {
+   "name": "random 1",
+   "input": [
+    "bbaaaaaaaaabaaab",
+    "bbabaaaa"
+   ],
+   "output": 7
+  },
+  {
+   "name": "random 2",
+   "input": [
+    "bbccbcababbaacccba",
+    "cbbcabacbccbcbccabbaaaac"
+   ],
+   "output": 13
+  },
+  {
+   "name": "random 3",
+   "input": [
+    "aaabaaababbaabab",
+    "aabababaaaaab"
+   ],
+   "output": 11
+  },
+  {
+   "name": "random 4",
+   "input": [
+    "cabcac",
+    "bbbbcccbaaaaabacbbbabbca"
+   ],
+   "output": 6
+  },
+  {
+   "name": "random 5",
+   "input": [
+    "fbb",
+    "ddbaceeacfff"
+   ],
+   "output": 1
+  },
+  {
+   "name": "random 6",
+   "input": [
+    "cabbcbcabcbcbbbcccacbacb",
+    "abccacacaaacbccbaaa"
+   ],
+   "output": 12
+  },
+  {
+   "name": "random 7",
+   "input": [
+    "caca",
+    "aabacacaccccabbc"
+   ],
+   "output": 4
+  },
+  {
+   "name": "random 8",
+   "input": [
+    "bcaaaaaacaaa",
+    "baba"
+   ],
+   "output": 3
+  },
+  {
+   "name": "random 9",
+   "input": [
+    "aacaabcacabbbcbacabac",
+    "accbaaab"
+   ],
+   "output": 7
+  },
+  {
+   "name": "random 10",
+   "input": [
+    "bcccccbaabcaabbcbcac",
+    "bbbbbbacccacabcaa"
+   ],
+   "output": 10
+  }
+ ],
+ "perf": {
+  "input": [
+   {
+    "string": 1000,
+    "alphabet": "abcd",
+    "seed": 1
+   },
+   {
+    "string": 1000,
+    "alphabet": "abcd",
+    "seed": 2
+   }
+  ],
+  "about": "two strings of length 1,000",
+  "limit": {
+   "ts": 0.5,
+   "py": 1.5
+  }
+ }
+}

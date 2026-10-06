@@ -1,0 +1,173 @@
+{
+ "cases": [
+  {
+   "name": "edge 1",
+   "input": [
+    "a",
+    "a"
+   ],
+   "output": 1
+  },
+  {
+   "name": "edge 2",
+   "input": [
+    "a",
+    "b"
+   ],
+   "output": 0
+  },
+  {
+   "name": "edge 3",
+   "input": [
+    "a",
+    "aa"
+   ],
+   "output": 0
+  },
+  {
+   "name": "edge 4",
+   "input": [
+    "aaa",
+    "a"
+   ],
+   "output": 3
+  },
+  {
+   "name": "edge 5",
+   "input": [
+    "aaaa",
+    "aa"
+   ],
+   "output": 6
+  },
+  {
+   "name": "edge 6",
+   "input": [
+    "AbAb",
+    "Ab"
+   ],
+   "output": 3
+  },
+  {
+   "name": "edge 7",
+   "input": [
+    "abc",
+    "abc"
+   ],
+   "output": 1
+  },
+  {
+   "name": "edge 8",
+   "input": [
+    "aAaA",
+    "aa"
+   ],
+   "output": 1
+  },
+  {
+   "name": "edge 9",
+   "input": [
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+   ],
+   "output": 166167000
+  },
+  {
+   "name": "random 1",
+   "input": [
+    "aAAAAaAaaaAAaaAAAAAaaaAaAaA",
+    "Aaaa"
+   ],
+   "output": 900
+  },
+  {
+   "name": "random 2",
+   "input": [
+    "babbaacbaaa",
+    "ccbacb"
+   ],
+   "output": 0
+  },
+  {
+   "name": "random 3",
+   "input": [
+    "bcacccbabbacbbcabcbacbcaaa",
+    "ababb"
+   ],
+   "output": 104
+  },
+  {
+   "name": "random 4",
+   "input": [
+    "bbc",
+    "cacab"
+   ],
+   "output": 0
+  },
+  {
+   "name": "random 5",
+   "input": [
+    "acbcbbbbaccacc",
+    "c"
+   ],
+   "output": 6
+  },
+  {
+   "name": "random 6",
+   "input": [
+    "babbaaaababbaabbaabababb",
+    "babbab"
+   ],
+   "output": 3800
+  },
+  {
+   "name": "random 7",
+   "input": [
+    "babbbbaabbbbaaa",
+    "baabbb"
+   ],
+   "output": 28
+  },
+  {
+   "name": "random 8",
+   "input": [
+    "abccbbaabbcababbccbab",
+    "cc"
+   ],
+   "output": 10
+  },
+  {
+   "name": "random 9",
+   "input": [
+    "cbbacbbcbcacbbabaccbc",
+    "cabacc"
+   ],
+   "output": 126
+  },
+  {
+   "name": "random 10",
+   "input": [
+    "acaccabaccbcaacb",
+    "cabb"
+   ],
+   "output": 15
+  }
+ ],
+ "perf": {
+  "input": [
+   {
+    "text": "a",
+    "n": 1000
+   },
+   {
+    "text": "a",
+    "n": 997
+   }
+  ],
+  "about": "s of 1,000 \"a\"s, t of 997 \"a\"s (166,167,000 ways)",
+  "limit": {
+   "ts": 0.5,
+   "py": 2.92
+  }
+ }
+}

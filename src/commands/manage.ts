@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { parse } from "../core/args";
 import { LANGUAGES } from "../core/languages";
 import { installDeps, refreshWorkspace } from "../core/create";
-import { specFrom } from "../core/generate";
+import { caseFile, specFrom } from "../core/generate";
 import { fetchQuestion, toMarkdown } from "../core/leetcode";
 import { renderList } from "../core/list";
 import { TOOL } from "../core/paths";
@@ -118,6 +118,9 @@ export async function add(ws: Workspace, args: string[]) {
   await Bun.write(join(dir, lang.test), files.test);
   await Bun.write(join(ws.dir, ".sleekcode", "stubs", `${prob.folder}.${lang.ext}`), files.stub);
   await Bun.write(join(ws.dir, ".sleekcode", "stubs", `${prob.folder}.${lang.test}`), files.test);
+  const cases = JSON.stringify(caseFile(spec)) + "\n";
+  await Bun.write(join(ws.dir, ".sleekcode", "stubs", `${prob.folder}.cases.json`), cases);
+  await Bun.write(join(dir, "cases.json"), cases);
   await Bun.write(join(dir, "README.md"), problemReadme(prob, toMarkdown(q.content)));
   if (q.hints?.length) {
     const hints = q.hints.map((h) => h.replace(/<code>([\s\S]*?)<\/code>/g, "`$1`").replace(/<[^>]+>/g, "").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&"));

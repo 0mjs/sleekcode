@@ -1,13 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { anyOrder } from "../../lib";
-import { kClosest } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("973. K Closest Points to Origin", () => {
-  test("example 1", () => {
-    expect(anyOrder(kClosest([[1,3],[-2,2]], 1))).toEqual(anyOrder([[-2,2]]));
-  });
-
-  test("example 2", () => {
-    expect(anyOrder(kClosest([[3,3],[5,-1],[-2,4]], 2))).toEqual(anyOrder([[3,3],[-2,4]]));
-  });
-});
+suite(cases, solution, import.meta.path);

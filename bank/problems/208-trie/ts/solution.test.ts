@@ -1,11 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { runOps } from "../../lib";
-import { Trie } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("208. Implement Trie (Prefix Tree)", () => {
-  test("example 1", () => {
-    const ops = ["Trie","insert","search","search","startsWith","insert","search"];
-    const args = [[],["apple"],["apple"],["app"],["app"],["app"],["app"]];
-    expect(runOps(Trie, ops, args)).toEqual([null, null, true, false, true, null, true]);
-  });
-});
+suite(cases, solution, import.meta.path);

@@ -9,7 +9,7 @@ export function threeSum(nums: number[]): number[][] {
   throw new Error("Not implemented");
 }
 
-// Scratchpad: `sk play` runs this, tests skip it
+// Scratchpad, for your own experiments: `sk play --scratch` runs this (`sk play` runs the examples)
 if (import.meta.main) {
   console.log(threeSum([-1,0,1,2,-1,-4]));
 }

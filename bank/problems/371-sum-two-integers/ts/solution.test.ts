@@ -1,12 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { getSum } from "./solution";
+// Runs every case in cases.json (the examples plus hidden edge and random cases) and a speed check.
+import { suite } from "../../lib/testing";
+import cases from "./cases.json";
+import * as solution from "./solution";
 
-describe("371. Sum of Two Integers", () => {
-  test("example 1", () => {
-    expect(getSum(1, 2)).toEqual(3);
-  });
-
-  test("example 2", () => {
-    expect(getSum(2, 3)).toEqual(5);
-  });
-});
+suite(cases, solution, import.meta.path);

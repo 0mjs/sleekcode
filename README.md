@@ -1,9 +1,15 @@
 # SleekCode
 
-**LeetCode practice in your terminal.** The NeetCode 150 (the classic interview problems, with the
-Blind 75 marked ⭐), in **TypeScript or Python**, with:
+**LeetCode practice in your terminal, where you can actually `print` your way to a solution.**
+LeetCode and friends make it awkward to just log things and work it out as you go. SleekCode is built
+around that: `sk play` runs every example and shows your `console.log` / `print` output under each one,
+right next to your answer and the expected one.
 
-- ✅ tests for every problem, so you know when you've got it
+The NeetCode 150 (the classic interview problems, with the Blind 75 marked ⭐), in **TypeScript or Python**, with:
+
+- 🖨 `sk play`: every example, your logs, your answer vs the expected one. Lists and trees print readably
+- ✅ `sk test`: the examples plus hidden edge and random cases, and a speed check that catches a too-slow
+  solution, like LeetCode's "Time Limit Exceeded"
 - 💡 hints one at a time when you're stuck (from NeetCode)
 - ⏱ a timer, and a log of every attempt
 - 🔁 spaced repetition: problems come back for review so they stick
@@ -63,12 +69,13 @@ Open your practice folder in your editor, open its built-in terminal (**ctrl + `
 | --- | --- | --- |
 | 1 | `sk next` | Opens the next problem: its description and your solution file |
 | 2 | `sk start` | Starts a timer |
-| 3 | `sk test -w` | Runs the tests every time you save. Green = solved |
-| | `sk play -w` | Runs your code and shows what you `print` / `console.log` |
+| 3 | `sk test -w` | Runs the full tests (examples + hidden cases + speed check) every time you save. Green = solved |
+| | `sk play -w` | Runs every example, showing what you `print` / `console.log` and your answer vs the expected one |
 | | `sk hint` | Stuck? Shows one hint (run it again for the next) |
 | 4 | `sk log` | Records how it went. The time comes from the timer; you pick how you solved it (on your own / AI / looked it up) and your time & space complexity from a list, and it checks them against the target |
 
-Then `sk next` again. Every few days, `sk review` brings back problems you found hard, with a blank
+Want the real thing too? `sk submit` copies your solution (cleaned up for LeetCode) and opens the
+problem on leetcode.com, so you can paste and submit it there. Then `sk next` again. Every few days, `sk review` brings back problems you found hard, with a blank
 file so you solve them fresh.
 
 `sk stats` shows a dashboard (use ← → to switch tabs, q to quit). `sk list` shows your checklist (`sk list -t` for just what's left).
@@ -140,6 +147,7 @@ Your practice folder is yours: delete it too if you want, or keep it.
 
 ```sh
 bun build/fetch-cache.ts   # download LeetCode + NeetCode data into .cache/
+bun build/build-cases.ts   # hidden cases + speed checks from build/cases/specs (see build/cases/README.md)
 bun build/build-bank.ts    # regenerate bank/ (hand-written problems are kept)
 bun build/validate.ts      # every test must fail on the blank stub and pass on a reference solution
 bun run typecheck
