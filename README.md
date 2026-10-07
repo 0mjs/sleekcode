@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width="2172" height="724" alt="3bb91130-549b-460c-aae3-21c3af1fcf1d" src="https://github.com/user-attachments/assets/5cb5ade4-9490-4a22-967a-2077fcf64d90" />
+<img width="2172" height="724" alt="SleekCode" src="assets/header.png" />
 
 **LeetCode at home, for people who debug with `print`.**
 
