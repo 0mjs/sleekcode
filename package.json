@@ -2,7 +2,6 @@
   "name": "sleekcode",
   "version": "0.5.0",
   "description": "LeetCode practice in your terminal, where you can print your way to a solution. NeetCode 150 in TypeScript or Python.",
-  "private": true,
   "type": "module",
   "bin": {
     "sk": "src/cli.ts",
@@ -24,5 +23,6 @@
     "@types/bun": "^1.4.2",
     "@types/turndown": "^5.0.6",
     "typescript": "^7.0.2"
-  }
+  },
+  "license": "MIT"
 }

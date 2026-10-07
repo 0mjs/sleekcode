@@ -86,4 +86,5 @@ Ideas, not promises ([ROADMAP.md](ROADMAP.md) has the details):
 - Test answers aren't hand-written: hidden cases are kept only when two independent reference
   solutions agree. Building them yourself: see [build/cases](build/cases/README.md).
 - Problem list and hints: [NeetCode](https://neetcode.io) ([MIT](THIRD_PARTY_NOTICES.md)). Problems: [LeetCode](https://leetcode.com).
+- SleekCode itself is [MIT](LICENSE): free for anyone to use, change and share.
 - Uninstall: `rm -rf ~/sleekcode ~/.config/sleekcode ~/.local/bin/sk ~/.local/bin/sleek`
