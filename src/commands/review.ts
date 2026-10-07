@@ -1,4 +1,4 @@
-import { ago, dueNow, loadAttempts, reviews } from "../core/attempts";
+import { ago, dueNow, loadAttempts, masteredFolders, reviews } from "../core/attempts";
 import { parse } from "../core/args";
 import { label } from "../core/problem";
 import type { Workspace } from "../core/workspace";
@@ -14,9 +14,12 @@ export async function review(ws: Workspace, args: string[]) {
   const upcoming = reviews(ws, attempts).filter((r) => r.due > new Date());
   const name = (folder: string) => ws.problems.find((p) => p.folder === folder)!;
 
+  const mastered = masteredFolders(ws, attempts).size;
+  const masteredNote = mastered ? `  ${c.green(`✅ ${mastered} mastered`)} ${c.muted("(out of the review queue for good)")}` : "";
   if (!due.length) {
-    const soon = upcoming[0]!;
-    return console.log(`\n  ✨ ${c.green("Nothing due.")} ${c.muted("Next up:")} ${label(name(soon.folder))} ${c.muted(`(${ago(soon.due)})`)}\n`);
+    const soon = upcoming[0];
+    console.log(`\n  ✨ ${c.green("Nothing due.")}${soon ? ` ${c.muted("Next up:")} ${label(name(soon.folder))} ${c.muted(`(${ago(soon.due)})`)}` : ""}`);
+    return console.log(`${masteredNote ? masteredNote + "\n" : ""}`);
   }
 
   console.log(`\n  ${c.amber(`🔁 ${due.length} due for review`)}\n`);

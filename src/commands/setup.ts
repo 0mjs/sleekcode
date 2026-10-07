@@ -238,6 +238,21 @@ async function setReview(config: Config, days?: string) {
   p.outro(`${c.green("Reviews:")} a clean solve comes back after ${config.reviewDays} days`);
 }
 
+async function setGraduate(config: Config, count?: string) {
+  if (count) {
+    if (!/^\d+$/.test(count) || Number(count) < 1) {
+      p.cancel("Give a number of clean solves, e.g. sk config -g 4");
+      process.exit(1);
+    }
+    config.graduateAfter = Number(count);
+  } else {
+    const v = check(await p.text({ message: "Clean solves in a row before a problem is mastered (leaves review for good)", defaultValue: String(config.graduateAfter), placeholder: String(config.graduateAfter), validate: (s) => (s && !/^[1-9]\d*$/.test(s) ? "A number, 1 or more" : undefined) }));
+    config.graduateAfter = Number(v || config.graduateAfter);
+  }
+  await saveConfig(config);
+  p.outro(`${c.green("Mastered after:")} ${config.graduateAfter} clean solves in a row`);
+}
+
 async function switchWorkspace(config: Config, query?: string) {
   config.workspace = await pickWorkspace(config, "Which workspace should be active?", query);
   await saveConfig(config);
@@ -265,11 +280,12 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
   const { values } = parse("config", args);
   const value = (v: unknown) => (v ? String(v) : undefined);
 
-  const shortcut = ["editor", "review", "workspace", "new", "delete"].some((k) => values[k] !== undefined);
+  const shortcut = ["editor", "review", "graduate", "workspace", "new", "delete"].some((k) => values[k] !== undefined);
   if (shortcut) {
     p.intro(bold(" SleekCode settings "));
     if (values.editor !== undefined) return setEditor(config, ws, value(values.editor));
     if (values.review !== undefined) return setReview(config, value(values.review));
+    if (values.graduate !== undefined) return setGraduate(config, value(values.graduate));
     if (values.workspace !== undefined) return switchWorkspace(config, value(values.workspace));
     if (values.new) return newWorkspace(config);
     return removeWorkspace(config, value(values.delete));
@@ -280,7 +296,7 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
   p.log.message([
     `${c.muted("Workspace")}  ${c.ink(tilde(ws?.dir ?? config.workspace))}${ws ? c.muted(` · ${LANGUAGES[ws.language].name}`) : ""}`,
     `${c.muted("Editor")}     ${c.ink(EDITORS[config.editor])}`,
-    `${c.muted("Reviews")}    ${c.ink(`${config.reviewDays} days`)} ${c.muted(`· targets ${config.targets.Easy}/${config.targets.Medium}/${config.targets.Hard} min`)}`,
+    `${c.muted("Reviews")}    ${c.ink(`${config.reviewDays} days`)} ${c.muted(`· mastered after ${config.graduateAfter} clean · targets ${config.targets.Easy}/${config.targets.Medium}/${config.targets.Hard} min`)}`,
   ].join("\n"));
   const others = knownWorkspaces(config).length;
   const choice = check(await p.select({
@@ -288,6 +304,7 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
     options: [
       { value: "editor", label: "Editor", hint: `${EDITORS[config.editor]} · sk config -e` },
       { value: "review", label: "Review timing", hint: `${config.reviewDays} days · sk config -r` },
+      { value: "graduate", label: "When a problem is mastered", hint: `after ${config.graduateAfter} clean solves · sk config -g` },
       ...(others > 1 ? [{ value: "workspace", label: "Switch workspace", hint: "sk config -w" }] : []),
       { value: "new", label: "Set up another workspace", hint: "sk config -n · rarely needed: sk lang switches languages" },
       { value: "remove", label: "Remove a workspace", hint: "moves it to the Trash · sk config -d" },
@@ -296,6 +313,7 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
   }));
   if (choice === "editor") return setEditor(config, ws);
   if (choice === "review") return setReview(config);
+  if (choice === "graduate") return setGraduate(config);
   if (choice === "workspace") return switchWorkspace(config);
   if (choice === "new") return newWorkspace(config);
   if (choice === "remove") return removeWorkspace(config);

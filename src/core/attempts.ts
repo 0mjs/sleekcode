@@ -102,6 +102,24 @@ const DAY = 86_400_000;
 
 export type Review = { folder: string; last: Attempt; due: Date; reason: string; streak: number };
 
+const slow = (ws: Workspace, a: Attempt) => a.minutes != null && a.minutes > ws.config.targets[a.difficulty];
+/** A solve that earns the full schedule: clean, and within your target time */
+const onSchedule = (ws: Workspace, a: Attempt) => clean(a) && !slow(ws, a);
+
+/** Clean solves in a row at the end of a problem's history */
+function streakOf(ws: Workspace, list: Attempt[]): number {
+  let streak = 0;
+  for (let i = list.length - 1; i >= 0 && onSchedule(ws, list[i]!); i--) streak++;
+  return streak;
+}
+
+/** Problems you've mastered: graduateAfter (4) clean solves in a row. They leave the review queue. */
+export function masteredFolders(ws: Workspace, attempts: Attempt[]): Set<string> {
+  const byFolder = new Map<string, Attempt[]>();
+  for (const a of attempts) byFolder.set(a.folder, [...(byFolder.get(a.folder) ?? []), a]);
+  return new Set([...byFolder].filter(([, list]) => streakOf(ws, list) >= ws.config.graduateAfter).map(([f]) => f));
+}
+
 /**
  * Spaced repetition, from your latest attempt of each problem:
  * - failed, or used AI / looked it up / had help → due again after 1 day
@@ -109,6 +127,7 @@ export type Review = { folder: string; last: Attempt; due: Date; reason: string;
  * - complexity above target, used hints, or slower than target → 3 days
  * - "nailed it" doubles the clean interval
  * - clean and quick                    → reviewDays (7), doubling with each clean repeat (7, 14, 28, …)
+ * - graduateAfter (4) clean solves in a row → mastered: out of the queue for good (until you log a non-clean redo)
  */
 export function reviews(ws: Workspace, attempts: Attempt[]): Review[] {
   const byFolder = new Map<string, Attempt[]>();
@@ -117,9 +136,8 @@ export function reviews(ws: Workspace, attempts: Attempt[]): Review[] {
   const out: Review[] = [];
   for (const [folder, list] of byFolder) {
     const last = list.at(-1)!;
-    let streak = 0;
-    for (let i = list.length - 1; i >= 0 && clean(list[i]!); i--) streak++;
-    const slow = last.minutes != null && last.minutes > ws.config.targets[last.difficulty];
+    const streak = streakOf(ws, list);
+    if (streak >= ws.config.graduateAfter) continue; // mastered
 
     let days: number, reason: string;
     if (!passed(last)) [days, reason] = [1, "tests didn't pass"];
@@ -127,8 +145,8 @@ export function reviews(ws: Workspace, attempts: Attempt[]): Review[] {
     else if (last.feel === "unhappy") [days, reason] = [2, "you weren't happy with it"];
     else if (last.aboveTarget) [days, reason] = [3, "complexity above target"];
     else if (last.hints) [days, reason] = [3, `used ${last.hints} hint${last.hints > 1 ? "s" : ""}`];
-    else if (slow) [days, reason] = [3, `slow (${last.minutes} min)`];
-    else [days, reason] = [ws.config.reviewDays * 2 ** Math.max(0, streak - 1) * (last.feel === "nailed" ? 2 : 1), `${streak > 1 ? `clean ×${streak}` : "clean"}${last.feel === "nailed" ? ", nailed it" : ""}`];
+    else if (slow(ws, last)) [days, reason] = [3, `slow (${last.minutes} min)`];
+    else [days, reason] = [ws.config.reviewDays * 2 ** Math.max(0, streak - 1) * (last.feel === "nailed" ? 2 : 1), `clean ${streak}/${ws.config.graduateAfter}${last.feel === "nailed" ? ", nailed it" : ""}`];
 
     out.push({ folder, last, due: new Date(new Date(last.at).getTime() + days * DAY), reason, streak });
   }

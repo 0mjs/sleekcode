@@ -1,7 +1,7 @@
 // Creates and refreshes practice workspaces.
 import { copyFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import type { Editor } from "./config";
+import { DEFAULTS, type Editor } from "./config";
 import { writeEditorFiles } from "./editor-files";
 import { LANGUAGES, type Language } from "./languages";
 import { renderLog, renderRecords } from "./records";
@@ -37,7 +37,7 @@ export async function createWorkspace(dir: string, language: Language, editor: E
   await renderLog({ dir } as Workspace, []);
 
   // Every problem gets its folder + README now, and starting code in the first language
-  const ws = await openWorkspace(dir, { workspace: dir, editor, reviewDays: 7, targets: { Easy: 15, Medium: 30, Hard: 45 } });
+  const ws = await openWorkspace(dir, { ...DEFAULTS, workspace: dir, editor });
   for (const p of ws.problems) await ensureProblemFiles(ws, p, language);
 }
 

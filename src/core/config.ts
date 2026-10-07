@@ -10,6 +10,8 @@ export type Config = {
   editor: Editor;
   /** Base spaced-repetition interval for a clean solve */
   reviewDays: number;
+  /** Clean solves in a row (each on the full schedule) before a problem is mastered and leaves review */
+  graduateAfter: number;
   /** "Comfortable" minutes per difficulty; slower counts as shaky */
   targets: Record<Difficulty, number>;
   /** Optional: replace the complexity choices `sk log` offers */
@@ -21,6 +23,7 @@ export type Config = {
 export const DEFAULTS: Omit<Config, "workspace"> = {
   editor: "none",
   reviewDays: 7,
+  graduateAfter: 4,
   targets: { Easy: 15, Medium: 30, Hard: 45 },
 };
 

@@ -12,7 +12,7 @@ import { TOOL } from "../core/paths";
 import { problemReadme } from "../core/readme";
 import { syncReadmes } from "../core/sync";
 import { openWorkspace, problemDir, type Problem, type Workspace } from "../core/workspace";
-import { loadAttempts, passed } from "../core/attempts";
+import { loadAttempts, masteredFolders, passed } from "../core/attempts";
 import type { Language } from "../core/languages";
 import { resolveProblem } from "../core/workspace";
 import { bold, c, diffColor, pad, rgb } from "../ui/colors";
@@ -25,6 +25,7 @@ export async function list(ws: Workspace, args: string[]) {
   const solvedIn = new Map<string, Set<Language>>();
   for (const a of attempts.filter(passed)) solvedIn.set(a.folder, (solvedIn.get(a.folder) ?? new Set()).add(a.language));
   const current = await resolveProblem(ws);
+  const mastered = masteredFolders(ws, attempts);
   const want = values.pattern ? String(values.pattern).toLowerCase() : null;
 
   const groups = new Map<string, Problem[]>();
@@ -40,7 +41,7 @@ export async function list(ws: Workspace, args: string[]) {
     out.push(`  ${bold(c.green(pattern.toUpperCase()))}  ${c.ink(String(done))}${c.muted(`/${ps.length}`)}  ${c.green("━".repeat(filled))}${c.dim("━".repeat(barW - filled))}`);
     for (const p of shown) {
       const langs = solvedIn.get(p.folder);
-      const mark = p === current ? c.amber("▸") : langs ? c.green("✓") : c.dim("○");
+      const mark = p === current ? c.amber("▸") : mastered.has(p.folder) ? "✅" : langs ? c.green("✓") : c.dim("○");
       const name = `${p.id}`.padEnd(5) + p.title;
       out.push(
         `    ${mark} ${pad((langs ? c.body : c.ink)(name.length > 46 ? name.slice(0, 45) + "…" : name), 48)}${pad(diffColor[p.difficulty](p.difficulty), 8)}` +

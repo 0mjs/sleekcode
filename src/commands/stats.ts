@@ -1,7 +1,7 @@
 // sk stats: a full-screen dashboard.
 //   ←/→ or 1-5   switch tabs        l   filter by language
 //   ↑/↓ or j/k   scroll             q   quit
-import { ago, clean, dueNow, HELP_LABEL, loadAttempts, passed, reviews, type Attempt } from "../core/attempts";
+import { ago, clean, dueNow, HELP_LABEL, loadAttempts, masteredFolders, passed, reviews, type Attempt } from "../core/attempts";
 import { formatDuration } from "../core/duration";
 import { LANGUAGES, type Language } from "../core/languages";
 import { label } from "../core/problem";
@@ -88,12 +88,13 @@ export async function stats(ws: Workspace) {
     const lang = filters[filter]!;
     const attempts = lang === "all" ? all : all.filter((a) => a.language === lang);
     const solvedSet = new Set(attempts.filter(passed).map((a) => a.folder));
-    return { lang, attempts, solvedSet, isSolved: (p: Problem) => solvedSet.has(p.folder) };
+    const mastered = masteredFolders(ws, attempts);
+    return { lang, attempts, solvedSet, mastered, isSolved: (p: Problem) => solvedSet.has(p.folder) };
   };
 
   // ----- 1. Overview -----
   function overview(width: number): string[] {
-    const { attempts, solvedSet, isSolved } = view();
+    const { attempts, solvedSet, mastered, isSolved } = view();
     if (!attempts.length) return empty();
 
     // Streaks, counted in local days
@@ -116,7 +117,7 @@ export async function stats(ws: Workspace) {
 
     const out = [""];
     out.push(...cards([
-      { title: "solved", value: bold(c.ink(String(solvedSet.size))) + c.muted(` / ${ws.problems.length}`), sub: c.muted(pct(solvedSet.size, ws.problems.length) + " done") },
+      { title: "solved", value: bold(c.ink(String(solvedSet.size))) + c.muted(` / ${ws.problems.length}`), sub: mastered.size ? c.green(`✅ ${mastered.size} mastered`) : c.muted(pct(solvedSet.size, ws.problems.length) + " done") },
       { title: "blind 75", value: bold(c.amber(String(blind.filter(isSolved).length))) + c.muted(` / ${blind.length}`), sub: c.muted("must-knows") },
       { title: "streak", value: bold(c.green(`${streak}`)) + c.muted(streak === 1 ? " day" : " days"), sub: c.muted(`best ${best}`) },
       { title: "this week", value: bold(c.ink(String(thisWeek))) + c.muted(" solves"), sub: trend > 0 ? c.green(`▲ ${trend} vs last`) : trend < 0 ? c.red(`▼ ${-trend} vs last`) : c.muted("= last week") },
@@ -165,7 +166,7 @@ export async function stats(ws: Workspace) {
 
   // ----- 2. Patterns -----
   function patterns(width: number): string[] {
-    const { attempts, isSolved } = view();
+    const { attempts, mastered, isSolved } = view();
     const groups = new Map<string, Problem[]>();
     for (const p of ws.problems) groups.set(p.pattern, [...(groups.get(p.pattern) ?? []), p]);
     const barW = Math.max(10, Math.min(28, width - 66));
@@ -178,9 +179,10 @@ export async function stats(ws: Workspace) {
       const cleanRate = cleanNow(as).rate; // latest attempt per problem, so a clean redo counts fully
       const level =
         !as.length ? c.dim("· not started")
-          : done === ps.length && cleanRate >= 0.7 ? c.green("● mastered")
-            : done / ps.length >= 0.5 ? c.blue("◕ practising")
-              : c.amber("◔ learning");
+          : ps.every((p) => mastered.has(p.folder)) ? c.green("✅ mastered")
+            : done === ps.length && cleanRate >= 0.7 ? c.green("● solid")
+              : done / ps.length >= 0.5 ? c.blue("◕ practising")
+                : c.amber("◔ learning");
       const hinted = as.filter((a) => a.hints > 0).length;
       const color = done === ps.length ? c.green : done ? c.blue : c.dim;
       out.push(
@@ -196,7 +198,7 @@ export async function stats(ws: Workspace) {
     const focus = [...weak.map((w) => w.name), ...(nextNew && weak.length < 2 ? [nextNew.name] : [])];
     out.push("", `${c.green("→")} ${c.muted("Focus next:")} ${focus.length ? focus.map((f) => c.ink(f)).join(c.muted(", ")) : c.green("you've covered everything 🎉")}`);
     out.push(c.dim("CLEAN = problems whose latest attempt had no hints or help · HINTS = all your attempts that used hints"));
-    out.push(c.dim("learning = under half solved · practising = half or more · mastered = all solved, 70%+ clean"));
+    out.push(c.dim(`learning = under half solved · practising = half or more · solid = all solved, 70%+ clean · mastered = every problem mastered (${ws.config.graduateAfter} clean solves in a row)`));
     return out;
   }
 
@@ -309,7 +311,13 @@ export async function stats(ws: Workspace) {
     if (!attempts.length) return empty();
     const due = dueNow(ws, attempts);
     const schedule = reviews(ws, attempts);
-    const out = ["", due.length ? bold(c.amber(`${due.length} DUE NOW`)) + c.muted("  ·  sk review starts the most overdue") : c.green("Nothing due right now ✓"), ""];
+    const done = masteredFolders(ws, attempts).size;
+    const out = [
+      "",
+      due.length ? bold(c.amber(`${due.length} DUE NOW`)) + c.muted("  ·  sk review starts the most overdue") : c.green("Nothing due right now ✓"),
+      ...(done ? [c.green(`✅ ${done} mastered`) + c.muted(` · ${ws.config.graduateAfter} clean solves in a row, out of the review queue for good`)] : []),
+      "",
+    ];
     const titleW = Math.max(16, width - 50);
     const row = (r: (typeof schedule)[number], when: string) => {
       const p = known.get(r.folder);
@@ -337,7 +345,7 @@ export async function stats(ws: Workspace) {
       out.push("", section("coming up"), "");
       for (const r of upcoming) out.push(row(r, ago(r.due)));
     }
-    out.push("", c.dim(`Not passed or hints → 1 day · slow → 3 days · clean → ${ws.config.reviewDays} days, doubling each clean repeat.`));
+    out.push("", c.dim(`Not passed / AI → 1 day · not happy → 2 · hints, slow or above target → 3 · clean → ${ws.config.reviewDays} days, doubling · ${ws.config.graduateAfter} clean in a row → mastered`));
     return out;
   }
 

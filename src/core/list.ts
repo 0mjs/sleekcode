@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { loadAttempts, passed } from "./attempts";
+import { loadAttempts, masteredFolders, passed } from "./attempts";
 import { LANGUAGES, type Language } from "./languages";
 import type { Problem, Workspace } from "./workspace";
 
@@ -9,6 +9,7 @@ export async function renderList(ws: Workspace) {
   const solvedIn = new Map<string, Set<Language>>();
   for (const a of attempts.filter(passed)) solvedIn.set(a.folder, (solvedIn.get(a.folder) ?? new Set()).add(a.language ?? ws.language));
   const solved = new Set(solvedIn.keys());
+  const mastered = masteredFolders(ws, attempts);
   const tags = (folder: string) => {
     const langs = solvedIn.get(folder);
     return langs && (ws.languages.length > 1 || langs.size > 1) ? ` · ${[...langs].map((l) => LANGUAGES[l].tag).join(" ")}` : "";
@@ -22,7 +23,7 @@ export async function renderList(ws: Workspace) {
   const lines = [
     "# Problem List",
     "",
-    `**Progress: ${count(ws.problems)}** · ⭐ Blind 75: ${count(ws.problems.filter((p) => p.blind75))} · Easy ${count(by("Easy"))} · Medium ${count(by("Medium"))} · Hard ${count(by("Hard"))}`,
+    `**Progress: ${count(ws.problems)}**${mastered.size ? ` · ✅ ${mastered.size} mastered` : ""} · ⭐ Blind 75: ${count(ws.problems.filter((p) => p.blind75))} · Easy ${count(by("Easy"))} · Medium ${count(by("Medium"))} · Hard ${count(by("Hard"))}`,
     "",
     "Work top to bottom (⭐ = Blind 75, do those first if you're short on time). `sk next` opens the next unsolved one.",
     "This file is rebuilt by `sk log`, so don't edit it by hand.",
@@ -30,7 +31,7 @@ export async function renderList(ws: Workspace) {
   for (const [pattern, ps] of groups) {
     lines.push("", `## ${pattern} (${count(ps)})`, "");
     for (const p of ps) {
-      lines.push(`- [${solved.has(p.folder) ? "x" : " "}] ${p.blind75 ? "⭐ " : ""}[${p.id}. ${p.title}](problems/${p.folder}/README.md) — ${p.difficulty}${p.paid ? " 🔒" : ""}${tags(p.folder)}`);
+      lines.push(`- [${solved.has(p.folder) ? "x" : " "}] ${p.blind75 ? "⭐ " : ""}[${p.id}. ${p.title}](problems/${p.folder}/README.md) — ${p.difficulty}${p.paid ? " 🔒" : ""}${tags(p.folder)}${mastered.has(p.folder) ? " · ✅ mastered" : ""}`);
     }
   }
   await Bun.write(join(ws.dir, "LIST.md"), lines.join("\n") + "\n");

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+- **Problems can be mastered.** 4 clean solves in a row (each one on time, on target, no hints or help) and a problem is ✅ mastered: out of the review queue for good. A non-clean redo puts it back. Change the number with `sk config -g`.
+- Pattern levels: learning → practising → solid (all solved, 70%+ clean) → mastered (every problem mastered).
+- Mastered counts in stats, `sk review`, `sk list` and LIST.md, and `sk log` tells you when it happens.
+
 ## 0.2.1
 
 - TypeScript workspaces no longer flag `nums[i]` as "possibly undefined" (`noUncheckedIndexedAccess` is off, like on LeetCode). `strict` stays on. Run `sk update` to apply it to your workspace.

@@ -75,6 +75,7 @@ const GROUPS: { title: string; commands: Command[] }[] = [
         flags: [
           { short: "e", long: "editor", arg: "name", optional: true, desc: "zed, vscode, cursor, terminal or none" },
           { short: "r", long: "review", arg: "days", optional: true, desc: "days before a clean solve comes back for review" },
+          { short: "g", long: "graduate", arg: "count", optional: true, desc: "clean solves in a row before a problem is mastered (default 4)" },
           { short: "w", long: "workspace", arg: "path", optional: true, desc: "switch the active workspace" },
           { short: "n", long: "new", desc: "set up another workspace" },
           { short: "d", long: "delete", arg: "path", optional: true, desc: "move a workspace to the Trash (shows what's in it, asks first)" },

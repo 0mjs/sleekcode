@@ -1,7 +1,7 @@
 import * as p from "@clack/prompts";
 import { copyFileSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
-import { addAttempt, type Feel, type Help } from "../core/attempts";
+import { addAttempt, loadAttempts, masteredFolders, type Feel, type Help } from "../core/attempts";
 import { aboveTarget, same, targetParts, verdict } from "../core/complexity";
 import { parse } from "../core/args";
 import { formatDuration, parseDuration } from "../core/duration";
@@ -159,6 +159,9 @@ export async function log(ws: Workspace, args: string[]) {
     language: ws.language, pass, total, seconds, minutes: seconds == null ? null : Math.max(1, Math.round(seconds / 60)),
     help, solo: help === "none", hints: hintsUsed, complexity, aboveTarget: above.above, feel, notes, snapshot,
   });
+  const wasMastered = masteredFolders(ws, (await loadAttempts(ws)).slice(0, -1)).has(prob.folder);
+  if (!wasMastered && masteredFolders(ws, await loadAttempts(ws)).has(prob.folder))
+    p.log.success(`✅ Mastered! ${ws.config.graduateAfter} clean solves in a row: ${label(prob)} is out of your review queue for good.`);
   await renderRecords(ws, [prob.folder]);
   rmSync(startedFile, { force: true });
   rmSync(usedFile, { force: true });
