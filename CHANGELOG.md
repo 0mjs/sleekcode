@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.1
+
+- Tokyo Night is the default theme: a cool header, and calm green / amber / red in sk stats.
+- SleekCode's neon theme is now SynthWave '84, with that theme's real colours (sk config -t synthwave).
+
 ## 0.8.0
 
 - **Themes.** sk config -t picks from 15: SleekCode's own (the new default), Tokyo Night, Dracula, One Dark, Monokai, Gruvbox, Nord, Catppuccin Mocha, Solarized Dark, GitHub Dark, Rosé Pine, Kanagawa, Everforest, Night Owl and Ayu Mirage. Everything recolours, header included.

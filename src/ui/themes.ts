@@ -37,17 +37,9 @@ function blend(a: string, b: string, t: number) {
   return `#${[1, 3, 5].map((i) => Math.round(ch(a, i) + (ch(b, i) - ch(a, i)) * t).toString(16).padStart(2, "0")).join("")}`;
 }
 
-export const DEFAULT_THEME = "sleekcode";
+export const DEFAULT_THEME = "tokyo-night";
 
 export const THEMES: Record<string, { name: string; palette: Palette }> = {
-  sleekcode: {
-    name: "SleekCode",
-    palette: theme({
-      bg: "#1a1030", ink: "#f5f0ff", body: "#cbc3e3", muted: "#8a82a6", dim: "#4d4766",
-      accent: "#ff5fd2", accent2: "#8be9fd", success: "#5af0b4", warn: "#ffd166", fail: "#ff5c7a", blue: "#7aa2ff",
-      sunset: ["#ff4fd8", "#b65cff", "#6f7bff"], grid: "#7a3cff",
-    }),
-  },
   "tokyo-night": {
     name: "Tokyo Night",
     palette: theme({
@@ -152,6 +144,14 @@ export const THEMES: Record<string, { name: string; palette: Palette }> = {
       sunset: ["#c792ea", "#82aaff", "#7fdbca"],
     }),
   },
+  "synthwave-84": {
+    name: "SynthWave '84",
+    palette: theme({
+      bg: "#262335", ink: "#f4f1fb", body: "#cdc8e3", muted: "#848bbd", dim: "#4f4a73",
+      accent: "#ff7edb", accent2: "#36f9f6", success: "#72f1b8", warn: "#fede5d", fail: "#fe4450", blue: "#03edf9",
+      sunset: ["#ff7edb", "#b381c5", "#36f9f6"], grid: "#9a5fd6",
+    }),
+  },
   ayu: {
     name: "Ayu Mirage",
     palette: theme({
@@ -162,9 +162,10 @@ export const THEMES: Record<string, { name: string; palette: Palette }> = {
   },
 };
 
-/** "Tokyo Night", "tokyo-night", "tokyonight" → "tokyo-night" */
+/** "Tokyo Night", "tokyo-night", "tokyonight" → "tokyo-night"; "synthwave" works without the '84 */
 export function findTheme(name: string | undefined): string | null {
   if (!name) return null;
-  const key = name.toLowerCase().replace(/[^a-z]/g, "");
-  return Object.keys(THEMES).find((id) => id.replace(/-/g, "") === key || THEMES[id]!.name.toLowerCase().replace(/[^a-z]/g, "") === key) ?? null;
+  const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const key = squash(name);
+  return Object.keys(THEMES).find((id) => [id, THEMES[id]!.name].some((n) => squash(n) === key || squash(n).replace(/\d/g, "") === key)) ?? null;
 }
