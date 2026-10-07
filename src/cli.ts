@@ -25,6 +25,7 @@ import { configure, onboarding } from "./commands/setup";
 import { stats } from "./commands/stats";
 import { c } from "./ui/colors";
 import { ALL, commandHelp, help } from "./ui/help";
+import { preview } from "./ui/header";
 
 const [cmd, ...rest] = process.argv.slice(2);
 
@@ -72,6 +73,12 @@ if (cmd === "help" || cmd === "-h" || cmd === "--help") {
     const ws = await currentWorkspace();
     console.log(help(ws ? await status(ws) : undefined));
   }
+  process.exit(0);
+}
+
+// Internal: a sample of the active theme (sk config -t runs it with the new theme)
+if (cmd === "theme-preview") {
+  console.log(preview());
   process.exit(0);
 }
 

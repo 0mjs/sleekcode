@@ -92,6 +92,7 @@ const GROUPS: { title: string; commands: Command[] }[] = [
         desc: "Settings menu, or jump straight to one setting:",
         flags: [
           { short: "e", long: "editor", arg: "name", optional: true, desc: "zed, vscode, cursor, terminal or none" },
+          { short: "t", long: "theme", arg: "name", optional: true, desc: "colours: tokyo-night, dracula, gruvbox, monokai… (no name = pick)" },
           { short: "r", long: "review", arg: "days", optional: true, desc: "days before a clean solve comes back for review" },
           { short: "u", long: "updates", arg: "on|off", optional: true, desc: "install new versions by themselves (on by default)" },
           { short: "g", long: "graduate", arg: "count", optional: true, desc: "clean solves in a row before a problem is mastered (default 4)" },

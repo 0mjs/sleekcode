@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.0
+
+- **Themes.** sk config -t picks from 15: SleekCode's own (the new default), Tokyo Night, Dracula, One Dark, Monokai, Gruvbox, Nord, Catppuccin Mocha, Solarized Dark, GitHub Dark, Rosé Pine, Kanagawa, Everforest, Night Owl and Ayu Mirage. Everything recolours, header included.
+- A new header: neon letters over a horizon grid, in your theme's colours.
+
 ## 0.7.1
 
 - Attempt lists (sk attempts, sk submit -a) line up in columns, most telling first: problem, how it felt and the result, how you solved it, complexity, time, language, date. A long row now loses the date, not the emoji.

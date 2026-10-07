@@ -1,20 +1,16 @@
-// The look: every colour SleekCode uses, in one place. The wordmark's shape lives in header.ts.
-export const THEME = {
-  name: "Mint",
-  /** Brand: headings, progress bars, "you are here" marks */
-  accent: "#6fd3a8",
-  /** Flags in help */
-  accent2: "#5fc3c8",
-  /** Meaning: passed, warning, failed */
-  success: "#6fd3a8",
-  warn: "#e3b04b",
-  fail: "#f07a7a",
-  blue: "#6aa9ef",
-  /** Text, brightest to faintest */
-  ink: "#eef0f2",
-  body: "#c2c7cd",
-  muted: "#868e97",
-  dim: "#4f565e",
-  /** The wordmark: "sleek" runs from → to, "code" is in `code`; speed lines fade in from `night` */
-  header: { from: "#6fd3a8", to: "#6aa9ef", code: "#eef0f2", night: "#1f2a27" },
-};
+// The active theme. Read once at startup, before anything is coloured: SLEEKCODE_THEME (for previews), then your config.
+import { existsSync, readFileSync } from "node:fs";
+import { CONFIG_FILE } from "../core/paths";
+import { DEFAULT_THEME, findTheme, THEMES } from "./themes";
+
+function chosen(): string {
+  const fromEnv = findTheme(process.env.SLEEKCODE_THEME);
+  if (fromEnv) return fromEnv;
+  try {
+    if (existsSync(CONFIG_FILE)) return findTheme(JSON.parse(readFileSync(CONFIG_FILE, "utf8")).theme) ?? DEFAULT_THEME;
+  } catch {}
+  return DEFAULT_THEME;
+}
+
+export const THEME_ID = chosen();
+export const THEME = THEMES[THEME_ID]!.palette;

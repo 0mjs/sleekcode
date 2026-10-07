@@ -9,10 +9,11 @@ import { LANGUAGE_IDS, LANGUAGES, ensureTool, type Language } from "../core/lang
 import { renderList } from "../core/list";
 import { createWorkspace, installDeps } from "../core/create";
 import { writeEditorFiles } from "../core/editor-files";
-import { CONFIG_FILE, tilde } from "../core/paths";
+import { CONFIG_FILE, TOOL, tilde } from "../core/paths";
 import { syncReadmes } from "../core/sync";
 import { MARKER, openWorkspace, type Workspace } from "../core/workspace";
-import { bold, c } from "../ui/colors";
+import { bold, c, rgb } from "../ui/colors";
+import { DEFAULT_THEME, findTheme, THEMES } from "../ui/themes";
 import { header } from "../ui/header";
 import { parse } from "../core/args";
 import { intro } from "./intro";
@@ -259,6 +260,36 @@ async function setGraduate(config: Config, count?: string) {
   p.outro(`${c.green("Mastered after:")} ${config.graduateAfter} clean solves in a row`);
 }
 
+/** A theme's colours as a row of blocks, for the picker */
+const swatch = (id: string) => {
+  const t = THEMES[id]!.palette;
+  return [t.header.top, t.header.middle, t.header.bottom, t.accent, t.success, t.warn, t.fail].map((hex) => rgb(hex)("■")).join("");
+};
+
+async function setTheme(config: Config, name?: string) {
+  const current = findTheme(config.theme) ?? DEFAULT_THEME;
+  let id = name ? findTheme(name) : null;
+  if (name && !id) {
+    p.cancel(`No theme called "${name}". Choose from: ${Object.keys(THEMES).join(", ")}`);
+    process.exit(1);
+  }
+  id ??= check(await p.select({
+    message: "Which theme?",
+    initialValue: current,
+    maxItems: 15,
+    options: Object.entries(THEMES).map(([key, t]) => ({
+      value: key,
+      label: `${swatch(key)}  ${t.name}`,
+      hint: key === current ? "current" : key === DEFAULT_THEME ? "default" : undefined,
+    })),
+  }));
+  config.theme = id === DEFAULT_THEME ? undefined : id;
+  await saveConfig(config);
+  p.outro(`${c.green("Theme:")} ${THEMES[id]!.name}`);
+  // This process is already coloured with the old theme, so a fresh one shows the new one
+  Bun.spawnSync(["bun", join(TOOL, "src", "cli.ts"), "theme-preview"], { stdio: ["ignore", "inherit", "inherit"], env: { ...process.env, SLEEKCODE_THEME: id } });
+}
+
 async function setUpdates(config: Config, value?: string) {
   if (value && !["on", "off"].includes(value.toLowerCase())) {
     p.cancel("Use on or off, e.g. sk config -u off");
@@ -305,10 +336,11 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
   const { values } = parse("config", args);
   const value = (v: unknown) => (v ? String(v) : undefined);
 
-  const shortcut = ["editor", "review", "graduate", "updates", "workspace", "new", "delete"].some((k) => values[k] !== undefined);
+  const shortcut = ["editor", "theme", "review", "graduate", "updates", "workspace", "new", "delete"].some((k) => values[k] !== undefined);
   if (shortcut) {
     p.intro(bold(" SleekCode settings "));
     if (values.editor !== undefined) return setEditor(config, ws, value(values.editor));
+    if (values.theme !== undefined) return setTheme(config, value(values.theme));
     if (values.review !== undefined) return setReview(config, value(values.review));
     if (values.graduate !== undefined) return setGraduate(config, value(values.graduate));
     if (values.updates !== undefined) return setUpdates(config, value(values.updates));
@@ -329,6 +361,7 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
     message: "What do you want to change?",
     options: [
       { value: "editor", label: "Editor", hint: `${EDITORS[config.editor]} · sk config -e` },
+      { value: "theme", label: "Theme", hint: `${THEMES[findTheme(config.theme) ?? DEFAULT_THEME]!.name} · sk config -t` },
       { value: "review", label: "Review timing", hint: `${config.reviewDays} days · sk config -r` },
       { value: "graduate", label: "When a problem is mastered", hint: `after ${config.graduateAfter} clean solves · sk config -g` },
       { value: "updates", label: "Automatic updates", hint: `${config.autoUpdate === false ? "off" : "on"} · sk config -u` },
@@ -339,6 +372,7 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
     ],
   }));
   if (choice === "editor") return setEditor(config, ws);
+  if (choice === "theme") return setTheme(config);
   if (choice === "review") return setReview(config);
   if (choice === "graduate") return setGraduate(config);
   if (choice === "updates") return setUpdates(config);
