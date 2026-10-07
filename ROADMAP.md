@@ -1,6 +1,6 @@
-# Plan
+# Roadmap
 
-What we want to add or fix next. Newest ideas at the bottom of each section.
+Ideas for where SleekCode goes next. Nothing here is promised or scheduled; it's a list of things worth building.
 
 ## Ideas
 

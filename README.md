@@ -69,6 +69,16 @@ Can't tell O(n) from O(n log n) yet? [BIG_O_CHEATSHEET.md](BIG_O_CHEATSHEET.md):
 
 Works with Zed, VS Code, Cursor or vim. Update with `sk update`.
 
+## Maybe next
+
+Ideas, not promises ([ROADMAP.md](ROADMAP.md) has the details):
+
+- 🃏 **Pattern drills**: read a problem, name the technique and the complexity, no coding
+- 🎤 **Interview habits**: explain your approach out loud, list edge cases before you code
+- ⏲️ **Mock interviews**: a random problem, a countdown, no hints (opt-in pressure)
+- 🏗️ **System design**: classic prompts, a 45-minute template, rubric checklists and estimation drills
+- 🧩 More problem sets (NeetCode 250, Grind 169) and more languages
+
 ## Fine print
 
 - Your solutions live in your own folder, not in this repo.
