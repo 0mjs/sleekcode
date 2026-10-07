@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.2
+
+- Updating no longer fails if a release tag was re-made on GitHub ("would clobber existing tag").
+
 ## 0.8.1
 
 - Tokyo Night is the default theme: a cool header, and calm green / amber / red in sk stats.

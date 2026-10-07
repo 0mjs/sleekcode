@@ -21,7 +21,9 @@ const git = (...args: string[]) => Bun.spawnSync(["git", ...args], { cwd: TOOL, 
 /** Pulls the latest SleekCode, installs its dependencies and refreshes your workspace (never your solutions, notes or attempts) */
 export async function pullLatest(ws: Workspace | null, progress: (msg: string) => void = () => {}) {
   const before = await version();
-  const pull = git("pull", "--ff-only");
+  // --force --tags: a release tag that was re-made upstream replaces the old one instead of failing the update
+  git("fetch", "--quiet", "--force", "--tags");
+  const pull = git("pull", "--ff-only", "--no-tags");
   if (pull.exitCode !== 0) return { ok: false as const, error: pull.stderr.toString().trim() };
   const changed = !pull.stdout.toString().includes("Already up to date");
   if (changed) Bun.spawnSync(["bun", "install"], { cwd: TOOL, stdout: "ignore", stderr: "ignore" });
@@ -53,7 +55,7 @@ export async function updateInBackground(config: Config) {
 export async function updateQuietly(ws: Workspace | null) {
   // Local changes or commits mean someone is working on SleekCode itself: leave it alone
   if (git("status", "--porcelain").stdout.toString().trim()) return;
-  if (git("fetch", "--quiet").exitCode !== 0) return; // offline: try again tomorrow
+  if (git("fetch", "--quiet", "--force", "--tags").exitCode !== 0) return; // offline: try again tomorrow
   const count = (range: string) => Number(git("rev-list", "--count", range).stdout.toString().trim() || 0);
   if (count("@{u}..HEAD") > 0 || count("HEAD..@{u}") === 0) return;
   const result = await pullLatest(ws);
