@@ -9,7 +9,7 @@ import { summary } from "./attempts";
 import { ask } from "./log";
 import { label, needProblem } from "../core/problem";
 import { runOnce } from "../core/run";
-import { problemDir, solutionFile, type Workspace } from "../core/workspace";
+import { problemDir, resolveProblem, solutionFile, type Problem, type Workspace } from "../core/workspace";
 import { c } from "../ui/colors";
 
 /** Your file minus the SleekCode bits LeetCode doesn't want: helper imports, `export`, the header, the scratchpad */
@@ -33,47 +33,56 @@ function forLeetCode(source: string, lang: Language): string {
 
 export async function submit(ws: Workspace, args: string[]) {
   const { values, positionals } = parse("submit", args);
-  const prob = await needProblem(ws, positionals[0]);
-  const dir = problemDir(ws, prob);
-
-  // What to submit: your current solution, or (with -a) any attempt you've logged
-  type Choice = { file: string; lang: Language; logged?: Attempt };
-  const current = (lang: Language): Choice | null => (existsSync(solutionFile(ws, prob, lang)) ? { file: solutionFile(ws, prob, lang), lang } : null);
-  let choice: Choice | null = current(ws.language);
+  type Choice = { prob: Problem; file: string; lang: Language; logged?: Attempt };
+  const current = (prob: Problem) =>
+    ws.languages.filter((l) => existsSync(solutionFile(ws, prob, l))).map((l): Choice => ({ prob, file: solutionFile(ws, prob, l), lang: l }));
+  let choice: Choice | undefined;
 
   if (values.attempt) {
-    const logged = (await loadAttempts(ws)).filter((a) => a.folder === prob.folder && a.snapshot && existsSync(join(dir, a.snapshot))).reverse();
-    const currents = ws.languages.map(current).filter((x): x is Choice => !!x);
-    if (!logged.length && currents.length <= 1) {
-      console.log(`\n  ${c.muted("Nothing logged for this problem yet, so there's only your current solution.")}`);
-    } else {
-      p.intro(`Submit ${label(prob)}`);
-      const options = [
-        ...currents.map((x) => ({ value: x.file, label: `Current solution (${LANGUAGES[x.lang].name})`, hint: x.file.split("/").pop() })),
-        ...logged.map((a) => ({ value: join(dir, a.snapshot!), label: summary(a) })),
-      ];
-      const picked = ask(await p.select({ message: "Which solution?", options, maxItems: 10 }));
-      const a = logged.find((x) => join(dir, x.snapshot!) === picked);
-      choice = { file: String(picked), lang: a ? a.language : currents.find((x) => x.file === picked)!.lang, logged: a };
-    }
+    // The picker: your current solution(s), then logged attempts, newest first.
+    // With a number, just that problem's; without one, every problem's.
+    const prob = positionals[0] ? await needProblem(ws, positionals[0]) : await resolveProblem(ws);
+    const logged: Choice[] = (await loadAttempts(ws))
+      .filter((a) => (!positionals[0] || a.folder === prob!.folder) && a.snapshot)
+      .reverse()
+      .flatMap((a) => {
+        const owner = ws.problems.find((x) => x.folder === a.folder);
+        return owner && existsSync(join(problemDir(ws, owner), a.snapshot!)) ? [{ prob: owner, file: join(problemDir(ws, owner), a.snapshot!), lang: a.language, logged: a }] : [];
+      });
+    const choices = [...(prob ? current(prob) : []), ...logged];
+    if (!choices.length) return console.log(`\n  ${c.muted("Nothing to submit yet: no solution and nothing logged.")}\n`);
+    p.intro(positionals[0] ? `Submit ${label(prob!)}` : "Submit");
+    const picked = ask(await p.select({
+      message: "Which solution?",
+      maxItems: 10,
+      options: choices.map((x, i) => ({
+        value: i,
+        label: x.logged ? summary(x.logged, !positionals[0]) : `${label(x.prob)} ${c.muted("·")} current solution (${LANGUAGES[x.lang].name})`,
+      })),
+    }));
+    choice = choices[picked];
+  } else {
+    const prob = await needProblem(ws, positionals[0]);
+    choice = current(prob).find((x) => x.lang === ws.language);
+    if (!choice) return console.log(`\n  ${c.amber("No solution yet.")}\n`);
   }
-  if (!choice) return console.log(`\n  ${c.amber("No solution yet.")}\n`);
+  const { prob, file, logged } = choice!;
+  const lang = LANGUAGES[choice!.lang];
 
-  const lang = LANGUAGES[choice.lang];
-  // Tests: a logged attempt already has its result; the current solution is checked now
-  const passing = choice.logged
-    ? choice.logged.total > 0 && choice.logged.pass === choice.logged.total
-    : choice.lang === ws.language ? (await runOnce(ws, prob, "test", true)).code === 0 : null;
+  // Only passing code goes to LeetCode. A logged attempt has its result; the current solution is tested now.
+  if (logged ? logged.total === 0 || logged.pass < logged.total : (await runOnce(ws, prob, "test", true, choice!.lang)).code !== 0) {
+    console.log(`\n  ${c.red("Not copied:")} ${logged ? `that attempt only passed ${logged.pass}/${logged.total} tests when you logged it.` : "it doesn't pass the tests yet."}`);
+    return console.log(`  ${c.muted("Get it green with")} ${c.ink(`sk test ${prob.id}`)}${c.muted(", then submit.")}\n`);
+  }
 
-  const code = forLeetCode(await Bun.file(choice.file).text(), choice.lang);
+  const code = forLeetCode(await Bun.file(file).text(), choice!.lang);
   const copy = Bun.spawn(["pbcopy"], { stdin: "pipe" });
   copy.stdin.write(code);
   await copy.stdin.end();
   await copy.exited;
 
-  const which = choice.logged ? `your ${lang.name} attempt from ${choice.logged.at.slice(0, 10)}` : `your ${lang.name} solution`;
+  const which = logged ? `your ${lang.name} attempt from ${logged.at.slice(0, 10)}` : `your ${lang.name} solution`;
   console.log(`\n  ${c.green("✓ Copied")} ${which} for ${c.ink(label(prob))} ${c.muted(`(${code.split("\n").length - 1} lines)`)}`);
-  if (passing === false) console.log(`  ${c.amber(choice.logged ? "Heads up: it didn't pass the tests when you logged it." : "Heads up: it doesn't pass sk test yet.")}`);
   if (prob.paid) {
     console.log(`  ${c.amber("This one is LeetCode Premium,")} ${c.muted("so submitting needs a subscription. The free version: https://neetcode.io/practice")}`);
   }

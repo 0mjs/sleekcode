@@ -44,7 +44,7 @@ const GROUPS: { title: string; commands: Command[] }[] = [
       {
         name: "submit",
         desc: "Copy your solution for LeetCode and open the problem, to submit it there",
-        flags: [{ short: "a", long: "attempt", desc: "pick which: your current solution or any attempt you've logged" }],
+        flags: [{ short: "a", long: "attempt", desc: "pick from your current solution and every attempt you've logged" }],
       },
       { name: "which", desc: "Show the current problem" },
     ],

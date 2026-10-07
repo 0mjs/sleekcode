@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1
+
+- `sk submit -a` always opens the picker. Without a number it lists every attempt you've logged (any problem), not just the current problem's, which often had none.
+- `sk submit` only copies code that passes: the current solution is tested first, and a logged attempt must have passed when you logged it.
+
 ## 0.6.0
 
 - **Submit any attempt:** `sk submit -a` lets you pick your current solution or any attempt you've logged (newest first), and copies that one for LeetCode. Plain `sk submit` is unchanged.

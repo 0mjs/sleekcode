@@ -11,8 +11,8 @@ const env = (ws: Workspace, color: boolean) => ({
 });
 
 /** Runs once and returns the exit code (and output, when quiet) */
-export async function runOnce(ws: Workspace, p: Problem, kind: Kind, quiet = false): Promise<{ code: number; output: string }> {
-  const proc = Bun.spawn(LANGUAGES[ws.language].run(kind, ws.dir, false), {
+export async function runOnce(ws: Workspace, p: Problem, kind: Kind, quiet = false, lang = ws.language): Promise<{ code: number; output: string }> {
+  const proc = Bun.spawn(LANGUAGES[lang].run(kind, ws.dir, false), {
     cwd: problemDir(ws, p),
     env: env(ws, !quiet),
     stdio: quiet ? ["ignore", "pipe", "pipe"] : ["inherit", "inherit", "inherit"],
