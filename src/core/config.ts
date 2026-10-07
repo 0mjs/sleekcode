@@ -20,6 +20,8 @@ export type Config = {
   workspaces?: string[];
   /** Colour theme (see ui/themes.ts); SleekCode's own when unset */
   theme?: string;
+  /** Plain sk opens the menu of next steps. On unless set to false (then sk prints the help page). */
+  menu?: boolean;
   /** Install new versions by themselves (once a day, in the background). On unless set to false. */
   autoUpdate?: boolean;
   /** Your league: the private GitHub repo (owner/name), your GitHub login, whether you created it */

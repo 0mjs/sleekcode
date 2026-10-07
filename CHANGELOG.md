@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+
+- **sk on its own opens a menu** of what to do next, based on where you are: start a problem, run the examples or tests, get a hint, log it once the tests pass, resume a paused timer. Each option shows its command, so you learn them as you go.
+- "Everything else…" in the menu lists every command, type to search.
+- The help page is now sk -h (or sk help). Prefer it when you type sk? sk config -m off.
+
 ## 0.8.2
 
 - Updating no longer fails if a release tag was re-made on GitHub ("would clobber existing tag").

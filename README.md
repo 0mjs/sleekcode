@@ -33,6 +33,8 @@ Answer three questions (language, editor, folder), take the two-minute tour (`sk
 
 ## Use
 
+Not sure what to type? `sk` on its own opens a menu of what to do next. `sk -h` lists every command.
+
 ```
 sk next      next problem
 sk start     start the timer (sk pause when you step away)

@@ -101,7 +101,7 @@ function screens(ws: Workspace | null, config: Config | null): Screen[] {
         `${pad(cmd("sk league"), 11)} a private leaderboard with friends ${c.muted("(needs a GitHub account)")}`,
         `${pad("", 11)} ${c.muted("shares what you solved, how and how fast. Never your code.")}`,
         `${pad(cmd("sk submit"), 11)} copies a passing solution to paste into LeetCode`,
-        `${pad(cmd("sk"), 11)} every command, any time`,
+        `${pad(cmd("sk"), 11)} a menu of what to do next ${c.muted("(sk -h lists every command)")}`,
         `${pad(cmd("sk intro"), 11)} this tour again`,
         "",
         c.muted("SleekCode updates itself, so there's nothing to maintain."),

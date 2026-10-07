@@ -93,7 +93,7 @@ sk log         record how it went
 Each problem gets files for a language the first time you open it in that language, and your notes and
 progress are shared across languages.
 
-Run \`sk\` on its own for every command.
+Run \`sk\` on its own for a menu of what to do next, or \`sk -h\` for every command.
 
 ## Editors
 

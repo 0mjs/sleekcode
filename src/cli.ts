@@ -13,6 +13,7 @@ import { label } from "./core/problem";
 import { currentWorkspace, resolveProblem, type Workspace } from "./core/workspace";
 import { attempts, undo } from "./commands/attempts";
 import { hint } from "./commands/hint";
+import { home } from "./commands/home";
 import { intro } from "./commands/intro";
 import { log } from "./commands/log";
 import { add, list, sync, update } from "./commands/manage";
@@ -132,7 +133,9 @@ if (config.league?.pending && cmd !== "league") publishInBackground();
 
 switch (cmd) {
   case undefined:
-    console.log(help(await status(ws)));
+    // In a terminal: the home screen. Piped or scripted: the help page (same as sk -h)
+    if (config.menu !== false && process.stdin.isTTY && process.stdout.isTTY) await home(ws);
+    else console.log(help(await status(ws)));
     break;
   case "next": await next(ws, rest); break;
   case "open": await open(ws, rest); break;
@@ -157,7 +160,7 @@ switch (cmd) {
   default: {
     const guess = ALL.map((x) => ({ x, d: distance(cmd, x.name) })).sort((a, b) => a.d - b.d).find((g) => g.d <= 2)?.x;
     console.log(`\n  ${c.red(`Unknown command "${cmd}".`)}${guess ? ` ${c.muted("Did you mean")} ${c.ink(`sk ${guess.name}`)}${c.muted("?")}` : ""}`);
-    console.log(`  ${c.muted("Run")} ${c.ink("sk")} ${c.muted("to see every command.")}\n`);
+    console.log(`  ${c.muted("Run")} ${c.ink("sk -h")} ${c.muted("to see every command, or just")} ${c.ink("sk")} ${c.muted("for the menu.")}\n`);
     process.exit(1);
   }
 }

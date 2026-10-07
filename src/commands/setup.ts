@@ -95,7 +95,7 @@ function nextSteps(ws: Workspace) {
       `${c.ink("sk log")}        record how it went`,
       "",
       editorLine,
-      `Run ${c.ink("sk")} any time to see every command.`,
+      `Lost? Type ${c.ink("sk")} for a menu of what to do next.`,
     ].join("\n"),
     "You're set",
   );
@@ -290,6 +290,26 @@ async function setTheme(config: Config, name?: string) {
   Bun.spawnSync(["bun", join(TOOL, "src", "cli.ts"), "theme-preview"], { stdio: ["ignore", "inherit", "inherit"], env: { ...process.env, SLEEKCODE_THEME: id } });
 }
 
+async function setMenu(config: Config, value?: string) {
+  if (value && !["on", "off"].includes(value.toLowerCase())) {
+    p.cancel("Use on or off, e.g. sk config -m off");
+    process.exit(1);
+  }
+  config.menu = value
+    ? value.toLowerCase() === "on"
+    : check(await p.select({
+        message: "What should sk on its own show?",
+        initialValue: config.menu !== false,
+        options: [
+          { value: true, label: "A menu of what to do next", hint: "the default" },
+          { value: false, label: "The help page", hint: "every command, like sk -h" },
+        ],
+      }));
+  if (config.menu) delete config.menu; // on is the default: keep the config file tidy
+  await saveConfig(config);
+  p.outro(`${c.green("sk on its own:")} ${config.menu === false ? "shows the help page (sk config -m on for the menu)" : "opens the menu (sk -h for the help page)"}`);
+}
+
 async function setUpdates(config: Config, value?: string) {
   if (value && !["on", "off"].includes(value.toLowerCase())) {
     p.cancel("Use on or off, e.g. sk config -u off");
@@ -336,13 +356,14 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
   const { values } = parse("config", args);
   const value = (v: unknown) => (v ? String(v) : undefined);
 
-  const shortcut = ["editor", "theme", "review", "graduate", "updates", "workspace", "new", "delete"].some((k) => values[k] !== undefined);
+  const shortcut = ["editor", "theme", "review", "graduate", "menu", "updates", "workspace", "new", "delete"].some((k) => values[k] !== undefined);
   if (shortcut) {
     p.intro(bold(" SleekCode settings "));
     if (values.editor !== undefined) return setEditor(config, ws, value(values.editor));
     if (values.theme !== undefined) return setTheme(config, value(values.theme));
     if (values.review !== undefined) return setReview(config, value(values.review));
     if (values.graduate !== undefined) return setGraduate(config, value(values.graduate));
+    if (values.menu !== undefined) return setMenu(config, value(values.menu));
     if (values.updates !== undefined) return setUpdates(config, value(values.updates));
     if (values.workspace !== undefined) return switchWorkspace(config, value(values.workspace));
     if (values.new) return newWorkspace(config);
@@ -364,6 +385,7 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
       { value: "theme", label: "Theme", hint: `${THEMES[findTheme(config.theme) ?? DEFAULT_THEME]!.name} · sk config -t` },
       { value: "review", label: "Review timing", hint: `${config.reviewDays} days · sk config -r` },
       { value: "graduate", label: "When a problem is mastered", hint: `after ${config.graduateAfter} clean solves · sk config -g` },
+      { value: "menu", label: "What sk on its own shows", hint: `${config.menu === false ? "help page" : "menu"} · sk config -m` },
       { value: "updates", label: "Automatic updates", hint: `${config.autoUpdate === false ? "off" : "on"} · sk config -u` },
       ...(others > 1 ? [{ value: "workspace", label: "Switch workspace", hint: "sk config -w" }] : []),
       { value: "new", label: "Set up another workspace", hint: "sk config -n · rarely needed: sk lang switches languages" },
@@ -375,6 +397,7 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
   if (choice === "theme") return setTheme(config);
   if (choice === "review") return setReview(config);
   if (choice === "graduate") return setGraduate(config);
+  if (choice === "menu") return setMenu(config);
   if (choice === "updates") return setUpdates(config);
   if (choice === "workspace") return switchWorkspace(config);
   if (choice === "new") return newWorkspace(config);
