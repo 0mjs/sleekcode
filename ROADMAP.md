@@ -43,6 +43,20 @@ Not testable like code, but the practice can have the same loop (practise → ch
 - **AI feedback only as an opt-in**, never the default.
 - **Content:** written carefully per prompt; the System Design Primer (CC BY-SA 4.0) can be adapted with credit.
 
+### AI review, bring-your-own-key (`sk review --ai`)
+Strictly opt-in, never the default — SleekCode's core stays AI-free. You add your own API key (OpenAI or
+Anthropic, any model) in `sk config`; nothing is sent anywhere unless you ask. Fits well with the free monthly
+API credits on Max/Team plans.
+- **Only runs after your own attempt and your own complexity guess.** A "check my work", never a "do my work",
+  so it doesn't remove the thinking (working out the pattern and the Big O yourself is the whole point).
+- **Checks your stated complexity:** you still type your Big O at `sk log`; then this can confirm or correct it
+  ("you said O(n), it's O(n·k) because the strings have length"). This is the "automated Big O" idea done safely
+  — assist, don't autofill.
+- **Feedback on the solution:** a cleaner approach, edge cases you missed, whether you hit the target.
+- **Model:** default a small fast model (Haiku 4.5, or an OpenAI mini); allow a bigger one (Sonnet 5) for the
+  subtle multi-variable complexities where small models slip. Key and model live in `~/.config/sleekcode`.
+- **Privacy:** the key never leaves the machine except in the API call you triggered; make that explicit.
+
 ### More languages
 Go, Java, … The language registry (`src/core/languages.ts`) is built for this: one entry, a generator in
 `src/core/generate.ts`, helpers in `runtime/<id>/`, then build + validate the bank.
