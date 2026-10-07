@@ -12,7 +12,7 @@ import { needProblem } from "../core/problem";
 import { renderRecords } from "../core/records";
 import { publishInBackground } from "../core/league";
 import { hintsFile, problemDir, type Workspace } from "../core/workspace";
-import { c, rgb, visible } from "../ui/colors";
+import { c, pad, rgb, visible } from "../ui/colors";
 import { ask, COMPLEXITIES, pickComplexity, pickHelp } from "./log";
 
 const when = (a: Attempt) => {
@@ -34,19 +34,38 @@ function fit(s: string, width: number): string {
   return out;
 }
 
+/**
+ * An attempt's details, most telling first, so trimming a long row only loses the least important:
+ * problem · feel + result · how · complexity · time · language · date.
+ * Without the problem (one problem's attempts), the date leads: it's what tells them apart.
+ */
+function cells(a: Attempt, withTitle: boolean): string[] {
+  const lang = LANGUAGES[a.language];
+  const feel = a.feel === "unhappy" ? "😬" : a.feel === "nailed" ? "😎" : "👍";
+  const result = passed(a) ? c.green(`✓ ${a.pass}/${a.total}`) : c.red(`✗ ${a.pass}/${a.total}`);
+  const how = a.help === "none" ? c.body(a.hints ? `on my own · ${a.hints} hint${a.hints > 1 ? "s" : ""}` : "on my own") : c.amber(HELP_LABEL[a.help]);
+  const complexity = !a.complexity ? c.dim("–") : a.aboveTarget ? c.amber(`${a.complexity} ↑`) : c.body(a.complexity);
+  const time = a.seconds == null ? c.dim("no time") : c.body(formatDuration(a.seconds));
+  const tag = lang ? rgb(lang.color)(lang.tag) : a.language;
+  return withTitle
+    ? [c.ink(`${a.id}.`), c.ink(a.title), `${feel} ${result}`, how, complexity, time, tag, c.muted(when(a))]
+    : [c.muted(when(a)), `${feel} ${result}`, how, complexity, time, tag];
+}
+
 /** One line describing an attempt */
 export function summary(a: Attempt, withTitle = false): string {
-  const lang = LANGUAGES[a.language];
-  return [
-    withTitle ? c.ink(`${a.id}. ${a.title}`) : null,
-    c.muted(when(a)),
-    lang ? rgb(lang.color)(lang.tag) : a.language,
-    passed(a) ? c.green(`✓ ${a.pass}/${a.total}`) : c.red(`✗ ${a.pass}/${a.total}`),
-    a.seconds == null ? c.dim("no time") : c.body(formatDuration(a.seconds)),
-    a.help === "none" ? c.body(a.hints ? `on my own · ${a.hints} hint${a.hints > 1 ? "s" : ""}` : "on my own") : c.amber(HELP_LABEL[a.help]),
-    a.complexity ? (a.aboveTarget ? c.amber(`${a.complexity} (above target)`) : c.body(a.complexity)) : null,
-    a.feel === "unhappy" ? "😬" : a.feel === "nailed" ? "😎" : null,
-  ].filter(Boolean).join(c.dim(" · "));
+  const [first, ...rest] = cells(a, withTitle);
+  return withTitle ? `${first} ${rest.join("  ")}` : [first, ...rest].join("  ");
+}
+
+/** Several attempts as rows lined up in columns */
+export function rows(list: Attempt[], withTitle = false): string[] {
+  const all = list.map((a) => cells(a, withTitle));
+  const widths = all[0]?.map((_, col) => Math.max(...all.map((r) => visible(r[col]!)))) ?? [];
+  return all.map((r) =>
+    // the id and title sit together ("1.   Two Sum"); everything else gets two spaces
+    r.map((cell, col) => pad(cell, widths[col]!) + (withTitle && col === 0 ? " " : col < r.length - 1 ? "  " : "")).join("").trimEnd(),
+  );
 }
 
 /** Deletes an attempt. Its code snapshot is kept, renamed so it's clearly not a logged attempt any more. */
@@ -121,10 +140,11 @@ export async function attempts(ws: Workspace, args: string[]) {
     message: "Which attempt?",
     maxItems: 10,
     options: [
-      ...list.map((a) => {
-        // Fit each row on one line: the summary first, then as much of the note as there's room for
+      ...rows(list, !!values.all).map((row, i) => {
+        // Fit each row on one line: the details first, then as much of the note as there's room for
+        const a = list[i]!;
         const room = (process.stdout.columns || 100) - 16; // clack adds a prefix and trims long rows itself
-        let label = summary(a, !!values.all);
+        let label = row;
         if (visible(label) > room) label = fit(label, room);
         const left = room - visible(label) - 3;
         const hint = a.notes && left >= 8 ? (a.notes.length > left ? a.notes.slice(0, left - 1).trimEnd() + "…" : a.notes) : undefined;

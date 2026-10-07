@@ -5,7 +5,7 @@ import { LANGUAGES, type Language } from "../core/languages";
 import { loadAttempts, type Attempt } from "../core/attempts";
 import * as p from "@clack/prompts";
 import { join } from "node:path";
-import { summary } from "./attempts";
+import { rows } from "./attempts";
 import { ask } from "./log";
 import { label, needProblem } from "../core/problem";
 import { runOnce } from "../core/run";
@@ -50,6 +50,7 @@ export async function submit(ws: Workspace, args: string[]) {
         return owner && existsSync(join(problemDir(ws, owner), a.snapshot!)) ? [{ prob: owner, file: join(problemDir(ws, owner), a.snapshot!), lang: a.language, logged: a }] : [];
       });
     const choices = [...(prob ? current(prob) : []), ...logged];
+    const lines = rows(logged.map((x) => x.logged!), !positionals[0]);
     if (!choices.length) return console.log(`\n  ${c.muted("Nothing to submit yet: no solution and nothing logged.")}\n`);
     p.intro(positionals[0] ? `Submit ${label(prob!)}` : "Submit");
     const picked = ask(await p.select({
@@ -57,7 +58,7 @@ export async function submit(ws: Workspace, args: string[]) {
       maxItems: 10,
       options: choices.map((x, i) => ({
         value: i,
-        label: x.logged ? summary(x.logged, !positionals[0]) : `${label(x.prob)} ${c.muted("·")} current solution (${LANGUAGES[x.lang].name})`,
+        label: x.logged ? lines[i - (choices.length - logged.length)]! : `${label(x.prob)} ${c.muted("·")} current solution (${LANGUAGES[x.lang].name})`,
       })),
     }));
     choice = choices[picked];

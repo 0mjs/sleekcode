@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.1
+
+- Attempt lists (sk attempts, sk submit -a) line up in columns, most telling first: problem, how it felt and the result, how you solved it, complexity, time, language, date. A long row now loses the date, not the emoji.
+- "Fine" shows 👍 instead of nothing, and above-target complexity is a short ↑.
+
 ## 0.7.0
 
 - **SleekCode updates itself.** Once a day, in the background, so you never wait. You're told what's new (like this) the next time you run sk. Turn it off with sk config -u off.
