@@ -9,6 +9,7 @@ import { LANGUAGES } from "../core/languages";
 import { renderRecords } from "../core/records";
 import { label, needProblem } from "../core/problem";
 import { runOnce } from "../core/run";
+import { clearTimer, elapsed, readTimer } from "../core/timer";
 import { hintsFile, problemDir, solutionFile, type Workspace } from "../core/workspace";
 import { c } from "../ui/colors";
 import type { Hints } from "./hint";
@@ -72,21 +73,40 @@ export async function log(ws: Workspace, args: string[]) {
   spin.stop(`Tests: ${ok ? c.green(`${pass}/${total} passed ✓`) : c.red(`${pass}/${total} passed`)}`);
 
   // 2. Time: from the timer if it's running, otherwise ask (any format)
-  const startedFile = join(dir, ".started");
+  const timer = await readTimer(ws, prob);
   let seconds: number | null = null;
-  if (values.time !== undefined) {
-    seconds = parseDuration(String(values.time));
-  } else if (existsSync(startedFile)) {
-    seconds = Math.max(1, Math.round((Date.now() - Number(await Bun.file(startedFile).text())) / 1000));
-    p.log.info(`Time: ${c.ink(formatDuration(seconds))} ${c.muted("(from your timer)")}`);
-  } else {
+  const askTime = async (message: string) => {
     const v = ask(await p.text({
-      message: "How long did it take?",
+      message,
       placeholder: "25  ·  1h 10m  ·  90s   (Enter to skip; sk start times it for you)",
       defaultValue: "",
       validate: (s) => (s && parseDuration(s) == null ? "Try something like 25, 25m, 1h 10m or 90s" : undefined),
     }));
-    seconds = v ? parseDuration(v) : null;
+    return v ? parseDuration(v) : null;
+  };
+  if (values.time !== undefined) {
+    seconds = parseDuration(String(values.time));
+  } else if (timer) {
+    seconds = Math.max(1, elapsed(timer));
+    // Forgot to pause? Don't trust a timer that's way past what this problem should take
+    const limit = Math.max(2 * 3600, 3 * ws.config.targets[prob.difficulty] * 60);
+    if (seconds > limit) {
+      const choice = ask(await p.select({
+        message: `The timer says ${formatDuration(seconds)}. Was that all solving time?`,
+        initialValue: "enter",
+        options: [
+          { value: "enter", label: "No, let me enter the real time" },
+          { value: "keep", label: `Yes, it took ${formatDuration(seconds)}` },
+          { value: "none", label: "Don't record a time" },
+        ],
+      }));
+      if (choice === "enter") seconds = await askTime("How long did you actually spend on it?");
+      else if (choice === "none") seconds = null;
+    } else {
+      p.log.info(`Time: ${c.ink(formatDuration(seconds))} ${c.muted(timer.pausedAt != null ? "(from your timer, paused)" : "(from your timer)")}`);
+    }
+  } else {
+    seconds = await askTime("How long did it take?");
   }
 
   // 3. How did you solve it? (Hints are tracked on their own and are fine to use)
@@ -163,7 +183,7 @@ export async function log(ws: Workspace, args: string[]) {
   if (!wasMastered && masteredFolders(ws, await loadAttempts(ws)).has(prob.folder))
     p.log.success(`✅ Mastered! ${ws.config.graduateAfter} clean solves in a row: ${label(prob)} is out of your review queue for good.`);
   await renderRecords(ws, [prob.folder]);
-  rmSync(startedFile, { force: true });
+  clearTimer(ws, prob);
   rmSync(usedFile, { force: true });
   p.outro(`${c.green("Logged.")} ${c.muted(ok ? "Next one: sk next" : "Have another go, then sk log again.")}`);
 }

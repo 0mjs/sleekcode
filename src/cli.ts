@@ -13,7 +13,8 @@ import { attempts, undo } from "./commands/attempts";
 import { hint } from "./commands/hint";
 import { log } from "./commands/log";
 import { add, list, sync, update } from "./commands/manage";
-import { next, open, reset, run, start, which } from "./commands/practice";
+import { next, open, pause, reset, run, start, which } from "./commands/practice";
+import { timerLabel } from "./core/timer";
 import { review } from "./commands/review";
 import { submit } from "./commands/submit";
 import { configure, onboarding } from "./commands/setup";
@@ -40,13 +41,15 @@ async function status(ws: Workspace): Promise<string[]> {
   const solved = (await solvedFolders(ws)).size;
   const due = dueNow(ws, attempts).length;
   const current = await resolveProblem(ws);
+  const timer = current ? await timerLabel(ws, current) : null;
   return [
     `  ${c.muted("Workspace")}  ${c.ink(tilde(ws.dir))} ${c.muted(`· ${EDITORS[ws.config.editor]}`)}`,
     `  ${c.muted("Language ")}  ${c.ink(LANGUAGES[ws.language].name)}` +
       (ws.languages.length > 1 ? ` ${c.muted(`· also set up: ${ws.languages.filter((l) => l !== ws.language).map((l) => LANGUAGES[l].name).join(", ")}`)}` : ` ${c.muted("· switch with sk lang")}`),
     `  ${c.muted("Progress ")}  ${c.ink(`${solved}/${ws.problems.length}`)} ${c.muted("solved")}` +
       (due ? ` ${c.muted("·")} ${c.amber(`${due} due for review`)}` : "") +
-      (current ? ` ${c.muted("· current:")} ${c.body(label(current))}` : ""),
+      (current ? ` ${c.muted("· current:")} ${c.body(label(current))}` : "") +
+      (timer ? ` ${c.amber(timer)}` : ""),
   ];
 }
 
@@ -99,6 +102,7 @@ switch (cmd) {
   case "open": await open(ws, rest); break;
   case "which": await which(ws, rest); break;
   case "start": await start(ws, rest); break;
+  case "pause": await pause(ws, rest); break;
   case "play": await run(ws, "play", rest); break;
   case "test": await run(ws, "test", rest); break;
   case "hint": await hint(ws, rest); break;

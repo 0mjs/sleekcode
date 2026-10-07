@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+- **Pause the timer:** `sk pause` when you step away, `sk start` to resume. Paused time isn't counted.
+- **Cancel it:** `sk start -c` throws the timer away; `sk log` asks for the time instead.
+- **Forgot to pause?** If the timer says more than 2 hours (or 3× your target for that difficulty), `sk log` asks whether that was really all solving time.
+- The running or paused timer shows in `sk` and `sk which`; Zed / VS Code get a "pause timer" task.
+
 ## 0.3.0
 
 - **Problems can be mastered.** 4 clean solves in a row (each one on time, on target, no hints or help) and a problem is ✅ mastered: out of the review queue for good. A non-clean redo puts it back. Change the number with `sk config -g`.

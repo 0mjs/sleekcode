@@ -11,6 +11,7 @@ const TASKS: { label: string; args: string; perFile: boolean }[] = [
   { label: "sk: play", args: "play", perFile: true },
   { label: "sk: hint", args: "hint", perFile: true },
   { label: "sk: start timer", args: "start", perFile: true },
+  { label: "sk: pause timer", args: "pause", perFile: true },
   { label: "sk: log result", args: "log", perFile: true },
   { label: "sk: next problem", args: "next", perFile: false },
   { label: "sk: review", args: "review", perFile: false },

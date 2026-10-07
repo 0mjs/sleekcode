@@ -10,7 +10,8 @@ const GROUPS: { title: string; commands: Command[] }[] = [
     title: "Daily loop",
     commands: [
       { name: "next", desc: "Open the next unsolved problem (and make it current)", flags: [{ short: "b", long: "blind", desc: "Blind 75 problems only" }] },
-      { name: "start", desc: "Start the timer" },
+      { name: "start", desc: "Start the timer (or resume a paused one)", flags: [{ short: "c", long: "cancel", desc: "throw the timer away (sk log will ask for the time)" }] },
+      { name: "pause", desc: "Pause the timer when you step away (sk start resumes it)" },
       {
         name: "play",
         desc: "Run every example: your logs/prints, then your answer vs the expected one",

@@ -5,6 +5,8 @@ import { dueNow, loadAttempts, solvedFolders } from "../core/attempts";
 import { parse } from "../core/args";
 import { openInEditor } from "../core/editor";
 import { ensureProblemFiles } from "../core/materialize";
+import { formatDuration } from "../core/duration";
+import { clearTimer, elapsed, pauseTimer, readTimer, startTimer, timerLabel } from "../core/timer";
 import { label, needProblem } from "../core/problem";
 import { runOnce, runWatching, type Kind } from "../core/run";
 import { problemDir, setCurrent, solutionFile, stubFile, type Problem, type Workspace } from "../core/workspace";
@@ -42,15 +44,34 @@ export async function open(ws: Workspace, args: string[]) {
 
 export async function which(ws: Workspace, args: string[]) {
   const p = await needProblem(ws, parse("which", args).positionals[0]);
-  console.log(`\n  ${describe(p)}\n  ${c.muted(problemDir(ws, p))}\n`);
+  const timer = await timerLabel(ws, p);
+  console.log(`\n  ${describe(p)}${timer ? `  ${c.amber(timer)}` : ""}\n  ${c.muted(problemDir(ws, p))}\n`);
 }
 
 export async function start(ws: Workspace, args: string[]) {
-  const p = await needProblem(ws, parse("start", args).positionals[0]);
-  await Bun.write(join(problemDir(ws, p), ".started"), String(Date.now()));
+  const { values, positionals } = parse("start", args);
+  const p = await needProblem(ws, positionals[0]);
+  if (values.cancel) {
+    const had = await readTimer(ws, p);
+    clearTimer(ws, p);
+    return console.log(had ? `\n  ${c.muted("⏹  Timer cancelled for")} ${label(p)}${c.muted(". sk log will ask for the time instead.")}\n` : `\n  ${c.muted("No timer running for")} ${label(p)}\n`);
+  }
+  const what = await startTimer(ws, p);
   await setCurrent(ws, p);
+  const t = await readTimer(ws, p);
+  if (what === "running") return console.log(`\n  ⏱  ${c.muted("Already running:")} ${c.ink(formatDuration(elapsed(t!)))} ${c.muted("on")} ${label(p)}${c.muted(". sk pause to pause it, sk start -c to cancel it.")}\n`);
+  if (what === "resumed") return console.log(`\n  ▶  ${c.green("Timer resumed")} at ${c.ink(formatDuration(elapsed(t!)))} ${c.muted("for")} ${label(p)}\n`);
   console.log(`\n  ⏱  ${c.green("Timer started")} for ${describe(p)}`);
-  console.log(`     ${c.muted("Then:")} ${c.ink("sk test -w")} ${c.muted("·")} ${c.ink("sk play -w")} ${c.muted("·")} ${c.ink("sk hint")} ${c.muted("·")} ${c.ink("sk log")}\n`);
+  console.log(`     ${c.muted("Then:")} ${c.ink("sk test -w")} ${c.muted("·")} ${c.ink("sk play -w")} ${c.muted("·")} ${c.ink("sk hint")} ${c.muted("·")} ${c.ink("sk log")}  ${c.muted("(sk pause if you step away)")}\n`);
+}
+
+export async function pause(ws: Workspace, args: string[]) {
+  const p = await needProblem(ws, parse("pause", args).positionals[0]);
+  const what = await pauseTimer(ws, p);
+  const t = await readTimer(ws, p);
+  if (what === "none") return console.log(`\n  ${c.muted("No timer running for")} ${label(p)}${c.muted(". Start one with sk start.")}\n`);
+  if (what === "already") return console.log(`\n  ⏸  ${c.muted("Already paused at")} ${c.ink(formatDuration(elapsed(t!)))}${c.muted(". sk start to resume.")}\n`);
+  console.log(`\n  ⏸  ${c.green("Paused")} at ${c.ink(formatDuration(elapsed(t!)))} ${c.muted("for")} ${label(p)}${c.muted(". sk start to resume.")}\n`);
 }
 
 export async function run(ws: Workspace, command: "test" | "play", args: string[]) {

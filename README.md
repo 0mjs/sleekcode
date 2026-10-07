@@ -35,6 +35,7 @@ Answer three questions (language, editor, folder), open a new terminal, type `sk
 
 ```
 sk next      next problem
+sk start     start the timer (sk pause when you step away)
 sk play -w   run the examples and see your logs, on every save
 sk test -w   examples + hidden cases + speed check
 sk hint      one hint at a time (no shame)
