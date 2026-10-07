@@ -12,6 +12,7 @@ import { tilde, TOOL } from "./core/paths";
 import { label } from "./core/problem";
 import { currentWorkspace, resolveProblem, type Workspace } from "./core/workspace";
 import { attempts, undo } from "./commands/attempts";
+import { drill } from "./commands/drill";
 import { hint } from "./commands/hint";
 import { home } from "./commands/home";
 import { intro } from "./commands/intro";
@@ -147,6 +148,7 @@ switch (cmd) {
   case "hint": await hint(ws, rest); break;
   case "log": await log(ws, rest); break;
   case "review": await review(ws, rest); break;
+  case "drill": await drill(ws, rest); break;
   case "reset": await reset(ws, rest); break;
   case "stats": await stats(ws); break;
   case "list": await list(ws, rest); break;

@@ -64,7 +64,7 @@ Never your code or notes. Needs the [GitHub CLI](https://cli.github.com) (SleekC
 
 ## Also
 
-`sk review` (spaced repetition: clean solves come back after 7, 14, 28 days; four in a row and it's ✅ mastered), `sk lang` (switch TypeScript ⇄ Python), `sk submit` (copy it to LeetCode
+`sk drill` (read a problem, name the pattern and target complexity, no coding — interview warm-up), `sk review` (spaced repetition: clean solves come back after 7, 14, 28 days; four in a row and it's ✅ mastered), `sk lang` (switch TypeScript ⇄ Python), `sk submit` (copy it to LeetCode
 when you're feeling brave; `-a` to pick an older attempt). `sk` lists the rest.
 
 Can't tell O(n) from O(n log n) yet? [BIG_O_CHEATSHEET.md](BIG_O_CHEATSHEET.md): the finite list of things to know.

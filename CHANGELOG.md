@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0
+
+SleekCode's first stable release. 🎉
+
+- **New: `sk drill`** — flashcards for the first two minutes of an interview. Read a problem, name the pattern and the target complexity, no coding. It grades you instantly and points out the patterns you keep missing. No AI, no setup.
+- Everything from the 0.x series: 150 problems in TypeScript or Python, hidden cases and a speed check, hints, spaced-repetition review, leagues, 15 themes, the sk menu, and updates that install themselves.
+
 ## 0.9.0
 
 - **sk on its own opens a menu** of what to do next, based on where you are: start a problem, run the examples or tests, get a hint, log it once the tests pass, resume a paused timer. Each option shows its command, so you learn them as you go.

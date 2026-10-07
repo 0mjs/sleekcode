@@ -39,6 +39,15 @@ const GROUPS: { title: string; commands: Command[] }[] = [
     title: "Practice",
     commands: [
       { name: "review", desc: "Redo what's due (spaced repetition), most overdue first", flags: [{ short: "l", long: "list", desc: "just show what's due" }] },
+      {
+        name: "drill",
+        desc: "Flashcards: read a problem, name the pattern and target complexity, no coding",
+        flags: [
+          { short: "n", long: "count", arg: "number", desc: "how many cards (default 5)" },
+          { short: "p", long: "pattern", arg: "name", desc: 'one pattern, e.g. "graphs"' },
+          { short: "s", long: "solved", desc: "only problems you've already solved" },
+        ],
+      },
       { name: "open", args: "<number>", desc: "Jump to a specific problem" },
       { name: "reset", desc: "Blank your solution again (your code is saved first)" },
       {

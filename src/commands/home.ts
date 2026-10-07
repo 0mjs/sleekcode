@@ -50,6 +50,7 @@ async function suggestions(ws: Workspace, prob: Problem | null, lastTest: Map<st
       { label: "Next problem", run: ["next"], hint: "sk next" },
       ...review,
       { label: "Pick a problem by number", run: ["open", "?"], hint: "sk open <number>" },
+      { label: "Drill patterns (no coding)", run: ["drill"], hint: "sk drill" },
       { label: "See your stats", run: ["stats"], hint: "sk stats" },
     ];
   }
