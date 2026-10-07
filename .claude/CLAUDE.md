@@ -23,3 +23,12 @@ CLI (`sk` / `sleek`, Bun + TypeScript) for practising the NeetCode 150 in TypeSc
 - Test new CLI behaviour with `SLEEKCODE_CONFIG_DIR=<tmp>` and `sk setup --language ts|py --editor none --dir <tmp>` so the real config and editors aren't touched.
 - CLI shape, everywhere: `sk <command> [number|name] [flags]`. Every option is a flag with a short and a long form (defined in `ui/help.ts`, which also drives parsing); a flag's value can be optional (`optional: true`), meaning "ask me / show a picker". No word sub-commands.
 - Commits: no Claude co-author trailer.
+
+## Versioning
+
+Semantic versioning, `MAJOR.MINOR.PATCH` in `package.json` (shown by `sk -v` and the header).
+- **PATCH**: bug fixes only. **MINOR**: new features that break nothing. **MAJOR**: breaking changes only.
+- Breaking = removing/renaming a command or flag, a workspace change the user must fix by hand, or existing data (`attempts.json`, `.sleekcode.json`, config) no longer loading.
+- Breaking changes are a last resort: add a migration instead (fill missing fields on load, keep reading old formats, let `sk update` refresh workspaces). The goal is to stay on 1.x forever (1.109.0 is fine; 2.0.0 should never be needed).
+- 0.x until the first-run install (Bun + uv from scratch) is proven on a real Mac and a second user has used it for a week or two without problems; then 1.0.0.
+- Every user-facing release: bump `package.json`, add a CHANGELOG.md entry (user-facing wording), commit, then `git tag -a vX.Y.Z` and push the tag.
