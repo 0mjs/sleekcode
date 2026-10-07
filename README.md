@@ -78,6 +78,7 @@ Ideas, not promises ([ROADMAP.md](ROADMAP.md) has the details):
 - ⏲️ **Mock interviews**: a random problem, a countdown, no hints (opt-in pressure)
 - 🏗️ **System design**: classic prompts, a 45-minute template, rubric checklists and estimation drills
 - 🧩 More problem sets (NeetCode 250, Grind 169) and more languages
+- 🐍 PyCharm support, for Python
 
 ## Fine print
 

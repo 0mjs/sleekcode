@@ -47,6 +47,17 @@ Not testable like code, but the practice can have the same loop (practise → ch
 Go, Java, … The language registry (`src/core/languages.ts`) is built for this: one entry, a generator in
 `src/core/generate.ts`, helpers in `runtime/<id>/`, then build + validate the bank.
 
+### PyCharm (Python only)
+An editor option for Python workspaces, since some Python learners live in PyCharm.
+- **Only offered when the workspace is Python-only.** If someone with PyCharm adds TypeScript (`sk lang`), stop
+  early and suggest switching editor first. (WebStorm is the TypeScript counterpart: maybe a general "JetBrains"
+  option later.)
+- **Opening files:** PyCharm's command-line launcher, or `open -a PyCharm`.
+- **Run buttons:** shared run configurations (`.run/*.run.xml`) for `sk test` and `sk play`, in place of the
+  Zed / VS Code tasks.
+- **Interpreter:** PyCharm should pick up the workspace's uv `.venv` by itself; confirm.
+- **Testing:** install the free PyCharm with Homebrew, check all of the above for real, then uninstall it.
+
 ## Known limits
 
 - A few speed checks only catch brute force in Python: at LeetCode's maximum input sizes the TypeScript brute
