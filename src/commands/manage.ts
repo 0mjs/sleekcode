@@ -4,11 +4,10 @@ import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "../core/args";
 import { LANGUAGES } from "../core/languages";
-import { installDeps, refreshWorkspace } from "../core/create";
 import { caseFile, specFrom } from "../core/generate";
 import { fetchQuestion, toMarkdown } from "../core/leetcode";
 import { renderList } from "../core/list";
-import { TOOL } from "../core/paths";
+import { pullLatest } from "../core/update";
 import { problemReadme } from "../core/readme";
 import { syncReadmes } from "../core/sync";
 import { openWorkspace, problemDir, type Problem, type Workspace } from "../core/workspace";
@@ -62,27 +61,16 @@ export async function sync(ws: Workspace) {
 }
 
 export async function update(ws: Workspace | null) {
-  const version = async () => (await Bun.file(join(TOOL, "package.json")).json()).version as string;
-  const before = await version();
   const spin = p.spinner();
   spin.start("Updating SleekCode");
-  const pull = Bun.spawnSync(["git", "pull", "--ff-only"], { cwd: TOOL, stdout: "pipe", stderr: "pipe" });
-  if (pull.exitCode !== 0) {
+  const r = await pullLatest(ws, (msg) => spin.message(msg));
+  if (!r.ok) {
     spin.stop(c.red("Couldn't update"));
-    return console.log(c.muted(pull.stderr.toString().trim()));
+    return console.log(c.muted(r.error));
   }
-  Bun.spawnSync(["bun", "install"], { cwd: TOOL, stdout: "ignore", stderr: "ignore" });
-  if (ws) {
-    spin.message("Refreshing your workspace (tests, helpers, editor tasks)");
-    await refreshWorkspace(ws); // never touches your solutions, notes or attempts
-    await syncReadmes(ws, () => {});
-    for (const lang of ws.languages) await installDeps(ws.dir, lang);
-  }
-  const after = await version();
   spin.stop(
-    pull.stdout.toString().includes("Already up to date")
-      ? `${c.green("Already up to date")} ${c.muted(`(v${after})`)}`
-      : `${c.green("Updated")} ${before === after ? c.muted(`(v${after}, small fixes)`) : `v${before} → ${c.ink(`v${after}`)}`} ${c.muted("· what's new: CHANGELOG.md")}`,
+    !r.changed ? `${c.green("Already up to date")} ${c.muted(`(v${r.after})`)}`
+      : `${c.green("Updated")} ${r.before === r.after ? c.muted(`(v${r.after}, small fixes)`) : `v${r.before} → ${c.ink(`v${r.after}`)}`} ${c.muted("· what's new: CHANGELOG.md")}`,
   );
 }
 

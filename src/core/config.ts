@@ -18,6 +18,8 @@ export type Config = {
   complexities?: string[];
   /** Every workspace you've created or used (for switching and removing) */
   workspaces?: string[];
+  /** Install new versions by themselves (once a day, in the background). On unless set to false. */
+  autoUpdate?: boolean;
   /** Your league: the private GitHub repo (owner/name), your GitHub login, whether you created it */
   league?: { repo: string; login: string; owner: boolean; pending?: boolean };
 };

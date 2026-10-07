@@ -33,4 +33,4 @@ Semantic versioning, `MAJOR.MINOR.PATCH` in `package.json` (shown by `sk -v` and
 - Breaking = removing/renaming a command or flag, a workspace change the user must fix by hand, or existing data (`attempts.json`, `.sleekcode.json`, config) no longer loading.
 - Breaking changes are a last resort: add a migration instead (fill missing fields on load, keep reading old formats, let `sk update` refresh workspaces). The goal is to stay on 1.x forever (1.109.0 is fine; 2.0.0 should never be needed).
 - 0.x until the first-run install (Bun + uv from scratch) is proven on a real Mac and a second user has used it for a week or two without problems; then 1.0.0.
-- Every user-facing release: bump `package.json`, add a CHANGELOG.md entry (user-facing wording), commit, then `git tag -a vX.Y.Z` and push the tag.
+- Every user-facing release: bump `package.json`, add a CHANGELOG.md entry (user-facing wording: auto-update shows users the first 4 bullets of each new version, so lead with what matters to them, one line each), commit, then `git tag -a vX.Y.Z` and push the tag.

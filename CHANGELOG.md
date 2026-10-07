@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+
+- **SleekCode updates itself.** Once a day, in the background, so you never wait. You're told what's new (like this) the next time you run sk. Turn it off with sk config -u off.
+- **sk intro: a two-minute tour** of what SleekCode is and how to use it, in plain English. Offered at the end of setup, and there any time.
+- sk update also refreshes your workspace using the new version's code (before, it used the old one until the next update).
+
 ## 0.6.1
 
 - `sk submit -a` always opens the picker. Without a number it lists every attempt you've logged (any problem), not just the current problem's, which often had none.

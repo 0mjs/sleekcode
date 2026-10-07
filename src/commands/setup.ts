@@ -15,6 +15,7 @@ import { MARKER, openWorkspace, type Workspace } from "../core/workspace";
 import { bold, c } from "../ui/colors";
 import { header } from "../ui/header";
 import { parse } from "../core/args";
+import { intro } from "./intro";
 
 const expand = (path: string) => resolve(path.trim().replace(/^~(?=$|\/)/, homedir()));
 const check = <T>(v: T): Exclude<T, symbol> => {
@@ -135,8 +136,13 @@ export async function onboarding(args: string[] = []) {
   const config: Config = { ...DEFAULTS, ...(await loadConfig()), workspace: dir, editor };
   const ws = await build(dir, language, editor, config);
   await saveConfig(config);
+  const tour = check(await p.confirm({ message: "New to this? Want a two-minute tour of how it works?", initialValue: true }));
+  if (tour) {
+    p.outro(c.muted("Starting the tour…"));
+    return intro(ws, config);
+  }
   nextSteps(ws);
-  p.outro(`Happy grinding ${c.green("✦")}`);
+  p.outro(`Happy grinding ${c.green("✦")} ${c.muted("(sk intro for a tour, any time)")}`);
 }
 
 /** Known workspaces that still exist, the active one first */
@@ -253,6 +259,25 @@ async function setGraduate(config: Config, count?: string) {
   p.outro(`${c.green("Mastered after:")} ${config.graduateAfter} clean solves in a row`);
 }
 
+async function setUpdates(config: Config, value?: string) {
+  if (value && !["on", "off"].includes(value.toLowerCase())) {
+    p.cancel("Use on or off, e.g. sk config -u off");
+    process.exit(1);
+  }
+  config.autoUpdate = value
+    ? value.toLowerCase() === "on"
+    : check(await p.select({
+        message: "Install new versions of SleekCode by themselves?",
+        initialValue: config.autoUpdate !== false,
+        options: [
+          { value: true, label: "Yes", hint: "checked once a day in the background; you're told what's new" },
+          { value: false, label: "No", hint: "run sk update yourself" },
+        ],
+      }));
+  await saveConfig(config);
+  p.outro(`${c.green("Automatic updates:")} ${config.autoUpdate ? "on" : "off (sk update when you want one)"}`);
+}
+
 async function switchWorkspace(config: Config, query?: string) {
   config.workspace = await pickWorkspace(config, "Which workspace should be active?", query);
   await saveConfig(config);
@@ -280,12 +305,13 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
   const { values } = parse("config", args);
   const value = (v: unknown) => (v ? String(v) : undefined);
 
-  const shortcut = ["editor", "review", "graduate", "workspace", "new", "delete"].some((k) => values[k] !== undefined);
+  const shortcut = ["editor", "review", "graduate", "updates", "workspace", "new", "delete"].some((k) => values[k] !== undefined);
   if (shortcut) {
     p.intro(bold(" SleekCode settings "));
     if (values.editor !== undefined) return setEditor(config, ws, value(values.editor));
     if (values.review !== undefined) return setReview(config, value(values.review));
     if (values.graduate !== undefined) return setGraduate(config, value(values.graduate));
+    if (values.updates !== undefined) return setUpdates(config, value(values.updates));
     if (values.workspace !== undefined) return switchWorkspace(config, value(values.workspace));
     if (values.new) return newWorkspace(config);
     return removeWorkspace(config, value(values.delete));
@@ -305,6 +331,7 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
       { value: "editor", label: "Editor", hint: `${EDITORS[config.editor]} · sk config -e` },
       { value: "review", label: "Review timing", hint: `${config.reviewDays} days · sk config -r` },
       { value: "graduate", label: "When a problem is mastered", hint: `after ${config.graduateAfter} clean solves · sk config -g` },
+      { value: "updates", label: "Automatic updates", hint: `${config.autoUpdate === false ? "off" : "on"} · sk config -u` },
       ...(others > 1 ? [{ value: "workspace", label: "Switch workspace", hint: "sk config -w" }] : []),
       { value: "new", label: "Set up another workspace", hint: "sk config -n · rarely needed: sk lang switches languages" },
       { value: "remove", label: "Remove a workspace", hint: "moves it to the Trash · sk config -d" },
@@ -314,6 +341,7 @@ export async function configure(ws: Workspace | null, args: string[] = []) {
   if (choice === "editor") return setEditor(config, ws);
   if (choice === "review") return setReview(config);
   if (choice === "graduate") return setGraduate(config);
+  if (choice === "updates") return setUpdates(config);
   if (choice === "workspace") return switchWorkspace(config);
   if (choice === "new") return newWorkspace(config);
   if (choice === "remove") return removeWorkspace(config);

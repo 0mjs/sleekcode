@@ -13,10 +13,12 @@ import { label } from "./core/problem";
 import { currentWorkspace, resolveProblem, type Workspace } from "./core/workspace";
 import { attempts, undo } from "./commands/attempts";
 import { hint } from "./commands/hint";
+import { intro } from "./commands/intro";
 import { log } from "./commands/log";
 import { add, list, sync, update } from "./commands/manage";
 import { next, open, pause, reset, run, start, which } from "./commands/practice";
 import { timerLabel } from "./core/timer";
+import { refresh, updateInBackground, updateNotice, updateQuietly } from "./core/update";
 import { review } from "./commands/review";
 import { submit } from "./commands/submit";
 import { configure, onboarding } from "./commands/setup";
@@ -73,12 +75,34 @@ if (cmd === "help" || cmd === "-h" || cmd === "--help") {
   process.exit(0);
 }
 
+// The tour works before setup too
+if (cmd === "intro") {
+  await intro(await currentWorkspace(), await loadConfig());
+  process.exit(0);
+}
+
+// Internal: the background update, and the workspace refresh that follows any update (run by the new code)
+if (cmd === "update" && rest[0] === "--background") {
+  await updateQuietly(await currentWorkspace());
+  process.exit(0);
+}
+if (cmd === "update" && rest[0] === "--refresh") {
+  const ws = await currentWorkspace();
+  if (ws) await refresh(ws);
+  process.exit(0);
+}
+
 // First run (or explicit setup)
 const config = await loadConfig();
 if (cmd === "setup" || !config) {
   await onboarding(cmd === "setup" ? rest : []);
   process.exit(0);
 }
+// Updates install themselves: tell you once when one has, and check (at most daily) in the background
+const notice = await updateNotice();
+if (notice) console.log(notice);
+if (cmd !== "update") await updateInBackground(config);
+
 if (cmd === "config") {
   await configure(await currentWorkspace(), rest);
   process.exit(0);

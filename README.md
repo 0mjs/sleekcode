@@ -29,7 +29,7 @@ git clone https://github.com/0mjs/sleekcode.git ~/sleekcode && bash ~/sleekcode/
 
 It installs what it needs: [Bun](https://bun.sh), and if you pick Python, [uv](https://docs.astral.sh/uv/) and Python too.
 
-Answer three questions (language, editor, folder), open a new terminal, type `sk`.
+Answer three questions (language, editor, folder), take the two-minute tour (`sk intro` any time), then type `sk next`.
 
 ## Use
 
@@ -67,7 +67,7 @@ when you're feeling brave; `-a` to pick an older attempt). `sk` lists the rest.
 
 Can't tell O(n) from O(n log n) yet? [BIG_O_CHEATSHEET.md](BIG_O_CHEATSHEET.md): the finite list of things to know.
 
-Works with Zed, VS Code, Cursor or vim. Update with `sk update`.
+Works with Zed, VS Code, Cursor or vim. Updates install themselves (once a day, in the background); `sk config -u off` if you'd rather run `sk update` yourself.
 
 ## Maybe next
 

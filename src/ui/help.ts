@@ -80,6 +80,7 @@ const GROUPS: { title: string; commands: Command[] }[] = [
   {
     title: "Setup",
     commands: [
+      { name: "intro", desc: "A two-minute tour of how SleekCode works, in plain English" },
       {
         name: "lang",
         args: "[language]",
@@ -92,6 +93,7 @@ const GROUPS: { title: string; commands: Command[] }[] = [
         flags: [
           { short: "e", long: "editor", arg: "name", optional: true, desc: "zed, vscode, cursor, terminal or none" },
           { short: "r", long: "review", arg: "days", optional: true, desc: "days before a clean solve comes back for review" },
+          { short: "u", long: "updates", arg: "on|off", optional: true, desc: "install new versions by themselves (on by default)" },
           { short: "g", long: "graduate", arg: "count", optional: true, desc: "clean solves in a row before a problem is mastered (default 4)" },
           { short: "w", long: "workspace", arg: "path", optional: true, desc: "switch the active workspace" },
           { short: "n", long: "new", desc: "set up another workspace" },
