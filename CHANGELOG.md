@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- TypeScript workspaces no longer flag `nums[i]` as "possibly undefined" (`noUncheckedIndexedAccess` is off, like on LeetCode). `strict` stays on. Run `sk update` to apply it to your workspace.
+
 ## 0.2.0
 
 - **Not happy with a solution?** `sk log` asks how you feel about it (😬 not happy · 👍 fine · 😎 nailed it). Not happy brings it back for review in 2 days; nailed it waits twice as long.

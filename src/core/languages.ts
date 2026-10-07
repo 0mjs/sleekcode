@@ -64,7 +64,7 @@ export const LANGUAGES: Record<Language, LanguageSpec> = {
       await Bun.write(join(dir, "tsconfig.json"), json({
         compilerOptions: {
           target: "ESNext", module: "ESNext", moduleResolution: "bundler", strict: true,
-          noUncheckedIndexedAccess: true, noEmit: true, skipLibCheck: true, resolveJsonModule: true, types: ["bun"],
+          noEmit: true, skipLibCheck: true, resolveJsonModule: true, types: ["bun"],
         },
         include: ["lib", "problems"],
       }));
