@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+- **Leagues: compete with friends.** `sk league -c` creates a private GitHub repo and invites friends by username; they run `sk league` and accept the invite. Your solves publish automatically after every `sk log`: what you solved, how (on your own, hints, AI…), complexity and time. Never your code or notes.
+- `sk league` shows the leaderboard and recent activity; `sk league 15` compares everyone on one problem. The league repo's README is a leaderboard you can check on GitHub.
+- A League tab in `sk stats` when you're in one. Leave with `-l`; the creator can delete it with `-d`.
+
 ## 0.4.0
 
 - **Pause the timer:** `sk pause` when you step away, `sk start` to resume. Paused time isn't counted.

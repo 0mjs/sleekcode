@@ -49,6 +49,17 @@ progress and streaks, every pattern from "not started" to "mastered" (and which 
 TypeScript vs Python if you do both, how long things take you vs how long they should, and what's due
 for review. Everything you log is tracked, so the graphs only lie if you do.
 
+## Compete with friends
+
+```
+sk league -c     create a league (a private GitHub repo) and invite friends by GitHub username
+sk league        the leaderboard, or accept an invite
+sk league 15     everyone's attempts at one problem, head to head
+```
+
+Every `sk log` publishes what you solved, how (on your own, hints, AI…), your complexity and your time.
+Never your code or notes. Needs the [GitHub CLI](https://cli.github.com) (SleekCode offers to install it).
+
 ## Also
 
 `sk review` (spaced repetition: clean solves come back after 7, 14, 28 days; four in a row and it's ✅ mastered), `sk lang` (switch TypeScript ⇄ Python), `sk submit` (copy it to LeetCode

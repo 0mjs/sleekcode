@@ -10,6 +10,7 @@ import { openInEditor } from "../core/editor";
 import { LANGUAGES } from "../core/languages";
 import { needProblem } from "../core/problem";
 import { renderRecords } from "../core/records";
+import { publishInBackground } from "../core/league";
 import { hintsFile, problemDir, type Workspace } from "../core/workspace";
 import { c, rgb, visible } from "../ui/colors";
 import { ask, COMPLEXITIES, pickComplexity, pickHelp } from "./log";
@@ -58,6 +59,7 @@ async function remove(ws: Workspace, a: Attempt) {
   }
   await updateAttempt(ws, a.at, null);
   await renderRecords(ws, [a.folder]);
+  if (ws.config.league) publishInBackground();
 }
 
 async function edit(ws: Workspace, a: Attempt) {
@@ -93,6 +95,7 @@ async function edit(ws: Workspace, a: Attempt) {
     help, solo: help === "none", complexity, aboveTarget: aboveTarget(complexity, target).above, feel, notes,
   });
   await renderRecords(ws, [a.folder]);
+  if (ws.config.league) publishInBackground();
   const updated = (await loadAttempts(ws)).find((x) => x.at === a.at)!;
   p.outro(`${c.green("Updated.")} ${summary(updated)}`);
 }

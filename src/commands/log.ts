@@ -7,6 +7,7 @@ import { parse } from "../core/args";
 import { formatDuration, parseDuration } from "../core/duration";
 import { LANGUAGES } from "../core/languages";
 import { renderRecords } from "../core/records";
+import { publishInBackground } from "../core/league";
 import { label, needProblem } from "../core/problem";
 import { runOnce } from "../core/run";
 import { clearTimer, elapsed, readTimer } from "../core/timer";
@@ -183,6 +184,7 @@ export async function log(ws: Workspace, args: string[]) {
   if (!wasMastered && masteredFolders(ws, await loadAttempts(ws)).has(prob.folder))
     p.log.success(`✅ Mastered! ${ws.config.graduateAfter} clean solves in a row: ${label(prob)} is out of your review queue for good.`);
   await renderRecords(ws, [prob.folder]);
+  if (ws.config.league) publishInBackground();
   clearTimer(ws, prob);
   rmSync(usedFile, { force: true });
   p.outro(`${c.green("Logged.")} ${c.muted(ok ? "Next one: sk next" : "Have another go, then sk log again.")}`);

@@ -1,5 +1,5 @@
 // sk stats: a full-screen dashboard.
-//   ←/→ or 1-5   switch tabs        l   filter by language
+//   ←/→ or 1-6   switch tabs        l   filter by language
 //   ↑/↓ or j/k   scroll             q   quit
 import { ago, clean, dueNow, HELP_LABEL, loadAttempts, masteredFolders, passed, reviews, type Attempt } from "../core/attempts";
 import { formatDuration } from "../core/duration";
@@ -8,9 +8,10 @@ import { label } from "../core/problem";
 import type { Problem, Workspace } from "../core/workspace";
 import { bold, c, diffColor, mix, pad, padL, rgb, visible } from "../ui/colors";
 import { small } from "../ui/header";
+import { leaderboardLines } from "./league";
 
 const DIFFS = ["Easy", "Medium", "Hard"] as const;
-const TABS = ["Overview", "Patterns", "Languages", "History", "Review"] as const;
+const BASE_TABS = ["Overview", "Patterns", "Languages", "History", "Review"];
 const DAY = 86_400_000;
 
 // ---------- small drawing helpers ----------
@@ -76,6 +77,9 @@ const section = (title: string, right = "") => `${bold(c.green(title.toUpperCase
 // ---------- the dashboard ----------
 
 export async function stats(ws: Workspace) {
+  // A 6th tab when you're in a league (read from the local copy; sk league fetches the latest)
+  const TABS = ws.config.league ? [...BASE_TABS, "League"] : BASE_TABS;
+  const league = () => ["", ...leaderboardLines(ws.config), "", c.dim(`Latest from GitHub: sk league · ${ws.config.league?.repo ?? ""}`)];
   const all = await loadAttempts(ws);
   const known = new Map(ws.problems.map((p) => [p.folder, p]));
   const usedLangs = [...new Set(all.map((a) => a.language))].filter((l): l is Language => l in LANGUAGES);
@@ -369,7 +373,7 @@ export async function stats(ws: Workspace) {
     const filterText = filters.length > 1 ? `${c.dim("[l]")} ${langLabel}` : "";
     const title = `  ${bold(small())}  ${c.muted("stats")}`;
     const head = ["", title + " ".repeat(Math.max(2, width - visible(title) - visible(filterText) - 2)) + filterText, "", `  ${tabLine}`, `  ${underline}`];
-    const body = [overview, patterns, languages, history, review][tab]!(width - 4).map((l) => "  " + l);
+    const body = [overview, patterns, languages, history, review, league][tab]!(width - 4).map((l) => "  " + l);
     const room = Math.max(3, height - head.length - 2);
     scroll = Math.max(0, Math.min(scroll, body.length - room));
     const shown = body.slice(scroll, scroll + room);
@@ -406,7 +410,7 @@ export async function stats(ws: Workspace) {
     if (k === "q" || k === "\x1b" || k === "\x03") return quit();
     if (k === "\x1b[C" || k === "\t") { tab = (tab + 1) % TABS.length; scroll = 0; }
     else if (k === "\x1b[D" || k === "\x1b[Z") { tab = (tab + TABS.length - 1) % TABS.length; scroll = 0; }
-    else if (/^[1-5]$/.test(k)) { tab = Number(k) - 1; scroll = 0; }
+    else if (/^[1-9]$/.test(k) && Number(k) <= TABS.length) { tab = Number(k) - 1; scroll = 0; }
     else if (k === "l" && filters.length > 1) { filter = (filter + 1) % filters.length; scroll = 0; }
     else if (k === "\x1b[B" || k === "j") scroll++;
     else if (k === "\x1b[A" || k === "k") scroll = Math.max(0, scroll - 1);

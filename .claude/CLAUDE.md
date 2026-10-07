@@ -12,6 +12,8 @@ CLI (`sk` / `sleek`, Bun + TypeScript) for practising the NeetCode 150 in TypeSc
 - `runtime/ts/lib`, `runtime/py/sleek`: helpers copied into each workspace (ListNode/TreeNode builders, runOps / run_ops, anyOrder / any_order).
 - `build/`: maintainer scripts. `fetch-cache.ts` → `build-bank.ts` → `validate.ts`. `build/refs/<lang>/` holds reference solutions where NeetCode's are missing or broken, plus the 13 MANUAL problems. `build/neetcode-hint-names.json` is a hand-checked 1:1 map; don't regenerate it by fuzzy matching.
 
+- Leagues: `src/core/league.ts` + `src/commands/league.ts`. A league is a private GitHub repo (via `gh`) cloned to `~/.config/sleekcode/league`; each player writes only `players/<login>.json` (no code, no notes) and the README is a regenerated leaderboard. Sync = fetch + hard reset + rewrite own file + push (never merges). `sk log` / edits publish in the background (`sk league --publish`, internal); failures set `league.pending` and retry on the next command. Test without GitHub by using a local bare repo path as the league and `SLEEKCODE_LEAGUE_LOGIN=<name>`.
+
 ## Rules
 
 - **Workspace ≠ tool.** User solutions, attempts.json, LOG.md and LIST.md live in the user's workspace (created by onboarding), never in this repo.

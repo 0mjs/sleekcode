@@ -5,6 +5,8 @@ import { dueNow, loadAttempts, solvedFolders } from "./core/attempts";
 import { EDITORS, loadConfig } from "./core/config";
 import { LANGUAGES } from "./core/languages";
 import { lang } from "./commands/lang";
+import { league } from "./commands/league";
+import { publishInBackground } from "./core/league";
 import pkg from "../package.json";
 import { tilde, TOOL } from "./core/paths";
 import { label } from "./core/problem";
@@ -94,6 +96,9 @@ if (!ws) {
 }
 if (!existsSync(ws.dir)) process.exit(1);
 
+// A league publish that didn't go through last time (offline?) retries quietly in the background
+if (config.league?.pending && cmd !== "league") publishInBackground();
+
 switch (cmd) {
   case undefined:
     console.log(help(await status(ws)));
@@ -117,6 +122,7 @@ switch (cmd) {
   case "attempts": await attempts(ws, rest); break;
   case "undo": await undo(ws); break;
   case "submit": await submit(ws, rest); break;
+  case "league": await league(ws, rest); break;
   default: {
     const guess = ALL.map((x) => ({ x, d: distance(cmd, x.name) })).sort((a, b) => a.d - b.d).find((g) => g.d <= 2)?.x;
     console.log(`\n  ${c.red(`Unknown command "${cmd}".`)}${guess ? ` ${c.muted("Did you mean")} ${c.ink(`sk ${guess.name}`)}${c.muted("?")}` : ""}`);

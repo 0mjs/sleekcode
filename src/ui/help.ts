@@ -52,6 +52,18 @@ const GROUPS: { title: string; commands: Command[] }[] = [
       { name: "undo", desc: "Delete your most recent log (asks first)" },
       { name: "stats", desc: "Dashboard: overview, patterns, history, review" },
       {
+        name: "league",
+        args: "[number]",
+        desc: "A private leaderboard with friends (a GitHub repo), or one problem head to head",
+        flags: [
+          { short: "c", long: "create", desc: "create a league and invite friends" },
+          { short: "i", long: "invite", arg: "username", optional: true, desc: "invite friends by GitHub username" },
+          { short: "j", long: "join", arg: "owner/repo", optional: true, desc: "join one (or just run sk league to see invites)" },
+          { short: "l", long: "leave", desc: "leave the league (your results are removed)" },
+          { short: "d", long: "delete", desc: "delete the league (only its creator)" },
+        ],
+      },
+      {
         name: "list",
         desc: "Your checklist, in study order (LIST.md updates by itself)",
         flags: [

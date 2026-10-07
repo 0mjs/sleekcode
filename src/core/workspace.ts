@@ -93,7 +93,7 @@ const currentFile = (ws: Workspace) => join(ws.dir, ".current");
 
 // ---------- picking a problem ----------
 
-function findProblem(ws: Workspace, query: string): Problem | undefined {
+export function findProblem(ws: Workspace, query: string): Problem | undefined {
   const q = basename(query);
   return ws.problems.find((p) => p.id === q || p.folder === q || p.slug === q) ?? ws.problems.find((p) => p.folder.includes(q));
 }
