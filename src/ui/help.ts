@@ -41,7 +41,11 @@ const GROUPS: { title: string; commands: Command[] }[] = [
       { name: "review", desc: "Redo what's due (spaced repetition), most overdue first", flags: [{ short: "l", long: "list", desc: "just show what's due" }] },
       { name: "open", args: "<number>", desc: "Jump to a specific problem" },
       { name: "reset", desc: "Blank your solution again (your code is saved first)" },
-      { name: "submit", desc: "Copy your solution for LeetCode and open the problem, to submit it there" },
+      {
+        name: "submit",
+        desc: "Copy your solution for LeetCode and open the problem, to submit it there",
+        flags: [{ short: "a", long: "attempt", desc: "pick which: your current solution or any attempt you've logged" }],
+      },
       { name: "which", desc: "Show the current problem" },
     ],
   },

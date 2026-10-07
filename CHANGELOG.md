@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- **Submit any attempt:** `sk submit -a` lets you pick your current solution or any attempt you've logged (newest first), and copies that one for LeetCode. Plain `sk submit` is unchanged.
+
 ## 0.5.0
 
 - **Leagues: compete with friends.** `sk league -c` creates a private GitHub repo and invites friends by username; they run `sk league` and accept the invite. Your solves publish automatically after every `sk log`: what you solved, how (on your own, hints, AI…), complexity and time. Never your code or notes.
