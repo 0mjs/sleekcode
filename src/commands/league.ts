@@ -146,10 +146,10 @@ export function leaderboardLines(config: Config, width = 100): string[] {
     `${c.muted(pad("#", 3))}${pad(c.muted("PLAYER"), 18)}${padL(c.muted("SOLVED"), 8)}${padL(c.muted("MASTERED"), 10)}${padL(c.muted("CLEAN NOW"), 11)}${padL(c.muted("STREAK"), 8)}${padL(c.muted("THIS WEEK"), 11)}${padL(c.muted("BLIND 75"), 10)}`,
   ];
   rows.forEach(({ pl, s }, i) => {
-    const name = pl.login === me ? bold(c.green(pl.login)) : c.ink(pl.login);
+    const name = pl.login === me ? bold(c.accent(pl.login)) : c.ink(pl.login);
     out.push(`${c.muted(pad(String(i + 1), 3))}${pad(name, 18)}${padL(c.ink(String(s.solved)), 8)}${padL(c.green(String(s.mastered)), 10)}${padL(c.body(pct(s.cleanNow)), 11)}${padL(c.amber(`${s.streak}d`), 8)}${padL(c.body(String(s.thisWeek)), 11)}${padL(c.body(`${s.blind}/75`), 10)}`);
   });
-  out.push("", bold(c.green("RECENT")), "");
+  out.push("", bold(c.accent("RECENT")), "");
   for (const a of activity(players).slice(0, 10)) {
     const ok = a.total > 0 && a.pass === a.total;
     const how = howLabel(a).replace("their own", a.login === me ? "my own" : "their own");
@@ -188,7 +188,7 @@ async function view(ws: Workspace, config: Config, problem?: string) {
   pullLeague();
   const lines = problem ? headToHead(ws, config, problem) : leaderboardLines(config, process.stdout.columns || 100);
   const n = readPlayers().length;
-  console.log(`\n  ${bold(c.green("LEAGUE"))} ${c.muted(`· ${config.league!.repo} · ${n} player${n === 1 ? "" : "s"}`)}\n`);
+  console.log(`\n  ${bold(c.accent("LEAGUE"))} ${c.muted(`· ${config.league!.repo} · ${n} player${n === 1 ? "" : "s"}`)}\n`);
   for (const l of lines) console.log("  " + l);
   console.log(`\n  ${c.dim(problem ? "sk league for the leaderboard" : "sk league <number> for one problem head to head · on GitHub: https://github.com/" + config.league!.repo)}\n`);
 }

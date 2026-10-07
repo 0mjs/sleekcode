@@ -37,7 +37,7 @@ export async function list(ws: Workspace, args: string[]) {
     if (!shown.length) continue;
     const barW = 16;
     const filled = Math.round((done / ps.length) * barW);
-    out.push(`  ${bold(c.green(pattern.toUpperCase()))}  ${c.ink(String(done))}${c.muted(`/${ps.length}`)}  ${c.green("━".repeat(filled))}${c.dim("━".repeat(barW - filled))}`);
+    out.push(`  ${bold(c.accent(pattern.toUpperCase()))}  ${c.ink(String(done))}${c.muted(`/${ps.length}`)}  ${c.accent("━".repeat(filled))}${c.dim("━".repeat(barW - filled))}`);
     for (const p of shown) {
       const langs = solvedIn.get(p.folder);
       const mark = p === current ? c.amber("▸") : mastered.has(p.folder) ? "✅" : langs ? c.green("✓") : c.dim("○");

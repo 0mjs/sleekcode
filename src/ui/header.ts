@@ -1,6 +1,7 @@
 // The SleekCode wordmark: slanted line-drawn letters with speed lines trailing behind.
 import pkg from "../../package.json";
 import { c, mix, rgb } from "./colors";
+import { THEME } from "./theme";
 
 const GLYPHS: Record<string, [string, string, string]> = {
   s: ["┏━━╸", "┗━━┓", "╺━━┛"],
@@ -12,10 +13,7 @@ const GLYPHS: Record<string, [string, string, string]> = {
   d: ["┳━━┓", "┃  ┃", "┻━━┛"],
 };
 
-const MINT = "#6fd3a8";
-const BLUE = "#6aa9ef";
-const WHITE = "#eef0f2";
-const NIGHT = "#1f2a27";
+const { from: MINT, to: BLUE, code: WHITE, night: NIGHT } = THEME.header;
 
 // Each row trails off to the left; gaps make it read as motion
 const SPEED = ["   ━━━━━ ━━ ━", " ━━━━━━━━ ━━ ", "━━━━━ ━━━  ━ "];

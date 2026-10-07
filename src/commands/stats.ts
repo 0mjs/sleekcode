@@ -7,6 +7,7 @@ import { LANGUAGES, type Language } from "../core/languages";
 import { label } from "../core/problem";
 import type { Problem, Workspace } from "../core/workspace";
 import { bold, c, diffColor, mix, pad, padL, rgb, visible } from "../ui/colors";
+import { THEME } from "../ui/theme";
 import { small } from "../ui/header";
 import { leaderboardLines } from "./league";
 
@@ -72,7 +73,7 @@ function cards(items: { title: string; value: string; sub: string }[], width: nu
   return out;
 }
 
-const section = (title: string, right = "") => `${bold(c.green(title.toUpperCase()))}${right ? "  " + c.muted(right) : ""}`;
+const section = (title: string, right = "") => `${bold(c.accent(title.toUpperCase()))}${right ? "  " + c.muted(right) : ""}`;
 
 // ---------- the dashboard ----------
 
@@ -123,7 +124,7 @@ export async function stats(ws: Workspace) {
     out.push(...cards([
       { title: "solved", value: bold(c.ink(String(solvedSet.size))) + c.muted(` / ${ws.problems.length}`), sub: mastered.size ? c.green(`✅ ${mastered.size} mastered`) : c.muted(pct(solvedSet.size, ws.problems.length) + " done") },
       { title: "blind 75", value: bold(c.amber(String(blind.filter(isSolved).length))) + c.muted(` / ${blind.length}`), sub: c.muted("must-knows") },
-      { title: "streak", value: bold(c.green(`${streak}`)) + c.muted(streak === 1 ? " day" : " days"), sub: c.muted(`best ${best}`) },
+      { title: "streak", value: bold(c.accent(`${streak}`)) + c.muted(streak === 1 ? " day" : " days"), sub: c.muted(`best ${best}`) },
       { title: "this week", value: bold(c.ink(String(thisWeek))) + c.muted(" solves"), sub: trend > 0 ? c.green(`▲ ${trend} vs last`) : trend < 0 ? c.red(`▼ ${-trend} vs last`) : c.muted("= last week") },
       { title: "clean now", value: bold(c.ink(pct(cleanNow(attempts).n, cleanNow(attempts).of))), sub: c.muted(`${attempts.filter((a) => a.help === "ai").length} with AI`) },
       { title: "time in", value: bold(c.ink(fmtMin(totalMin))), sub: c.muted(`${attempts.length} tr${attempts.length === 1 ? "y" : "ies"}`) },
@@ -154,7 +155,7 @@ export async function stats(ws: Workspace) {
       }
     }
     out.push(c.muted(months));
-    const shades = [c.dim("·"), rgb("#2a6b52")("■"), rgb("#3fa37b")("■"), c.green("■")];
+    const shades = [c.dim("·"), rgb(mix(THEME.dim, THEME.accent, 0.35))("■"), rgb(mix(THEME.dim, THEME.accent, 0.7))("■"), c.accent("■")];
     ["", "Mon", "", "Wed", "", "Fri", ""].forEach((name, dow) => {
       let row = c.dim(name.padEnd(4));
       for (let w = 0; w < weeks; w++) {
@@ -200,7 +201,7 @@ export async function stats(ws: Workspace) {
     const weak = levels.filter((l) => l.started && l.done < l.total).sort((a, b) => a.clean - b.clean).slice(0, 2);
     const nextNew = levels.find((l) => !l.started);
     const focus = [...weak.map((w) => w.name), ...(nextNew && weak.length < 2 ? [nextNew.name] : [])];
-    out.push("", `${c.green("→")} ${c.muted("Focus next:")} ${focus.length ? focus.map((f) => c.ink(f)).join(c.muted(", ")) : c.green("you've covered everything 🎉")}`);
+    out.push("", `${c.accent("→")} ${c.muted("Focus next:")} ${focus.length ? focus.map((f) => c.ink(f)).join(c.muted(", ")) : c.green("you've covered everything 🎉")}`);
     out.push(c.dim("CLEAN = problems whose latest attempt had no hints or help · HINTS = all your attempts that used hints"));
     out.push(c.dim(`learning = under half solved · practising = half or more · solid = all solved, 70%+ clean · mastered = every problem mastered (${ws.config.graduateAfter} clean solves in a row)`));
     return out;
@@ -301,7 +302,7 @@ export async function stats(ws: Workspace) {
       const spec = LANGUAGES[a.language];
       const help = a.help !== "none" ? c.red(HELP_LABEL[a.help]) : a.hints ? c.amber(`${a.hints} hint${a.hints > 1 ? "s" : ""}`) : c.muted("on my own");
       out.push(
-        `${c.dim(a.at.slice(5, 10))} ${passed(a) ? c.green("✓") : c.red("✗")} ${rgb(spec?.color ?? "#868e97")(pad(spec?.tag ?? "?", 3))}` +
+        `${c.dim(a.at.slice(5, 10))} ${passed(a) ? c.green("✓") : c.red("✗")} ${rgb(spec?.color ?? THEME.muted)(pad(spec?.tag ?? "?", 3))}` +
           `${pad(c.ink(truncate(`${a.id}. ${a.title}`, titleW)), titleW + 1)}${pad(diffColor[a.difficulty](a.difficulty), 7)}` +
           `${padL(a.seconds == null ? c.dim("–") : c.body(formatDuration(a.seconds)), 8)}  ${help}`,
       );
@@ -368,7 +369,7 @@ export async function stats(ws: Workspace) {
   function frame(width: number, height: number): string[] {
     const { lang } = view();
     const tabLine = TABS.map((t, i) => (i === tab ? bold(c.ink(` ${i + 1} ${t} `)) : c.muted(` ${i + 1} ${t} `))).join(c.dim("│"));
-    const underline = TABS.map((t, i) => (i === tab ? c.green("━".repeat(t.length + 4)) : " ".repeat(t.length + 4))).join(" ");
+    const underline = TABS.map((t, i) => (i === tab ? c.accent("━".repeat(t.length + 4)) : " ".repeat(t.length + 4))).join(" ");
     const langLabel = lang === "all" ? c.ink("all languages") : bold(rgb(LANGUAGES[lang].color)(LANGUAGES[lang].name));
     const filterText = filters.length > 1 ? `${c.dim("[l]")} ${langLabel}` : "";
     const title = `  ${bold(small())}  ${c.muted("stats")}`;

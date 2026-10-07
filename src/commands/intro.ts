@@ -113,13 +113,13 @@ function screens(ws: Workspace | null, config: Config | null): Screen[] {
 }
 
 function render(s: Screen, i: number, total: number): string {
-  const dots = Array.from({ length: total }, (_, j) => (j === i ? c.green("●") : c.dim("○"))).join(" ");
+  const dots = Array.from({ length: total }, (_, j) => (j === i ? c.accent("●") : c.dim("○"))).join(" ");
   const keys = i === total - 1 ? "Enter: done" : "Enter: next";
   return [
     "",
     `  ${small()}  ${c.muted("·")} ${c.muted("a quick tour")}`,
     "",
-    `  ${bold(c.green(s.title))}`,
+    `  ${bold(c.accent(s.title))}`,
     "",
     ...s.lines.map((l) => (l ? `  ${l}` : "")),
     "",

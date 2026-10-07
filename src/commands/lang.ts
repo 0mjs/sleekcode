@@ -17,7 +17,7 @@ export async function lang(ws: Workspace, args: string[]) {
     console.log(`\n  ${c.muted("Practising in")} ${bold(rgb(LANGUAGES[ws.language].color)(LANGUAGES[ws.language].name))}\n`);
     for (const id of LANGUAGE_IDS) {
       const l = LANGUAGES[id];
-      const mark = id === ws.language ? c.green("●") : ws.languages.includes(id) ? c.body("○") : c.dim("○");
+      const mark = id === ws.language ? c.accent("●") : ws.languages.includes(id) ? c.body("○") : c.dim("○");
       const note = id === ws.language ? c.muted("current") : ws.languages.includes(id) ? c.muted("set up") : c.dim("not set up yet");
       console.log(`  ${mark} ${rgb(l.color)(l.name.padEnd(12))} ${c.ink(`sk lang ${l.aliases[0]}`.padEnd(22))} ${note}`);
     }

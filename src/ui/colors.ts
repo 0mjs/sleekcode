@@ -1,3 +1,5 @@
+import { THEME } from "./theme";
+
 // Truecolor helpers. Respects NO_COLOR and non-terminal output.
 const enabled = !process.env.NO_COLOR && (process.stdout.isTTY || process.env.FORCE_COLOR === "1");
 
@@ -8,15 +10,16 @@ export const rgb = (hex: string) => (s: string | number) => {
 };
 
 export const c = {
-  ink: rgb("#eef0f2"),
-  body: rgb("#c2c7cd"),
-  muted: rgb("#868e97"),
-  dim: rgb("#4f565e"),
-  green: rgb("#6fd3a8"),
-  teal: rgb("#5fc3c8"),
-  blue: rgb("#6aa9ef"),
-  amber: rgb("#e3b04b"),
-  red: rgb("#f07a7a"),
+  ink: rgb(THEME.ink),
+  body: rgb(THEME.body),
+  muted: rgb(THEME.muted),
+  dim: rgb(THEME.dim),
+  accent: rgb(THEME.accent),
+  green: rgb(THEME.success),
+  teal: rgb(THEME.accent2),
+  blue: rgb(THEME.blue),
+  amber: rgb(THEME.warn),
+  red: rgb(THEME.fail),
 };
 export const bold = (s: string) => (enabled ? `\x1b[1m${s}\x1b[22m` : s);
 export const diffColor = { Easy: c.green, Medium: c.amber, Hard: c.red } as const;

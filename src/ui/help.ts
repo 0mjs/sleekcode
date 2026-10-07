@@ -132,7 +132,7 @@ export function help(status?: string[]): string {
   const out = [header()];
   if (status?.length) out.push(...status, "");
   for (const g of GROUPS) {
-    out.push(`  ${bold(c.green(g.title.toUpperCase()))}`);
+    out.push(`  ${bold(c.accent(g.title.toUpperCase()))}`);
     for (const cmd of g.commands) out.push(...commandLines(cmd));
     out.push("");
   }
